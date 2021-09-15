@@ -1,5 +1,5 @@
 ## Eco-evolutionary models of population decline: 
-# how does migration effect long-term population persistence when extirpation risk is high?
+#* how does migration effect long-term population persistence when extirpation risk is high?*
 **Gina Lamka and Dr. Janna Willoughby**
 
 *Code accessed here is used for the complex model assignment in ABM class Fall 2021 at Auburn University*
