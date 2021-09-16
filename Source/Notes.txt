@@ -1,0 +1,31 @@
+Project Flow:
+set parameters >                                 #set variables
+  init pop and source >                          #create pops
+    AgeUp >                                      #age pop + 1 year
+      DeathbyAge >                               #age-dependent mortality
+        RandomDeath >                            #random mortality
+          Migrate >                              #subpop migration
+            MateChoice >                         #find partner(s)
+              Breed >                            #get freaky
+                OffspringAssign >                #assign offspring alleles
+                  PopSizeNext >                  #determine pop size and trend
+                    Repeat                       #replicate
+
+
+Notes that may be helpful in the future:
+
+- in krats, breeding is polygynandrous, which means multiple females breed with multiple males
+  https://academic.oup.com/jmammal/article/94/6/1258/903126
+  
+- currently, migration is by # of indv, but in future, should be 0-10% of population
+  consider *why* indv may move - boldness, resources, looking for less density
+  consider male vs female migrants
+
+- can do a fitness-dependent behavior, but not multiple. 
+  this can be either mate choice, fitness-dependent death, or migration behavior, consider implications of each
+
+- offspring should inherit alleles from mom/dad, not be assigned randomly
+  assign microsat and SNP loci, not just A/a alleles
+  
+- consider sex ratio - should this vary year to year or be ~1:1
+  
