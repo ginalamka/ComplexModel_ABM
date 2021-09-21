@@ -38,6 +38,7 @@ RunModel = function(parameters, r, directory){
   for(y in 1:years){
     pop = AgeUp(pop)
     pop = DeathByAge(pop, maxage)
+    pop = RandomDeath(pop)
     pop = Migrate(pop, source)
     #dead = sample(seq(1,nrow(pop),1),1,replace=F) #take a sample of the sequence 1-all the rows in matrix "pop", take out 1 individual and do not replace it
     #pop = pop[-dead,] #now re-create "pop" with this change
