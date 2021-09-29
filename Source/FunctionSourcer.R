@@ -17,6 +17,6 @@ source(paste(getwd(), "/DeathByAge.R", sep = ''))
 source(paste(getwd(), "/RandomDeath.R", sep = ''))
 source(paste(getwd(), "/SourcePop.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
+source(paste(getwd(), "/MateChoice.R", sep = ''))
 
-#source(paste(getwd(), "/Mate.R", sep = ''))
 #source(paste(getwd(), "/Reproduce.R", sep = ''))
