@@ -9,7 +9,8 @@ set parameters >                                 #set variables
               Breed >                            #get freaky
                 OffspringAssign >                #assign offspring alleles
                   PopSizeNext >                  #determine pop size and trend
-                    Repeat                       #replicate
+                    Repeat >                     #replicate
+                      Analyze                    #analyze the outcome
 
 
 Notes that may be helpful in the future:
