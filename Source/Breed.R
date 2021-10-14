@@ -1,13 +1,16 @@
 #Breed
 #for complex model for ABM class
 
+##{THIS STILL DOES NOT RUN}
+#rethink the steps to make this happen
+
 Breed = function(pop, pairs, years){
   #use for loop to iterate over pairs (?)
   
   #use sample function to randomly select fecundity of each pair
-  breedingpairs = matrix(nrow=nrow(pairs), ncol=7)            #each individual gets its own row.. matrix > dataframe
-  colnames(breedingpairs) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2") #just to give a better understanding of what these variables are, set names
-  breedingpairs[,1] = seq(years*1000,years*1000+nrow,1)            
+  breedingpairs = matrix(nrow=nrow(pairs), ncol=7)            #make new matrix for breeding pairs
+  colnames(breedingpairs) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2") #name columns
+  breedingpairs[,1] = seq(years*1000,years*1000+nrow,1)         #get new numerical value for individuals in this generation ?? - maybe add generation column? 
   
   pairs <- pairs + pairs[,3]
   pop = rbind(pop, source[migrant,])
@@ -24,4 +27,4 @@ Breed = function(pop, pairs, years){
   
   
 }
-#think about adding in a "generation born" and "generation died" column in pop
+#think about adding in a "generation born" and "generation died" columns in pop
