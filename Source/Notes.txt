@@ -6,14 +6,22 @@ set parameters >                                 #set variables
         RandomDeath >                            #random mortality
           Migrate >                              #subpop migration
             MateChoice >                         #find partner(s)
-              Breed >                            #get freaky
-                OffspringAssign >                #assign offspring alleles
-                  PopSizeNext >                  #determine pop size and trend
+              PopSizeNext >                      #determine pop size and trend
+                Breed >                          #get freaky
+                  OffspringAssign >              #assign offspring alleles
                     Repeat >                     #replicate
-                      Analyze                    #analyze the outcome
+                      Analyze >                  #analyze the outcome
+                        Validate                 #compare to real data
 
 
 Notes that may be helpful in the future:
+
+- validate the model [look at pattern oriented modeling slides from class] 
+  by double checking if alleles are added and lost to the population at the same rate as expected (1/2N)
+  this will be done with heterozygosity values of the population following migration
+  different allele frequencies of migrants will induce the changes here as a pattern
+  compare this rate to the equation of loss of genetic diversity 1/2Ne to examine trends
+  this works because I am giving indv allele frequ, but not for the whole population
 
 - in krats, breeding is polygynandrous, which means multiple females breed with multiple males
   https://academic.oup.com/jmammal/article/94/6/1258/903126
@@ -30,14 +38,3 @@ Notes that may be helpful in the future:
   
 - consider sex ratio - should this vary year to year or be ~1:1
   
-  
-  
-BREEDING NOTES FROM JANNA 10/19/2021  
-  next steps: make sure to randomize the order of the pairs table before breeding
-  then generate fecundity for each pair down th list for a certain number of times to get past the number of offspring needed to reach K
-  make sure to buffer by overshooting the number
-  then before rturning offspring, drop some until the total number needed
-  total offspring/2*fecundity
-  check at end of function if below or above K
-  make sure to break with an error message if too small
-  return offspring and then rbind them to pop
