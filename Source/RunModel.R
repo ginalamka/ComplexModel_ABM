@@ -11,6 +11,7 @@ RunModel = function(parameters, r, directory){
   sexratio      = parameters$sexratio[r]
   maturity      = parameters$maturity[r]
   years         = parameters$years[r]
+  r0            = parameters$r0[r]
   
   #initialize population
   pop = matrix(nrow=k, ncol=7)            #each individual gets its own row.. matrix > dataframe
@@ -40,9 +41,15 @@ RunModel = function(parameters, r, directory){
     pop = DeathByAge(pop, maxage)
     pop = RandomDeath(pop)
     pop = Migrate(pop, source)
-    #dead = sample(seq(1,nrow(pop),1),1,replace=F) #take a sample of the sequence 1-all the rows in matrix "pop", take out 1 individual and do not replace it
-    #pop = pop[-dead,] #now re-create "pop" with this change
+    pop = MateChoice(pop)
+    pop = PopSizeNext(pop, r0, k)
+    
     return (pop)
   }
   write.table(pop, paste(directory, "/Output/testRunModel.txt", sep=""), sep="/t", col.names=F, row.names=F)
 }  
+
+
+#OLD NOTES
+#dead = sample(seq(1,nrow(pop),1),1,replace=F) #take a sample of the sequence 1-all the rows in matrix "pop", take out 1 individual and do not replace it
+#pop = pop[-dead,] #now re-create "pop" with this change

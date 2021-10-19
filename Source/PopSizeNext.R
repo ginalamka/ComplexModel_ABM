@@ -17,5 +17,4 @@ PopSizeNext = function(pop, k, r0){
   numboff = Nt1 - Nt
   
   return(numboff)
-  
 }
