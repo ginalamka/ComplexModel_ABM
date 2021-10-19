@@ -18,7 +18,7 @@ source(paste(getwd(), "/RandomDeath.R", sep = ''))
 source(paste(getwd(), "/SourcePop.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
+source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 
 #source(paste(getwd(), "/Breed.R", sep = ''))
-#source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 #source(paste(getwd(), "/Analyze.R", sep = ''))

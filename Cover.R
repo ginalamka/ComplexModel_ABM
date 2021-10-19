@@ -18,10 +18,11 @@ sexratio.V    = 0.5           #equal ratio of females:males; consider a more rea
 maturity.V    = 1             #age indv becomes reproductively mature
 years.V       = 250           #total run time; 200 year run following 50 year stabilization period
 reps.V        = 100           #number of replications of the simulation
+r0.V          = 0.1           #per capita growth rate
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V)
-colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years")
+parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V)
+colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0")
 
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){
