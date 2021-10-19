@@ -9,7 +9,7 @@ MateChoice = function(pop){
   sex <- c(0,1)[which.min(tabulate(match(pop[,'sex'], c(0,1))))]
   
   #randomly select indv of the most sex with replacement*
-  mates <- sample(pop[pop[,'sex'] != sex, 'id'], tabulate(match(pop[,'sex'], sex)), replace=TRUE)
+  mates <- sample(pop[pop[,'sex'] != sex, 'id'], tabulate(match(pop[,'sex'], sex)), replace=FALSE) #this means indv can only mate once
   
   #pair individuals
   pairs <- cbind(pop[pop[,'sex'] == sex, 'id'], mates)
@@ -20,3 +20,6 @@ MateChoice = function(pop){
 #*note, because krats have a promiscuous system, allow replacement so multiple indv can mate more than once (monogamous would be set up different)
 #as set up currently, only the sex with the most indv will be used more than once (i.e. not both sexes with multiple mating events)
 #consider requiring that migrants mate, or dont and then can compare N and Ne(?)
+
+
+##MAKE SURE TO KNOW IF MALE/FEMALE IS MATE 1or2**
