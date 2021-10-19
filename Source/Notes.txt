@@ -30,3 +30,14 @@ Notes that may be helpful in the future:
   
 - consider sex ratio - should this vary year to year or be ~1:1
   
+  
+  
+BREEDING NOTES FROM JANNA 10/19/2021  
+  next steps: make sure to randomize the order of the pairs table before breeding
+  then generate fecundity for each pair down th list for a certain number of times to get past the number of offspring needed to reach K
+  make sure to buffer by overshooting the number
+  then before rturning offspring, drop some until the total number needed
+  total offspring/2*fecundity
+  check at end of function if below or above K
+  make sure to break with an error message if too small
+  return offspring and then rbind them to pop
