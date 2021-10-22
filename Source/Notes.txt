@@ -22,6 +22,9 @@ Notes that may be helpful in the future:
   different allele frequencies of migrants will induce the changes here as a pattern
   compare this rate to the equation of loss of genetic diversity 1/2Ne to examine trends
   this works because I am giving indv allele frequ, but not for the whole population
+  
+- theory testing: vary the sizes of source and focal pops to examine density-dependent effects
+  I could also add in habitat complexity to determine how that affects migration
 
 - in krats, breeding is polygynandrous, which means multiple females breed with multiple males
   https://academic.oup.com/jmammal/article/94/6/1258/903126

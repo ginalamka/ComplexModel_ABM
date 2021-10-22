@@ -3,7 +3,7 @@
 #this will also help in giving the number of offspring to generate from mating pairs
 
 PopSizeNext = function(pop, k, r0){
-  #calculat the current population size following aging and death
+  #calculate the current population size following aging and death
   Nt = nrow(pop)
   
   #calculate the new pop size with the logistic growth equation

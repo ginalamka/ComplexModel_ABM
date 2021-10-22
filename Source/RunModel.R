@@ -24,6 +24,18 @@ RunModel = function(parameters, r, directory){
   pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
   pop[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
   pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
+  
+  #notes from talking with Janna 10/21 -- doesnt quite work yet
+  #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
+  "
+  f = 0.2 #allele freq, means 20% of the time, allele 0, 80% of the time, allele 1
+  x = sample(c(0,1), 2(nrow(pop)), freq = c(f,1-f))
+  pop[,i] = x[1:nrow(pop)]
+  pop[,i+1] = x[nrow(pop)+1:length(x)]
+  for(i in 1:10){
+    seq(1,nSNP*2,2)
+  }
+  "
 
   #initialize source population 
   source = matrix(nrow=k, ncol=7)            #each individual gets its own row.. matrix > dataframe
