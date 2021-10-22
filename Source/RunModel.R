@@ -36,6 +36,10 @@ RunModel = function(parameters, r, directory){
     seq(1,nSNP*2,2)
   }
   "
+  #make sure to add in additional SNPs for Source pop also!!
+  
+  #options for SNPs = can do 0-2 values with 1 column per SNP OR 2 columns per SNP with 0-1 
+  #implications of each decision is based on calculating heterozygosity vs generating offspring
 
   #initialize source population 
   source = matrix(nrow=k, ncol=7)            #each individual gets its own row.. matrix > dataframe
