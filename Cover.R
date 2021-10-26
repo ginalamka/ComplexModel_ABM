@@ -27,5 +27,6 @@ colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broo
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){
   POP = RunModel(parameters, r, directory)
+  write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep="/t", col.names=F, row.names=F)
 }
-write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep="/t", col.names=F, row.names=F)
+

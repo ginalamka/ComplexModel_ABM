@@ -40,4 +40,6 @@ Notes that may be helpful in the future:
   assign microsat and SNP loci, not just A/a alleles
   
 - consider sex ratio - should this vary year to year or be ~1:1
+
+- notes on operators in R https://www.tutorialgateway.org/logical-operators-in-r/
   

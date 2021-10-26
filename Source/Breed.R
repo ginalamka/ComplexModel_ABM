@@ -4,12 +4,19 @@
 ##{THIS STILL DOES NOT RUN}
 #rethink the steps to make this happen
 
+"LOOK INTO 
+  BREAK
+  NEXT - check if there are more pairs to iterate over, if no, Break
+  https://statisticsglobe.com/r-break-next-function-for-loop-example"
+
 Breed = function(pop, pairs, years, numboff, k){
-  #randomize pairs so that all have an opportunity to make babies
+  #use numboff to determine how many offspring to make
+  pairings = numboff * 2 #this generates double the amount of offspring needed since fecundity can be 0
   
-  
-  
-  
+  #use matings to create the number of offspring necessary
+  for(pa in 1:pairs){
+    
+  }
   
   #use for loop to iterate over pairs (?)
   
