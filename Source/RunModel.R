@@ -15,7 +15,7 @@ RunModel = function(parameters, r, directory){
     r0            = parameters$r0[r]
     
     #initialize population
-    pop = matrix(nrow=k, ncol=7)            #each individual gets its own row.. matrix > dataframe
+    pop = matrix(nrow=k, ncol=7)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
     colnames(pop) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                    #each individual has unique ID name; sequence starting at 1, through k, with each 1 interation
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
@@ -68,7 +68,8 @@ RunModel = function(parameters, r, directory){
         next
       }
       pairs = MateChoice(pop)   
-      numboff = PopSizeNext(pop, r0, k)
+      numboff = PopSizeNext(pop, r0, k) #numboff goes weird?? which is breaking Breed
+      pop = Breed(pop, pairs, numboff, k)
       
       return (pop)
     }
