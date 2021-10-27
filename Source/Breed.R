@@ -8,6 +8,8 @@
 
 Breed = function(pop, pairs, numboff, k){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
+  print(paste("the number of offspring STILL needed is", numboff))
+  print(paste("numboff is STILL an", typeof(numboff)))
   
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   pairings = sample(1:nrow(pairs), numboff*2, replace = F)

@@ -68,8 +68,8 @@ RunModel = function(parameters, r, directory){
         next
       }
       pairs = MateChoice(pop)   
-      numboff = PopSizeNext(pop, r0, k) #numboff goes weird?? which is breaking Breed
-      pop = Breed(pop, pairs, numboff, k)
+      numboff = PopSizeNext(pop, r0, k) #numboff goes weird?? which is breaking Breed #this is occuring because of Nt1
+      #pop = Breed(pop, pairs, numboff, k) #turned off until get PopSizeNext working
       
       return (pop)
     }
