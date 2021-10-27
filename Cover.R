@@ -25,6 +25,7 @@ parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, brood
 colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0")
 
 replicates    = 1
+r             = 1
 
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){

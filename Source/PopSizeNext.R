@@ -12,8 +12,9 @@ PopSizeNext = function(pop, k, r0){
   
   #add Density Independent variance in growth
   Nt1 = round(rnorm(1, Ntt, 1), 0)
-  Nt1 <- as.integer(Nt1)
+  Nt1 = as.integer(Nt1)
   print(paste("Nt1 is", Nt1))
+  print(paste("Nt1 is an", typeof(Nt1)))
   
   #determine the number of additional offspring to produce
   numboff = Nt1 - Nt
