@@ -4,7 +4,7 @@
 MateChoice = function(pop, sex){
   #find which sex has more, male or female.
   ck = mean(pop[,'sex']) #<0.5 female, >.5 male
-  print(ck)
+  print(paste("the sex ratio is", ck))
   if(ck == 1){
     print(paste("Only males left"))
     next
