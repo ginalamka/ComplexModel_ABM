@@ -24,6 +24,8 @@ r0.V          = 0.1           #per capita growth rate
 parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V)
 colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0")
 
+replicates    = 1
+
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){
   POP = RunModel(parameters, r, directory)
