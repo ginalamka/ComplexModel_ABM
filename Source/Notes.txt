@@ -42,4 +42,8 @@ Notes that may be helpful in the future:
 - consider sex ratio - should this vary year to year or be ~1:1
 
 - notes on operators in R https://www.tutorialgateway.org/logical-operators-in-r/
+
+- notes on BREAK / NEXT - for example, check if there are more pairs to iterate over, if no, Break
+  https://statisticsglobe.com/r-break-next-function-for-loop-example
+
   
