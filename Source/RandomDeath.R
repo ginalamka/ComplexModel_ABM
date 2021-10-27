@@ -8,7 +8,7 @@ RandomDeath = function(pop){
   #syntax: sample(group, X, replace) with group being the column in the matrix, X being the number to kill per run
   #the number of indv to die will vary, so calibrate this later
   
-  dead = sample(pop[,1], 10, replace = FALSE)
+  dead = sample(pop[,1], (nrow(pop)*0.1), replace = FALSE) #this is to kill off 10% of the population size randomly
   pop1 = pop[-which(pop[,1]%in%dead),] 
   pop <- pop1
   
