@@ -11,6 +11,7 @@ Migrate = function(pop, source){
     
     #take migrant from source and put into pop
     pop = rbind(pop, source[migrant,])
-  } 
+    #source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
+    } 
   return(pop)
 }
