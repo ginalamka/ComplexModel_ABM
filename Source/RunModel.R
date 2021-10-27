@@ -56,11 +56,18 @@ RunModel = function(parameters, r, directory){
     for(y in 1:years){
       pop = AgeUp(pop)                        #age pop + 1 year
       pop = DeathByAge(pop, maxage)           #age-dependent mortality
+      if(nrow(pop) <= 10){
+        print(paste("Population crash, less than 10 indv"))
+        next
+      }
       pop = RandomDeath(pop)                  #random mortality
       pop = Migrate(pop, source)              #subpop migration
       #add in checks with breaks -- this is especially important going through replicates
       #for example, check that we have 1 male and 1 female before pairing
-      pairs = MateChoice(pop)   #NOTE-- when running this function, pop turns to pairs???
+      if(nrow(pop) <= 4){
+        next
+      }
+      pairs = MateChoice(pop)   
       numboff = PopSizeNext(pop, r0, k)
       
       return (pop)
