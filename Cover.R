@@ -19,6 +19,7 @@ maturity.V    = 1             #age indv becomes reproductively mature
 years.V       = 250           #total run time; 200 year run following 50 year stabilization period
 reps.V        = 100           #number of replications of the simulation
 r0.V          = 0.1           #per capita growth rate
+#nSNP.mig     =10             #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 
 #generate list of parameter combinations
 parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V)
@@ -32,4 +33,4 @@ for(r in 1:nrow(parameters)){
   POP = RunModel(parameters, r, directory)
   write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep="/t", col.names=F, row.names=F)
 }
-
+#notice as written, goes through 11 times because there are 11 varaibles within parameters
