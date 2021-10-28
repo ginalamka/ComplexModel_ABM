@@ -25,6 +25,7 @@ RunModel = function(parameters, r, directory){
     pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     pop[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
+    sz = k #to keep track of the number of indv for ID'ing later
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -61,7 +62,10 @@ RunModel = function(parameters, r, directory){
         next
       }
       pop = RandomDeath(pop)                  #random mortality
-      pop = Migrate(pop, source)              #subpop migration
+      tt = Migrate(pop, source)             #subpop migration
+      pop = tt[[1]]
+      mig = tt[[2]]
+      sz = sz + mig
       #add in checks with breaks -- this is especially important going through replicates
       #for example, check that we have 1 male and 1 female before pairing
       if(nrow(pop) <= 4){
@@ -69,7 +73,10 @@ RunModel = function(parameters, r, directory){
       }
       pairs = MateChoice(pop)   
       numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      pop = Breed(pop, pairs, numboff, k) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k) #still needs work 
+      pop = ttt[[1]]
+      bb = ttt[[2]]
+      sz = sz + bb
       
       return (pop)
     }
@@ -85,7 +92,15 @@ RunModel = function(parameters, r, directory){
 ##Remember that whatever you return at the end of the function is what you set the function equal to in RunModel
 
 
-##new notes 10/28
+##new notes in Jannas office 10/28
 #look up break, next, try -- make sure to get these because they are helpful
 #next will go to the next loop AKA the next year
 #break will completely stop the loop AKA the next replicate
+
+#notes from class 10/28
+#pop[,9] = y                 #birth year
+#~function to kill indv~
+#~tokill = indv xyz~
+#pop[tokill,10] = y          #gives the year they were killed
+#pop[tokill,11] = 0          #this is for dead/alive = 0 is dead, 1 is alive
+
