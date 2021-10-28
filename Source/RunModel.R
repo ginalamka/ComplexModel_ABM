@@ -66,14 +66,13 @@ RunModel = function(parameters, r, directory){
       pop = tt[[1]]
       mig = tt[[2]]
       sz = sz + mig
-      #add in checks with breaks -- this is especially important going through replicates
-      #for example, check that we have 1 male and 1 female before pairing
+      source = tt[[3]]
       if(nrow(pop) <= 4){
         next
       }
       pairs = MateChoice(pop)   
       numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      ttt = Breed(pop, pairs, numboff, k) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
@@ -104,3 +103,7 @@ RunModel = function(parameters, r, directory){
 #pop[tokill,10] = y          #gives the year they were killed
 #pop[tokill,11] = 0          #this is for dead/alive = 0 is dead, 1 is alive
 
+
+
+#add in checks with breaks -- this is especially important going through replicates
+#for example, check that we have 1 male and 1 female before pairing

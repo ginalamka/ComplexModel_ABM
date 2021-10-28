@@ -4,7 +4,7 @@
 ##{THIS STILL DOES NOT RUN}
 #rethink the steps to make this happen
 
-Breed = function(pop, pairs, numboff, k){
+Breed = function(pop, pairs, numboff, k, sz){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
@@ -40,11 +40,13 @@ Breed = function(pop, pairs, numboff, k){
   parents = TEMP
   remove(TEMP)
   
-  newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
+  #generate unique IDS
+  ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
+  SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
   babies = matrix(nrow=nrow(parents), ncol=7) #make new matrix for offspring     
   colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2")
-  babies[,1] = newid                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
+  babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
   babies[,4] = 0    #first of the year - consider if these should be 0 or -1
