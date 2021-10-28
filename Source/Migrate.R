@@ -7,7 +7,7 @@ Migrate = function(pop, source){
   
   for(m in 1:mig){
     #select migrant without replacement
-    migrant = sample(1:nrow(source), mig, replace = F)
+    migrant = sample(1:nrow(source), 1, replace = F)
     
     
     #take migrant from source and put into pop
@@ -15,7 +15,7 @@ Migrate = function(pop, source){
     #remove migrant from source
     source = source[-migrant,]
     } 
-  return(list(pop, mig))
+  return(list(pop, mig, source))
 }
 
 #source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
