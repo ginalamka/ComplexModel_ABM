@@ -8,9 +8,7 @@
 
 Breed = function(pop, pairs, numboff, k){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
-  print(paste("the number of offspring STILL needed is", numboff))
-  print(paste("numboff is STILL an", typeof(numboff)))
-  
+ 
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   pairings = sample(1:nrow(pairs), numboff*2, replace = F)
   parents <- pairs[pairings,]
@@ -36,8 +34,8 @@ Breed = function(pop, pairs, numboff, k){
   babies[,3] = parents[,2]
   babies[,4] = 0    #first of the year - consider if these should be 0 or -1
   babies[,5] = sample(c(0,1),nrow(babies),replace=T)    #each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
-  babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
-  babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
+  #babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
+  #babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
