@@ -9,9 +9,23 @@ Migrate = function(pop, source){
     #select migrant without replacement
     migrant = sample(1:nrow(source), mig, replace = F)
     
+    
     #take migrant from source and put into pop
     pop = rbind(pop, source[migrant,])
-    #source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
+    #remove migrant from source
+    source = source[-migrant,]
     } 
-  return(pop)
+  return(list(pop, mig))
 }
+
+#source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
+
+
+#in function
+#return(list(n, pop)) #where n = number of indv added
+
+#in runmodel.R
+#temp = function(n, pop)
+
+#n = unlist(temp)[1] #unlist the first object
+#pop = unlist(temp)[[2]]
