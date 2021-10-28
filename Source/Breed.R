@@ -13,16 +13,32 @@ Breed = function(pop, pairs, numboff, k){
   #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
   #generate fecundity for each set of parents
-  fecundity = sample(seq(0,2,1),nrow(parents),replace=T)
+  fecundity = sample(seq(1,5,1),nrow(parents),replace=T) #cahnge tthe number of offspring to biologically relevant number later
   parents <- cbind(parents, fecundity)
   
-  parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
+  #parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
   
   nbabes = sum(parents[,3])
   #consider changing the matrix so that nrow = nbabes, not number of parents - not sure how to make that function
   
   #currently this works so that each pair only makes 1 baby
   #figure this out so that we have varying fecundity and only some of the offspring survive
+  
+  TEMP = NULL
+  for(n in 1:nrow(parents)){
+    t = parents[n, ,drop=FALSE] #need drop = false or else will lose 
+    f = t[1,3]
+    t[1,3] = 1
+    while(f > 0){
+      TEMP = rbind(TEMP, t)
+      f = f - 1
+      if(f==0){
+        break
+      }
+    }
+  }
+  parents = TEMP
+  remove(TEMP)
   
   newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
   
@@ -36,21 +52,21 @@ Breed = function(pop, pairs, numboff, k){
   #babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
   #babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   
+  #check out lines 129 from Jannas Repro.R in CaptiveBreedingIBM for generating genotypes
+  #the suggestion is to cbind the genotypes to the babies matrix to better keep track of column numbers
+  
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
     rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm),] 
-    #pop = rbind(pop, babies)
-  } else(numboff > nrow(babies)){
+    pop = rbind(pop, babies)
+  }else if(numboff > nrow(babies)){
     print(paste("need more offspring generated"))
     next
-  } else{
-    #add babies to pop
-    pop = rbind(pop, babies)
   }
   
   #think about adding in a "generation born" and "generation died" columns in pop
-  #consider adding a column for calculating parents' lifetime reproductive success
+  #consider adding a column for calculating parents' lifetime reproductive success -- ORRR print this as a separate table!
   return(pop)
 }
 
@@ -65,3 +81,10 @@ Breed = function(pop, pairs, numboff, k){
 #check at end of function if below or above K
 #make sure to break with an error message if too small
 #return offspring and then rbind them to pop
+
+#notes 10/28
+#consider adding gamma distribution to fecundity
+#take out fecundity=0 - cuz doesnt matter
+#think about variable to calculate the ID names using the nrow for total indv created--
+# # what the above means is that for every time I add indv (init, migrate, breed), keep a running total of all the indv created so no duplicate values
+# # this will be easier than *10 that I have now once I start running over several years

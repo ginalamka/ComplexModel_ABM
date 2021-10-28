@@ -83,3 +83,9 @@ RunModel = function(parameters, r, directory){
 #pop = pop[-dead,] #now re-create "pop" with this change
 
 ##Remember that whatever you return at the end of the function is what you set the function equal to in RunModel
+
+
+##new notes 10/28
+#look up break, next, try -- make sure to get these because they are helpful
+#next will go to the next loop AKA the next year
+#break will completely stop the loop AKA the next replicate
