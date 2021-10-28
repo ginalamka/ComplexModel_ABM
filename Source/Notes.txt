@@ -46,4 +46,7 @@ Notes that may be helpful in the future:
 - notes on BREAK / NEXT - for example, check if there are more pairs to iterate over, if no, Break
   https://statisticsglobe.com/r-break-next-function-for-loop-example
 
-  
+#other things to consider later --- shrinking K over time to simulate habitat destruction
+#add in mutation??
+#make sure that migrants are prefered for matechoice - do this by first adding pairs with migrants, then adding in the random other pairs
+    #this will make it so that I am tracking effective migrants rather than actual migrants. 
