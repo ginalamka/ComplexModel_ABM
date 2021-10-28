@@ -4,14 +4,13 @@
 ##{THIS STILL DOES NOT RUN}
 #rethink the steps to make this happen
 
-#seems to be breaking because of returning numboff
-
 Breed = function(pop, pairs, numboff, k){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   pairings = sample(1:nrow(pairs), numboff*2, replace = F)
   parents <- pairs[pairings,]
+  #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
   #generate fecundity for each set of parents
   fecundity = sample(seq(0,2,1),nrow(parents),replace=T)
@@ -20,7 +19,7 @@ Breed = function(pop, pairs, numboff, k){
   parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
   
   nbabes = sum(parents[,3])
-  #consider changing the matrix so that nrow = nbabes, not number of parents
+  #consider changing the matrix so that nrow = nbabes, not number of parents - not sure how to make that function
   
   #currently this works so that each pair only makes 1 baby
   #figure this out so that we have varying fecundity and only some of the offspring survive
@@ -41,7 +40,8 @@ Breed = function(pop, pairs, numboff, k){
   if(nrow(babies) > numboff){
     rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm),] 
-  } else if(numboff > nrow(babies)){
+    #pop = rbind(pop, babies)
+  } else(numboff > nrow(babies)){
     print(paste("need more offspring generated"))
     next
   } else{

@@ -13,8 +13,7 @@ PopSizeNext = function(pop, k, r0){
   #add Density Independent variance in growth
   Nt1 = round(rnorm(1, Ntt, 1), 0)
   Nt1 = as.integer(Nt1)
-  print(paste("Nt1 is", Nt1))
-  print(paste("Nt1 is an", typeof(Nt1)))
+  print(paste("The next generation's population size will be", Nt1))
   
   #determine the number of additional offspring to produce
   numboff = Nt1 - Nt
@@ -23,7 +22,7 @@ PopSizeNext = function(pop, k, r0){
   #turn numboff into an integer
   numboff = as.integer(numboff)
   print(paste("the number of offspring needed is", numboff))
-  print(paste("numboff is an", typeof(numboff)))
+  #print(paste("numboff is an", typeof(numboff)))  #this check was to fix a bug, works now so not needed
   
   return(numboff)
 }
