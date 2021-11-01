@@ -54,19 +54,44 @@ Breed = function(pop, pairs, numboff, k, sz){
   #babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
   #babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   
-  #check out lines 129 from Jannas Repro.R in CaptiveBreedingIBM for generating genotypes
-  #the suggestion is to cbind the genotypes to the babies matrix to better keep track of column numbers
-  
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
     rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm),] 
     bb = nrow(babies)
+    
+    #genotypes
+    #prep parent genotypes
+    f = parents[,1]
+    m = parents[,2]
+    fg = pop[f, -c(8:27)]
+    mg = pop[m, -c(8:27)]
+    
+    babygeno = matrix(nrow=bb, ncol=(nSNP*2))
+    
+    #allele 1 positions
+    pos = seq(1, (nSNP*2), 2)
+    
+    #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
+    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    fallele2 <- fg[fallele]
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    
+    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    mallele2 <- mg[mallele]
+    mallele3 <- matrix(mallele2, rnow=bb, ncol = nSNP, byrow = TRUE)
+    
+    babygeno[, pos]       <- fallele3
+    babygeno[, pos + 1]   <- mallele3
+    
     pop = rbind(pop, babies)
   }else if(numboff > nrow(babies)){
     print(paste("need more offspring generated"))
     next
   }
+  
+  #check out lines 129 from Jannas Repro.R in CaptiveBreedingIBM for generating genotypes
+  #the suggestion is to cbind the genotypes to the babies matrix to better keep track of column numbers
   
   #think about adding in a "generation born" and "generation died" columns in pop
   #consider adding a column for calculating parents' lifetime reproductive success -- ORRR print this as a separate table!

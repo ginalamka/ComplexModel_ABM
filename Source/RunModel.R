@@ -27,17 +27,49 @@ RunModel = function(parameters, r, directory){
     pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     sz = k #to keep track of the number of indv for ID'ing later
     
+    #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
+    popgen = matrix(nrow=k, ncol=nSNP*2)
+    columns = seq(1,(nSNP*2),2)
+    for(l in 1:nSNP){
+      p = sample(seq(from=0, to=1, by=0.01), 1)
+      #create pool of genotypes in HWE
+      pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
+               rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
+               rep(2, k-(round(k*p*p, 0)+(round(k*(1-p)*(1-p), 0))))         #heterozygous
+               )
+      gtype = sample(pool, k, replace = FALSE)
+      for(kk in 1:k){
+        if(gtype[kk]==0){                 #homo (0,0)
+          popgen[kk,columns[l]]   = 0
+          popgen[kk,columns[l]+1] = 0
+          next
+        }else if(gtype[kk]==1){           #hetero (0,1)
+          popgen[kk,columns[l]]   = 0
+          popgen[kk,columns[l]+1] = 1
+        }else{                            #homo (1,1)
+          popgen[kk,columns[l]]   = 1
+          popgen[kk,columns[l]+1] = 1
+        }
+      }
+      #colnames(popgen) <- c('SNP', l)
+      pool = NULL
+      
+      #add genotypes to pop matrix
+      focalpop <- cbind(pop, popgen)   ##??not sure why, but not binding correctly???
+      pop <- focalpop
+    }
+    
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
-    "
-  f = 0.2 #allele freq, means 20% of the time, allele 0, 80% of the time, allele 1
-  x = sample(c(0,1), 2(nrow(pop)), freq = c(f,1-f))
-  pop[,i] = x[1:nrow(pop)]
-  pop[,i+1] = x[nrow(pop)+1:length(x)]
-  for(i in 1:10){
-    seq(1,nSNP*2,2)
-  }
-  "
+    #f = 0.2 #allele freq, means 20% of the time, allele 0, 80% of the time, allele 1
+    #x = sample(c(0,1), 2(nrow(pop)), freq = c(f,1-f))
+    #pop[,i] = x[1:nrow(pop)]
+    #pop[,i+1] = x[nrow(pop)+1:length(x)]
+    #for(i in 1:10){
+    #  seq(1,nSNP*2,2)
+    #  }
+    
+
     #make sure to add in additional SNPs for Source pop also!!
     
     #options for SNPs = can do 0-2 values with 1 column per SNP OR 2 columns per SNP with 0-1 
@@ -52,6 +84,38 @@ RunModel = function(parameters, r, directory){
     source[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     source[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     source[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
+    
+    #generate source gentoypes
+    sourcegen = matrix(nrow=k, ncol=nSNP*2)
+    columns = seq(1,(nSNP*2),2)
+    for(l in 1:nSNP){
+      p = sample(seq(from=0, to=1, by=0.01), 1)
+      #create pool of genotypes in HWE
+      pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
+               rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
+               rep(2, k-(round(k*p*p, 0)+(round(k*(1-p)*(1-p), 0))))         #heterozygous
+      )
+      gtype = sample(pool, k, replace = FALSE)
+      for(kk in 1:k){
+        if(gtype[kk]==0){                 #homo (0,0)
+          sourcegen[kk,columns[l]]   = 0
+          sourcegen[kk,columns[l]+1] = 0
+          next
+        }else if(gtype[kk]==1){           #hetero (0,1)
+          sourcegen[kk,columns[l]]   = 0
+          sourcegen[kk,columns[l]+1] = 1
+        }else{                            #homo (1,1)
+          sourcegen[kk,columns[l]]   = 1
+          sourcegen[kk,columns[l]+1] = 1
+        }
+      }
+      #colnames(sourcegen) <- c('SNP', l)
+      #pool = NULL
+      
+      #add genotypes to source matrix
+      source1 <- cbind(source, sourcegen)        #also doesnt work????
+      source <- source1
+    }
     
     #create for loop for each time step
     for(y in 1:years){

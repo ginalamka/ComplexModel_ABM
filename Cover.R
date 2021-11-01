@@ -9,7 +9,7 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 #parameters
 k.V           = 1000          #carrying capacity
 allele.V      = c(0,1)        #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
-nSNP.V        = 1000          #number of SNPs simulated
+nSNP.V        = 10          #number of SNPs simulated
 nMicro.V      = 100           #number of microsats simulated
 sex.V         = c(0,1)        #males and females in population, 0 = Female, 1 = Male
 maxage.V      = 3             #maximum age individuals can be; add one at first, so they will die at 4, start at -1
