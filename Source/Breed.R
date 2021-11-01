@@ -60,12 +60,26 @@ Breed = function(pop, pairs, numboff, k, sz){
     babies = babies[-which(babies[,1]%in%rm),] 
     bb = nrow(babies)
     
+    #rename babies so count doesnt get messed up
+    babies[,1] = seq(sz+1, (sz+bb), 1)
+    
     #genotypes
     #prep parent genotypes
-    f = parents[,1]
-    m = parents[,2]
-    fg = pop[f, -c(8:27)]
-    mg = pop[m, -c(8:27)]
+    f = babies[,2]
+    m = babies[,3]
+    
+    fem = pop[-which(pop[,1]%NOTin%f),]
+    mal = pop[-which(pop[,1]%NOTin%m),]
+    
+    fg = fem[, -c(ncol(fem)-(nSNP*2):ncol(fem))]
+    mg = mal[, -c(ncol(mal)-(nSNP*2):ncol(mal))]
+
+    #check 
+    #if(nrow(fg)==nrow(mg)){
+    #  next
+    #}else{
+    #  print(paste("error in parent genotypes"))
+    #}
     
     babygeno = matrix(nrow=bb, ncol=(nSNP*2))
     
@@ -79,10 +93,12 @@ Breed = function(pop, pairs, numboff, k, sz){
     
     mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, rnow=bb, ncol = nSNP, byrow = TRUE)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
+    
+    babies = cbind(babies, babygeno)
     
     pop = rbind(pop, babies)
   }else if(numboff > nrow(babies)){
@@ -116,3 +132,7 @@ Breed = function(pop, pairs, numboff, k, sz){
 #think about variable to calculate the ID names using the nrow for total indv created--
 # # what the above means is that for every time I add indv (init, migrate, breed), keep a running total of all the indv created so no duplicate values
 # # this will be easier than *10 that I have now once I start running over several years
+
+
+#match mom by ID in pop
+#ncol(pop)-(nSNP*2):ncol(pop) #use this to select the genotypes

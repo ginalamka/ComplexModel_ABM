@@ -55,9 +55,9 @@ RunModel = function(parameters, r, directory){
       pool = NULL
       
       #add genotypes to pop matrix
-      focalpop <- cbind(pop, popgen)   ##??not sure why, but not binding correctly???
-      pop <- focalpop
     }
+    focalpop <- cbind(pop, popgen)   ##??not sure why, but not binding correctly???
+    pop <- focalpop
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -113,9 +113,10 @@ RunModel = function(parameters, r, directory){
       #pool = NULL
       
       #add genotypes to source matrix
-      source1 <- cbind(source, sourcegen)        #also doesnt work????
-      source <- source1
+      
     }
+    source1 <- cbind(source, sourcegen)        #also doesnt work????
+    source <- source1
     
     #create for loop for each time step
     for(y in 1:years){
