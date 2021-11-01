@@ -4,7 +4,7 @@
 ##{THIS STILL DOES NOT RUN}
 #rethink the steps to make this happen
 
-Breed = function(pop, pairs, numboff, k, sz){
+Breed = function(pop, pairs, numboff, k, sz, nSNP){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)

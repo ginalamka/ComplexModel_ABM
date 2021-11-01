@@ -59,6 +59,12 @@ RunModel = function(parameters, r, directory){
     focalpop <- cbind(pop, popgen)   ##??not sure why, but not binding correctly???
     pop <- focalpop
     
+    #write starting pop to table
+    write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep="/t", col.names=F, row.names=F)
+    
+    #clean up
+    remove(popgen, focalpop)
+    
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
     #f = 0.2 #allele freq, means 20% of the time, allele 0, 80% of the time, allele 1
@@ -118,6 +124,12 @@ RunModel = function(parameters, r, directory){
     source1 <- cbind(source, sourcegen)        #also doesnt work????
     source <- source1
     
+    #write starting source to table
+    write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep="/t", col.names=F, row.names=F)
+    
+    #clean up
+    remove(sourcegen, source1)
+    
     #create for loop for each time step
     for(y in 1:years){
       pop = AgeUp(pop)                        #age pop + 1 year
@@ -137,7 +149,7 @@ RunModel = function(parameters, r, directory){
       }
       pairs = MateChoice(pop)   
       numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      ttt = Breed(pop, pairs, numboff, k, sz) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz, nSNP) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
@@ -162,13 +174,12 @@ RunModel = function(parameters, r, directory){
 #break will completely stop the loop AKA the next replicate
 
 #notes from class 10/28
+#do I need generation born/died or should I just continue removing those that died? what would be the benefit of having this? longevity == fitness??
 #pop[,9] = y                 #birth year
 #~function to kill indv~
 #~tokill = indv xyz~
 #pop[tokill,10] = y          #gives the year they were killed
 #pop[tokill,11] = 0          #this is for dead/alive = 0 is dead, 1 is alive
-
-
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
