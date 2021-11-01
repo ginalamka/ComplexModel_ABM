@@ -21,4 +21,4 @@ source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 
-#source(paste(getwd(), "/Analyze.R", sep = ''))
+source(paste(getwd(), "/Analyze.R", sep = ''))
