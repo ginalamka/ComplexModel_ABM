@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, POP){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   allele        = parameters$allele[r]
@@ -18,16 +18,16 @@ Analyze = function(parameters, r, POP){  #should this be parameters or replicate
   r0            = parameters$r0[r]
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
-  write.table(POP, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep="/t", col.names=F, row.names=F) #since in RunModel, might not need to feed it POP
+  write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep="/t", col.names=F, row.names=F) #since in RunModel, might not need to feed it pop
   
   #check for indv ID numbers
-  if(!length(POP[,1])==length(unique(POP[,1]))){ #notice that ! means NOT
+  if(!length(pop[,1])==length(unique(pop[,1]))){ #notice that ! means NOT
     print(r)
     print("NON UNIQUE ID NUMBERS")
     return()
   }
   #if no indv, exit
-  if(length(POP[,1])==0){return()}
+  if(length(pop[,1])==0){return()}
   
   #calculate summary stats for final pop
   FIN = matrix(nrow=years, ncol=5 + (maxage+1))
@@ -39,7 +39,7 @@ Analyze = function(parameters, r, POP){  #should this be parameters or replicate
   FIN[,1] = c(1:nrow(FIN))
   
   for(g in 1:nrow(FIN)){
-    genotype = POP[, -c(ncol(POP)-(nSNP*2):ncol(POP))]
+    genotype = pop[, -c(ncol(pop)-(nSNP*2):ncol(pop))]
     SNPs = rep(c(1,2),ncol(genotype)/2)
     
     #He and Ho - neutral (?)
