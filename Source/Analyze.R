@@ -68,7 +68,7 @@ Analyze = function(parameters, r, POP){  #should this be parameters or replicate
   
   #figure out how to find RRS, I think we need fecundity/indv LRS first
   
-  ages = 
+  #ages = (?)
   
   
 }
