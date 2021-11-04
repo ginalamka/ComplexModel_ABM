@@ -1,7 +1,7 @@
 #RunModel.R for complex migration model for ABM class fall 2021
 
-RunModel = function(parameters, r, directory){
-  for(rep in 1:replicates){
+RunModel = function(parameters, r, directory, replicates){
+  for(rr in 1:replicates){
     k             = parameters$k[r]
     allele        = parameters$allele[r]
     nSNP          = parameters$nSNP[r]
@@ -60,7 +60,7 @@ RunModel = function(parameters, r, directory){
     pop <- focalpop
     
     #write starting pop to table
-    write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep="/t", col.names=F, row.names=F)
+    write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
     remove(popgen, focalpop)
@@ -125,7 +125,7 @@ RunModel = function(parameters, r, directory){
     source <- source1
     
     #write starting source to table
-    write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep="/t", col.names=F, row.names=F)
+    write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
     remove(sourcegen, source1, pool)
@@ -135,8 +135,8 @@ RunModel = function(parameters, r, directory){
       pop = AgeUp(pop)                        #age pop + 1 year
       pop = DeathByAge(pop, maxage)           #age-dependent mortality
       if(nrow(pop) <= 10){
-        print(paste("Population crash, less than 10 indv"))
-        next
+        print(paste("Population crash @ RandomDeath, less than 10 indv"))
+        break
       }
       pop = RandomDeath(pop)                  #random mortality
       tt = Migrate(pop, source)             #subpop migration
@@ -145,10 +145,15 @@ RunModel = function(parameters, r, directory){
       sz = sz + mig
       source = tt[[3]]
       if(nrow(pop) <= 4){
-        next
+        print(paste("Population crash @ MateChoice, less than 4 indv"))
+        break
       }
       pairs = MateChoice(pop)   
       numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
+      if(numboff == 0){
+        print(paste("No new babies, skip breed"))
+        next
+      }
       ttt = Breed(pop, pairs, numboff, k, sz, nSNP) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
@@ -156,9 +161,9 @@ RunModel = function(parameters, r, directory){
       
       return (pop)
     }
-    write.table(pop, paste(directory, "/Output/testRunModel.txt", sep=""), sep="/t", col.names=F, row.names=F)
+    #write.table(pop, paste(directory, "/Output/testRunModel.txt", sep=""), sep=",", col.names=T, row.names=F)
   
-  }  
+  }  #rep
 }
 
 #OLD NOTES
@@ -183,3 +188,10 @@ RunModel = function(parameters, r, directory){
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
+
+#Places my code is breaking
+  #within breed (line 64 AND fem, mal)
+  #within RAndom Death
+#step through several times until pop crashes and figure out each place the error happens. then debug!
+#after that, can run multiple years/replicates, but since it is breaking, the next run doesnt go
+#ways to potentially fix this, instead of removing dead, put in a column for dead v alive?
