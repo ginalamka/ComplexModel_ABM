@@ -28,8 +28,8 @@ colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broo
 #clean up, remember that these are still available in parameters
 remove(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V)
 
-replicates    = 1
-r             = 1
+replicates    = 10
+r             = 10
 
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){

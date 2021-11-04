@@ -128,7 +128,7 @@ RunModel = function(parameters, r, directory){
     write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep="/t", col.names=F, row.names=F)
     
     #clean up
-    remove(sourcegen, source1)
+    remove(sourcegen, source1, pool)
     
     #create for loop for each time step
     for(y in 1:years){
