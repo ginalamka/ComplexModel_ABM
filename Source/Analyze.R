@@ -18,7 +18,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   r0            = parameters$r0[r]
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
-  write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep="/t", col.names=F, row.names=F) #since in RunModel, might not need to feed it pop
+  write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
   
   #check for indv ID numbers
   if(!length(pop[,1])==length(unique(pop[,1]))){ #notice that ! means NOT
