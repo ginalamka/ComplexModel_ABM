@@ -61,7 +61,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     bb = nrow(babies)
     
     #rename babies so count doesnt get messed up
-    babies[,1] = seq(sz+1, (sz+bb), 1)
+    babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
     
     #genotypes
     #prep parent genotypes
@@ -70,6 +70,15 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     
     fem = pop[-which(pop[,1]%NOTin%f),]
     mal = pop[-which(pop[,1]%NOTin%m),]
+    
+    if(nrow(mal) == 0){
+      print(paste("can't generate father genotypes"))
+      break
+    }
+    if(nrow(fem)==0){
+      print(paste("can't generate mother genotypes"))
+      break
+    }
     
     fg = fem[, -c(ncol(fem)-(nSNP*2):ncol(fem))]
     mg = mal[, -c(ncol(mal)-(nSNP*2):ncol(mal))]
@@ -136,3 +145,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
 
 #match mom by ID in pop
 #ncol(pop)-(nSNP*2):ncol(pop) #use this to select the genotypes
+
+
+###notes from 11/4/2021
+#make sure to put in a check for small popsizes
