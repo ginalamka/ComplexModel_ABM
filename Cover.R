@@ -29,11 +29,23 @@ colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broo
 remove(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V)
 
 replicates    = 10
-r             = 10
+r             = 1
 
 #run model iterating over parameters 
 for(r in 1:nrow(parameters)){
-  POP = RunModel(parameters, r, directory)
-  write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep="/t", col.names=F, row.names=F)
+  POP = RunModel(parameters, r, directory, replicates)
+  write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
+  #write.table(POP, paste(directory, "/Output/CoverPop.txt", sep=""), sep="\t", col.names=TRUE, row.names=F)  #use this for a .txt file, good for in a text editor. ; "/t" for macs
 }
 #notice as written, goes through 12 times because there are 12 sets of parameters
+
+#Questions for class today 11/4/2021
+#how do I get multiple replicates and years to run??
+#How do I get my writeout table (csv) to be in each column?
+
+#consider adding in rbinom() ?? not sure why it would be relevant yet
+
+
+#Use Janna's papers to look at inbreeding - heck other mmodedls to see how to put an inbreeding cost on indvs
+
+#"google coding standards" for ways to clean up the script
