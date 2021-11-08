@@ -58,6 +58,10 @@ Notes from weekly meeting 11/1/2021
 #how to analyze these data
   He, Ho, mean lifetime reproductive success (fitness), number of migrants?, population size over time
   Note: while keeping the starting source and focal pop, I can calc the difference in hetero, etc before and after the simulation!
+  #make sure to include paramtere values: rr (replicate), year, k, [anything that will be variable across runs], THEN the output data
   
 NOTE: when finished with the code, use this R Style Guide to clean it up
   https://web.stanford.edu/class/cs109l/unrestricted/resources/google-style.html
+  
+#before adding in a bunch of parameter combos, do one and look at file size because YOU COULD KILL ALL STORAGE ON COMPUTER
+#therefore dont make it too crazy at once, just get something to work for class. 
