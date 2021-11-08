@@ -47,5 +47,8 @@ for(r in 1:nrow(parameters)){
 
 
 #Use Janna's papers to look at inbreeding - heck other mmodedls to see how to put an inbreeding cost on indvs
-
-#"google coding standards" for ways to clean up the script
+  #things that her paper has: 
+    #survival to maturity             .981 and .988
+    #lifespan (years)                1.971 and 1.986
+    #juvenile offspring              3.149 and 3.171
+    #lifetime reproductive success   4.662 nd 4.707
