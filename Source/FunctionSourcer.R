@@ -13,8 +13,7 @@ setwd(paste(directory,"/source/", sep = '')) #set temp working directory
 #source functions
 source(paste(getwd(), "/RunModel.R", sep = ''))
 source(paste(getwd(), "/AgeUp.R", sep = ''))
-source(paste(getwd(), "/DeathByAge.R", sep = ''))
-source(paste(getwd(), "/RandomDeath.R", sep = ''))
+source(paste(getwd(), "/Death.R", sep = ''))
 source(paste(getwd(), "/SourcePop.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
@@ -22,3 +21,7 @@ source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 
 source(paste(getwd(), "/Analyze.R", sep = ''))
+
+####old, removed functions
+#source(paste(getwd(), "/DeathByAge.R", sep = ''))
+#source(paste(getwd(), "/RandomDeath.R", sep = ''))

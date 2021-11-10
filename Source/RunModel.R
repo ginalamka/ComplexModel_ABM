@@ -135,22 +135,23 @@ RunModel = function(parameters, r, directory, replicates){
     #create for loop for each time step
     for(y in 1:years){
       pop = AgeUp(pop)                        #age pop + 1 year
-      pop = DeathByAge(pop, maxage)           #age-dependent mortality
+      pop = Death(pop, maxage)                #kill indv
+      #pop = DeathByAge(pop, maxage)           #age-dependent mortality
       if(nrow(pop) <= 10){
-        print(paste("Population crash @ RandomDeath, less than 10 indv"))
-        break
+        print(paste("Population low, less than 10 indv"))
+        #break
       }
-      pop = RandomDeath(pop)                  #random mortality
+      #pop = RandomDeath(pop)                  #random mortality
       tt = Migrate(pop, source)             #subpop migration
       pop = tt[[1]]
       mig = tt[[2]]
-      sz = sz + mig
+      sz = sz + mig #may need to edit since dead are not being removed from pop
       source = tt[[3]]
       if(nrow(pop) <= 4){
         print(paste("Population crash @ MateChoice, less than 4 indv"))
         break
       }
-      pairs = MateChoice(pop)   
+      pairs = MateChoice(pop, sex, maturity)   
       numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
       if(numboff == 0){
         print(paste("No new babies, skip breed"))

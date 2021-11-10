@@ -4,15 +4,35 @@
 
 #this will impose an increase in probability of death wiht increasing age
 Death = function(pop, maxage){
-  if(pop[,4] >= maxage){
-    pop[,8] = 0
+  dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+  pop = pop[pop[,8] == 1, , drop=FALSE]                  #isolate adults
+  
+  mort.rate = pop[pop[,4]]/maxage                        #calculate mortality rate (age/maxage)
+  
+  #find old individuals and mark as dead
+  oldies = NULL
+  oldies = try(pop[pop[,4]>=maxage, 1])
+
+  if(nrow(pop)>1){
+    pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
+    #pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
+    
+    #kill some more individuals
+    nkill = round((nrow(pop) * mort.rate), 0) - length(oldies)
+    if(any(nkill>0)){
+      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE)
+      pop[kill,8]  = 0
+      #pop[kill,10] = g   #this is if I have a generation died column
+    }
   }else{
-    print(paste("no death"))
+    print(paste("no death cuz all dead"))
   }
-  dead = pop[pop[,8] == 0, , drop=FALSE]
+  #combine pop and previously removed dead indv
+  pop = rbind(pop, dead)
+  
+  return(pop)
 }
-
-
+  
 #notes 11/8
 #problem with pop crashing after 6 years is because I am killing too much
 #therefore, instead of random death, put in a age-related increase of chances of death
