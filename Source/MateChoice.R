@@ -1,7 +1,11 @@
 #Mate
 #used for complex model for ABM class
 
-MateChoice = function(pop, sex){
+MateChoice = function(pop, sex, maturity){
+  immature  = pop[pop[,4] < maturity, ,drop=FALSE]          #remove immature indvs
+  pop =       pop[pop[,4] >= maturity, ,drop=FALSE]         #pop without immature
+  #since not returning pop, don't need to re-add pop and immature at end of function
+  
   #find which sex has more, male or female.
   ck = mean(pop[,'sex']) #<0.5 female, >.5 male
   print(paste("the sex ratio is", ck))
