@@ -19,7 +19,7 @@ maturity.V    = 1                   #age indv becomes reproductively mature
 years.V       = 50  #scaleup               #total run time; 200 year run following 50 year stabilization period
 reps.V        = 100                 #number of replications of the simulation
 r0.V          = 0.1                 #per capita growth rate
-ratemort.V    = 0.1666667 #(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM
+ratemort.V    = 0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 #nSNP.mig     =10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 
 #generate list of parameter combinations
