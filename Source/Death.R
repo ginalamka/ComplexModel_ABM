@@ -7,7 +7,7 @@ Death = function(pop, maxage, ratemort){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
   pop = pop[pop[,8] == 1, , drop=FALSE]                  #isolate alive
   
-  mort.rate = pop[,4]/maxage                        #calculate mortality rate (age/maxage)
+  mort.rate = (maxage - pop[,4])*.25  #this makes chance of death at age 0, 0==== ##pop[,4]/maxage                        #calculate mortality rate (age/maxage)
   
   #find old individuals and mark as dead
   oldies = NULL
@@ -17,8 +17,9 @@ Death = function(pop, maxage, ratemort){
     pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
     #pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
     
+    pop = pop[-which(pop[,8] == 0),]
     #kill some more individuals
-    nkill = round((nrow(pop) * ratemort), 0) - length(oldies)
+    nkill = round((sum(pop[,4]) * ratemort), 0) - length(oldies)
     if(any(nkill>0)){
       kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, mort.rate)
       pop[kill,8]  = 0
@@ -46,3 +47,14 @@ Death = function(pop, maxage, ratemort){
 #make sure that the values spit it out corrrectly, i.e. kills 30% not 70$ based on incorrect putting in probabilities
 
 #for the column alive v dead, make sure that the functions taht need pop get a temp pop for only adults (mate choice, breeding) but hten make sure to add the indv (breed) to the main pop, not temp pop
+
+#fake = matrix(nrow=5, ncol = 5)
+#fake[,1] = c(1:5)
+#fake[,2] = c(-2:2)
+#m = fake[fake[,2] <=0, , drop=FALSE]
+#m
+#if(fake[,1]%in%m){
+#  fake[,3] = 1
+#}else{
+#  fake[,3] = 0
+#}
