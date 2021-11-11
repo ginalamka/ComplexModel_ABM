@@ -51,8 +51,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   babies[,3] = parents[,2]
   babies[,4] = 0    #first of the year - consider if these should be 0 or -1
   babies[,5] = sample(c(0,1),nrow(babies),replace=T)    #each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
-  #babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
-  #babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
+  babies[,6] = 0                #####sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
+  babies[,7] =                 #####sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   babies[,8] = 1      #make every baby alive
   
   #create a check to make sure the correct number of babies are being added to pop
@@ -111,7 +111,60 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     babies = cbind(babies, babygeno)
     
     pop = rbind(pop, babies)
-  }else if(numboff > nrow(babies)){
+  }else if(numboff == nrow(babies)){
+    bb = nrow(babies)
+    
+    #rename babies so count doesnt get messed up
+    babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
+    
+    #genotypes
+    #prep parent genotypes
+    f = babies[,2]
+    m = babies[,3]
+    
+    fem = pop[-which(pop[,1]%NOTin%f),]
+    mal = pop[-which(pop[,1]%NOTin%m),]
+    
+    if(nrow(mal) == 0){
+      print(paste("can't generate father genotypes"))
+      break
+    }
+    if(nrow(fem)==0){
+      print(paste("can't generate mother genotypes"))
+      break
+    }
+    
+    fg = fem[, -c(ncol(fem)-(nSNP*2):ncol(fem))]
+    mg = mal[, -c(ncol(mal)-(nSNP*2):ncol(mal))]
+    
+    #check 
+    #if(nrow(fg)==nrow(mg)){
+    #  next
+    #}else{
+    #  print(paste("error in parent genotypes"))
+    #}
+    
+    babygeno = matrix(nrow=bb, ncol=(nSNP*2))
+    
+    #allele 1 positions
+    pos = seq(1, (nSNP*2), 2)
+    
+    #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
+    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    fallele2 <- fg[fallele]
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    
+    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    mallele2 <- mg[mallele]
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    
+    babygeno[, pos]       <- fallele3
+    babygeno[, pos + 1]   <- mallele3
+    
+    babies = cbind(babies, babygeno)
+    
+    pop = rbind(pop, babies)
+  }else{
     print(paste("need more offspring generated"))
     next
   }
