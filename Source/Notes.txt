@@ -71,3 +71,5 @@ I am tracking alleles specifically from migrants following reproduction. if an a
 if they are not migrants, the allele is 0. when creating babies, I would like to do some sort of conditional so that 
 if a parent or ancestor is a migrant (a negative ID number), then the allele should be a 1, if not, 0. 
 tried if, ifelse, apply
+
+instead of the above idea, add 1000 additional migratory SNPs so that migrants all =1 and nonmig=0 and then go through mendelian genetics from then on. 
