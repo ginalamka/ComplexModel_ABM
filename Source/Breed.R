@@ -8,7 +8,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
-  pairings = sample(1:nrow(pairs), numboff*2, replace = F)
+  pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
   parents <- pairs[pairings,]
   #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
@@ -44,8 +44,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
-  babies = matrix(nrow=nrow(parents), ncol=7) #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2")
+  babies = matrix(nrow=nrow(parents), ncol=8) #make new matrix for offspring     
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive")
   babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
@@ -53,6 +53,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   babies[,5] = sample(c(0,1),nrow(babies),replace=T)    #each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
   #babies[,6] = sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
   #babies[,7] = sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
+  babies[,8] = 1      #make every baby alive
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
