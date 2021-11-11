@@ -2,6 +2,9 @@
 #used for complex model for ABM class
 
 MateChoice = function(pop, sex, maturity){
+  dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
+  pop = pop[-which(pop[,1]%in%dead),]
+  
   immature  = pop[pop[,4] < maturity, ,drop=FALSE]          #remove immature indvs
   pop =       pop[pop[,4] >= maturity, ,drop=FALSE]         #pop without immature
   #since not returning pop, don't need to re-add pop and immature at end of function
@@ -29,12 +32,14 @@ MateChoice = function(pop, sex, maturity){
     #pair individuals
     pairs <- cbind(pop[pop[,'sex'] == fem, 'id'], mates)
     
-    #randomize the pairs so all indv have chance of mating
-    rand = sample(1:nrow(pairs),nrow(pairs))
-    pairs <- pairs[rand, ]
-    
-    #pairs <- rand
-    colnames(pairs) <- c('mom','dad')
+    if(nrow(pairs) >= 3){
+      #randomize the pairs so all indv have chance of mating
+      rand = sample(1:nrow(pairs),nrow(pairs))
+      pairs <- pairs[rand, ]
+      
+      #pairs <- rand
+      colnames(pairs) <- c('mom','dad')
+    }
     return(pairs)
   }
 }
