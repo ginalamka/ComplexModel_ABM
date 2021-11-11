@@ -13,6 +13,7 @@ RunModel = function(parameters, r, directory, replicates){
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
+    ratemort      = parameters$ratemort[r]
     
     #initialize population
     pop = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -135,7 +136,7 @@ RunModel = function(parameters, r, directory, replicates){
     #create for loop for each time step
     for(y in 1:years){
       pop = AgeUp(pop)                        #age pop + 1 year
-      pop = Death(pop, maxage)                #kill indv
+      pop = Death(pop, maxage, ratemort)                #kill indv
       #pop = DeathByAge(pop, maxage)           #age-dependent mortality
       if(nrow(pop) <= 10){
         print(paste("Population low, less than 10 indv"))
@@ -152,8 +153,8 @@ RunModel = function(parameters, r, directory, replicates){
         break
       }
       pairs = MateChoice(pop, sex, maturity)   
-      numboff = PopSizeNext(pop, k, r0) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      if(numboff == 0){
+      numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
+      if(numboff <= 0){
         print(paste("No new babies, skip breed"))
         next
       }
