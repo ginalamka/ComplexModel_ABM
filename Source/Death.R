@@ -4,35 +4,46 @@
 
 #this will impose an increase in probability of death wiht increasing age
 Death = function(pop, maxage, ratemort){
-  dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+  dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
+  #alreadydead = pop[-which(pop[,1]%NOTin%dead),]
+  #pop = pop[-which(pop[,1]%in%dead),]
+  
   pop = pop[pop[,8] == 1, , drop=FALSE]                  #isolate alive
   
-  mort.rate = (maxage - pop[,4])*.25  #this makes chance of death at age 0, 0==== ##pop[,4]/maxage                        #calculate mortality rate (age/maxage)
+  #mort.rate = (maxage - pop[,4])*.25  #this makes chance of death at age 0, 0==== ##pop[,4]/maxage                        #calculate mortality rate (age/maxage)
   
   #find old individuals and mark as dead
   oldies = NULL
-  oldies = try(pop[pop[,4]>=maxage, 1])
+  oldies = (pop[pop[,4]>=maxage, , drop=FALSE])
+  
+  print(paste("there are", nrow(oldies), "oldies killed"))
 
   if(nrow(pop)>1){
     pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
     #pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
+    oldies = pop[(pop[,8] == 0),]
+    pop = pop[(pop[,8] == 1),]
     
-    pop = pop[-which(pop[,8] == 0),]
     #kill some more individuals
-    nkill = round((sum(pop[,4]) * ratemort), 0) - length(oldies)
-    if(any(nkill>0)){
-      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, mort.rate)
+    nkill = round((nrow(pop) * ratemort), 0) - nrow(oldies)
+    if((nkill>0)){
+      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE)
       pop[kill,8]  = 0
       #pop[kill,10] = g   #this is if I have a generation died column
+    }else{
+      print(paste("enough dead from age"))
     }
-  }else{
-    print(paste("no death cuz all dead"))
   }
+  #combine pop and previously removed dead indv
+  pop = rbind(pop, oldies)
+  
+  #if(nrow(alreadydead) >= 1){
+    #pop = rbind(pop,alreadydead)
+  #}
+  
   nowalive = nrow(pop) - sum(pop[,8])
   print(paste("killed", nowalive, "individuals"))
   
-  #combine pop and previously removed dead indv
-  pop = rbind(pop, dead)
   
   return(pop)
 }
@@ -58,3 +69,7 @@ Death = function(pop, maxage, ratemort){
 #}else{
 #  fake[,3] = 0
 #}
+
+
+##DOUBLE CHECK THAT NOT LOSING INDVS
+#RARELY, but still a thing, a few individuals die that shouldnt (i.e. they are not at max age and are killed with oldies but the number to kill is smaller than oldies, so that shouldnt happen). keep and eye on this and figure out why this occurs
