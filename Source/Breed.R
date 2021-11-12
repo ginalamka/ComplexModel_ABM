@@ -59,7 +59,21 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   if(nrow(babies) > numboff){
     rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm),] 
-    bb = nrow(babies)
+    
+    if(is.null(nrow(babies))==TRUE){
+      bb = 1
+      print(paste("only one new baby"))
+      
+      #singlebabe = NULL
+      #singlebabe = matrix(1:8,nrow = 1)
+      #bby = rbind(babies,singlebabe)
+      
+      #NEED TO FIGURE OUT SOLUTION FOR WHEN THERE IS ONLY ONE BABY 
+      ##ERROR WILL CONTINUE ON LINE 79 UNTIL RESOLVED
+      
+    }else{
+      bb = nrow(babies)
+    }
     
     #rename babies so count doesnt get messed up
     babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
