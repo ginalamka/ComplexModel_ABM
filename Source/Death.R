@@ -30,6 +30,10 @@ Death = function(pop, maxage, ratemort){
       kill  = sample(1:length(pop[,1]), nkill, replace=FALSE)
       pop[kill,8]  = 0
       #pop[kill,10] = g   #this is if I have a generation died column
+      
+      totalkilled = nkill + nrow(oldies)
+      print(paste("killed", totalkilled, "individuals"))
+      
     }else{
       print(paste("enough dead from age"))
     }
@@ -40,10 +44,6 @@ Death = function(pop, maxage, ratemort){
   #if(nrow(alreadydead) >= 1){
     #pop = rbind(pop,alreadydead)
   #}
-  
-  nowalive = nrow(pop) - sum(pop[,8])
-  print(paste("killed", nowalive, "individuals"))
-  
   
   return(pop)
 }
