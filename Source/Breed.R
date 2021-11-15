@@ -8,12 +8,17 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
-  pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
+  if(nrow(pairs)>= numboff*2){
+    pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
+  }else{
+    pairings = sample(1:nrow(pairs), numboff, replace = T,) ### DOUBLE CHECK THAT replace=T does not fuck this up, error tends to occurr when numboff = 2
+  }
+  
   parents <- pairs[pairings,]
   #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
   #generate fecundity for each set of parents
-  fecundity = sample(seq(1,5,1),nrow(parents),replace=T) #change the number of offspring to biologically relevant number later
+  fecundity = sample(seq(1,5,1),nrow(parents),replace=T,) #change the number of offspring to biologically relevant number later
   parents <- cbind(parents, fecundity)
   
   #parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
