@@ -16,8 +16,8 @@ maxage.V      = 3                   #maximum age individuals can be; add one at 
 broodsize.V   = c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 sexratio.V    = 0.5                 #equal ratio of females:males; consider a more real life value here, taken from pedigree data with Poisson dist
 maturity.V    = 1                   #age indv becomes reproductively mature
-years.V       = 50  #scaleup               #total run time; 200 year run following 50 year stabilization period
-reps.V        = 100                 #number of replications of the simulation
+years.V       = 100  #scaleup               #total run time; 200 year run following 50 year stabilization period
+reps.V        = 5 #scaleup                 #number of replications of the simulation
 r0.V          = 0.1                 #per capita growth rate
 ratemort.V    = 1/(maxage.V+5) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 #nSNP.mig     =10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
@@ -29,15 +29,16 @@ colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broo
 #clean up, remember that these are still available in parameters
 remove(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V, ratemort.V)
 
-replicates    = 10
+replicates    = 3 #10
 r             = 1
 
 #run model iterating over parameters 
-#for(r in 1:nrow(parameters)){
-  #POP = RunModel(parameters, r, directory, replicates)
-  #write.table(POP, paste(directory, "/Output/CoverPop.csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
+for(r in 1:nrow(parameters)){
+  RunModel(parameters, r, directory, replicates)
+  ####REMOVED## POP = RunModel(parameters, r, directory, replicates)
+  ####REMOVED## write.table(POP, paste(directory, "/Output/CoverPop", r, ".csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
   #####REMOVED##write.table(POP, paste(directory, "/Output/CoverPop.txt", sep=""), sep="\t", col.names=TRUE, row.names=F)  #use this for a .txt file, good for in a text editor. ; "/t" for macs
-#}
+}
 #notice as written, goes through 12 times because there are 12 sets of parameters
 
 #Questions for class today 11/4/2021
