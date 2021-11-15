@@ -14,10 +14,10 @@ MateChoice = function(pop, sex, maturity){
   print(paste("the sex ratio is", ck))
   if(ck == 1){
     print(paste("Only males left"))
-    next
+    break #next   ##ERROR HERE BECAUSE BREAK/NEXT ARENT IN A LOOP (if is not a loop)
   }else if(ck == 0){
     print(paste("Only females left"))
-    next
+    break #next
   }else{
     #REMOVED###turn "sex" into the value of sex with the fewest indv, 0=female, 1=male
     #REMOVED###sex <- c(0,1)[which.min(tabulate(match(pop[,'sex'], c(0,1))))]
