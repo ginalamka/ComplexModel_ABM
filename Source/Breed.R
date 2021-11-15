@@ -58,7 +58,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
     rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
-    babies = babies[-which(babies[,1]%in%rm),] 
+    babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
     
     if(is.null(nrow(babies))==TRUE){
       bb = 1
@@ -76,6 +76,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     }
     
     #rename babies so count doesnt get messed up
+    babies =  as.matrix(babies)       #t(as.matrix(babies))
     babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
     
     #genotypes
@@ -83,8 +84,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     f = babies[,2]
     m = babies[,3]
     
-    fem = pop[-which(pop[,1]%NOTin%f),]
-    mal = pop[-which(pop[,1]%NOTin%m),]
+    fem = pop[-which(pop[,1]%NOTin%f), , drop = FALSE]
+    mal = pop[-which(pop[,1]%NOTin%m), , drop = FALSE]
     
     if(nrow(mal) == 0){
       print(paste("can't generate father genotypes"))
@@ -136,8 +137,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     f = babies[,2]
     m = babies[,3]
     
-    fem = pop[-which(pop[,1]%NOTin%f),]
-    mal = pop[-which(pop[,1]%NOTin%m),]
+    fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
+    mal = pop[-which(pop[,1]%NOTin%m), ,drop=FALSE]
     
     if(nrow(mal) == 0){
       print(paste("can't generate father genotypes"))

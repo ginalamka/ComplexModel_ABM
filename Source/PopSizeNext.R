@@ -4,7 +4,7 @@
 
 PopSizeNext = function(pop, k, r0, maturity){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
-  alive = pop[-which(pop[,1]%in%dead),]
+  alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
   #since only returning numboff, dont need to rbind dead and alive into pop
   #pop = pop[pop[,4] >= maturity, , drop=FALSE]          #isolate adults -- if only want effective pop size to count here
   #if only using adults, remove immature

@@ -21,8 +21,8 @@ Death = function(pop, maxage, ratemort){
   if(nrow(pop)>1){
     pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
     #pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
-    oldies = pop[(pop[,8] == 0),]
-    pop = pop[(pop[,8] == 1),]
+    oldies = pop[(pop[,8] == 0), , drop = FALSE]
+    pop = pop[(pop[,8] == 1), , drop = FALSE]
     
     #kill some more individuals
     nkill = round((nrow(pop) * ratemort), 0) - nrow(oldies)
@@ -35,7 +35,7 @@ Death = function(pop, maxage, ratemort){
     }
   }
   #combine pop and previously removed dead indv
-  pop = rbind(pop, oldies)
+  pop = rbind(pop, oldies, dead)
   
   #if(nrow(alreadydead) >= 1){
     #pop = rbind(pop,alreadydead)
