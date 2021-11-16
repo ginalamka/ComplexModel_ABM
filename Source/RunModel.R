@@ -152,7 +152,11 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("Population crash @ MateChoice, less than 4 indv"))
         break
       }
-      pairs = MateChoice(pop, sex, maturity)   
+      pairs = MateChoice(pop, sex, maturity)  
+      if(is.null(pairs)==TRUE){
+        print(paste("skipping pop size next, breed due to no parents"))
+        next  #consider whether this should be next or break
+      }
       numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
       if(numboff <= 0){
         print(paste("No new babies, skip breed"))
