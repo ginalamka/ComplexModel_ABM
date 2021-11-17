@@ -140,7 +140,7 @@ RunModel = function(parameters, r, directory, replicates){
       #pop = DeathByAge(pop, maxage)           #age-dependent mortality
       if(nrow(pop) <= 10){
         print(paste("Population low, less than 10 indv"))
-        #break
+        break
       }
       #pop = RandomDeath(pop)                  #random mortality
       tt = Migrate(pop, source)             #subpop migration
@@ -155,12 +155,12 @@ RunModel = function(parameters, r, directory, replicates){
       pairs = MateChoice(pop, sex, maturity)  
       if(is.null(pairs)==TRUE){
         print(paste("skipping pop size next, breed due to no parents"))
-        next  #consider whether this should be next or break
+        break  #consider whether this should be next or break
       }
       numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      if(numboff <= 0){
+      if(numboff <= 1){
         print(paste("No new babies, skip breed"))
-        next
+        break
       }
       ttt = Breed(pop, pairs, numboff, k, sz, nSNP) #still needs work 
       pop = ttt[[1]]
