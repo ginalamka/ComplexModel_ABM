@@ -8,8 +8,11 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
-  if(nrow(pairs)>= numboff*2){
-    pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
+  if(is.null(nrow(pairs))==TRUE){
+    print(paste("no pairs of parents available"))
+    break
+  }else if(nrow(pairs)>= numboff*2){
+      pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
   }else{
     pairings = sample(1:nrow(pairs), numboff, replace = T,) ### DOUBLE CHECK THAT replace=T does not fuck this up, error tends to occurr when numboff = 2
   }
@@ -62,7 +65,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
-    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE) #remove babies so that you generate only the number needed
+    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE,) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
     
     if(is.null(nrow(babies))==TRUE){
@@ -117,13 +120,13 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     pos = seq(1, (nSNP*2), 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
     
-    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
@@ -170,13 +173,13 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP){
     pos = seq(1, (nSNP*2), 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
     
-    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE)
+    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
