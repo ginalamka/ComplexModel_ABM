@@ -33,12 +33,42 @@ replicates    = 3 #10
 r             = 1
 
 #run model iterating over parameters 
+theEND = NULL
 for(r in 1:nrow(parameters)){
-  RunModel(parameters, r, directory, replicates)
+  FINAL = RunModel(parameters, r, directory, replicates)
+  
   ####REMOVED## POP = RunModel(parameters, r, directory, replicates)
   ####REMOVED## write.table(POP, paste(directory, "/Output/CoverPop", r, ".csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
   #####REMOVED##write.table(POP, paste(directory, "/Output/CoverPop.txt", sep=""), sep="\t", col.names=TRUE, row.names=F)  #use this for a .txt file, good for in a text editor. ; "/t" for macs
+ 
+  theEND = rbind(theEND, FINAL)
 }
+write.table(theEND, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+#summary table should have nrows = nparameters * nyears * nreplicates
+  #^^ may have some fewer than above because some simulations may break before all years are able to be run
+
+
+##############################################################
+#PLOT IT
+#if(runvars$plotit[r]==1){
+#  Na      = c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
+#  alive   = population[population[,9]==1, ,drop=FALSE]
+#  Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
+#  lines(c(0:g), Na , xlab="generation", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
+#  lines(c(0:g), Nadults , xlab="generation", ylab="population size", cex = 2, lty = 1, col="blue", lwd=5)
+#  remove(alive)
+#}
+
+##############################################################
+
+#WAIT FOR REPRODUCTIVE SUCCESS UNTIL AFTER THE CLASS IS OVER!!!!! 
+  #things that would need to be done:
+    #year born and year died (would essentially need sliding window analysis per year)
+    #total number of times an adult was a parent
+    #amount of babies born to each parent that made it to maturity 
+    #would probably need to hold pop because you need to run the whole simulation before knowing repro success
+    #mayyyy need to be its own function within cover? or within replicates? or maybe just for each 100 years. think about this later
+
 #notice as written, goes through 12 times because there are 12 sets of parameters
 
 #Questions for class today 11/4/2021
@@ -48,7 +78,7 @@ for(r in 1:nrow(parameters)){
 #consider adding in rbinom() ?? not sure why it would be relevant yet
 
 
-#Use Janna's papers to look at inbreeding - heck other mmodedls to see how to put an inbreeding cost on indvs
+#Use Janna's papers to look at inbreeding - heck other models to see how to put an inbreeding cost on indvs
   #things that her paper has: 
     #survival to maturity             .981 and .988
     #lifespan (years)                1.971 and 1.986
