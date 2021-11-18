@@ -1,6 +1,7 @@
 #RunModel.R for complex migration model for ABM class fall 2021
 
 RunModel = function(parameters, r, directory, replicates){
+  FINAL = NULL
   for(rr in 1:replicates){
     k             = parameters$k[r]
     allele        = parameters$allele[r]
@@ -172,13 +173,17 @@ RunModel = function(parameters, r, directory, replicates){
       
       ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
       ###REMOVED### return (pop)
-    
+      
       #analyze each replicate
-      pop = Analyze(parameters, r, pop)
+      out = Analyze(parameters, r, pop)
+      out[1,1] = y
+      FINAL = rbind(FINAL, out[1,])
+      
     }
     
     
   } 
+  return(FINAL)
 }
 
 #OLD NOTES
