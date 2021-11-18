@@ -12,7 +12,7 @@ allele.V      = c(0,1)              #alleles assigned to individuals, equal prob
 nSNP.V        = 10  #scaleup                #number of SNPs simulated
 nMicro.V      = 100                 #number of microsats simulated
 sex.V         = c(0,1)              #males and females in population, 0 = Female, 1 = Male
-maxage.V      = 4     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
+maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 sexratio.V    = 0.5                 #equal ratio of females:males; consider a more real life value here, taken from pedigree data with Poisson dist
 maturity.V    = 1                   #age indv becomes reproductively mature
