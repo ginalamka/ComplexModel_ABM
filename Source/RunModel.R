@@ -172,11 +172,13 @@ RunModel = function(parameters, r, directory, replicates){
       
       ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
       ###REMOVED### return (pop)
-    }
-    #analyze each replicate
-    Analyze(parameters, r, pop)
     
-  }  #rep
+      #analyze each replicate
+      pop = Analyze(parameters, r, pop)
+    }
+    
+    
+  } 
 }
 
 #OLD NOTES
