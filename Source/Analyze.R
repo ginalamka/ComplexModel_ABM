@@ -33,7 +33,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   
   #SHOULD THESE BE ALL INDV OR ONLY ALIVE??
   #separate out alive indv
-  pop = pop[pop[,8]==1, , drop=FALSE]
+  alive = pop[pop[,8]==1, , drop=FALSE]
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
@@ -47,7 +47,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     year = FIN[f,1]
     
     #separate out alive in current year -- Janna did these from year born and year died column
-    data = pop[pop[,8]>0, , drop =FALSE]
+    data = alive[alive[,8]>0, , drop =FALSE]
     
     x=NULL
     x = try(length(data[,1]), silent=TRUE)
@@ -98,4 +98,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
                     "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
   write.table(out, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+  return(pop)
 }
+#problems: not sure how to do RRS
+#only analyzes once and pastes down all columns
