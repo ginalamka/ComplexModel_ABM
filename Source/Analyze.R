@@ -43,11 +43,12 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   #add year to summary matrix
   FIN[,1] = c(1:nrow(FIN))
   
-  for(f in 1:nrow(FIN)){
+  f = 1
+  #for(f in 1:nrow(FIN)){
     year = FIN[f,1]
     
     #separate out alive in current year -- Janna did these from year born and year died column
-    data = alive[alive[,8]>0, , drop =FALSE]
+    data = alive[alive[,8]>0, , drop = FALSE]
     
     x=NULL
     x = try(length(data[,1]), silent=TRUE)
@@ -90,15 +91,19 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     
     #figure out how to find RRS, I think we need fecundity/indv LRS first
     FIN[f,6] = NA #mean(data[REPRODUCTIVE SUCCESS COLUMN])
-  }
+  #}
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS",
                     "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
-  write.table(out, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
-  return(pop)
+  return(out)
 }
 #problems: not sure how to do RRS
 #only analyzes once and pastes down all columns
+
+#additional possible values
+  #number of unique breeders unique(pop[,2])+unique(pop[,3])
+  #mating success = total number of mates with whome an indv produced offspring
+#DO REPRODUCTIVE SUCCESS LATER
