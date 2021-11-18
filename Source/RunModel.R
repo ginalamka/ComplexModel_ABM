@@ -14,6 +14,7 @@ RunModel = function(parameters, r, directory, replicates){
     years         = parameters$years[r]
     r0            = parameters$r0[r]
     ratemort      = parameters$ratemort[r]
+    #nSNP.mig     = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
     
     #initialize population
     pop = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -172,6 +173,8 @@ RunModel = function(parameters, r, directory, replicates){
       ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
       ###REMOVED### return (pop)
     }
+    #analyze each replicate
+    Analyze(parameters, r, pop)
     
   }  #rep
 }

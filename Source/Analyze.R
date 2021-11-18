@@ -16,9 +16,11 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   maturity      = parameters$maturity[r]
   years         = parameters$years[r]
   r0            = parameters$r0[r]
+  ratemort      = parameters$ratemort[r]
+  #nSNP.mig     = parameters$nSNP.mig[r]    
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
-  write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
+  #write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
   
   #check for indv ID numbers
   if(!length(pop[,1])==length(unique(pop[,1]))){ #notice that ! means NOT
@@ -29,26 +31,47 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   #if no indv, exit
   if(length(pop[,1])==0){return()}
   
+  #SHOULD THESE BE ALL INDV OR ONLY ALIVE??
+  #separate out alive indv
+  pop = pop[pop[,8]==1, , drop=FALSE]
+  ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
+  
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years, ncol=5 + (maxage+1))
-  AGES = NULL
-  for(a in 0:maxage){AGES = c(AGES, paste("age", a, sep=""))}
-  colnames(FIN) = c("year", "popsize", "He", "Ho", "meanRRS", AGES)
+  FIN = matrix(nrow=years, ncol=6)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS")
   
   #add year to summary matrix
   FIN[,1] = c(1:nrow(FIN))
   
-  for(g in 1:nrow(FIN)){
-    genotype = pop[, -c(ncol(pop)-(nSNP*2):ncol(pop))]
-    SNPs = rep(c(1,2),ncol(genotype)/2)
+  for(f in 1:nrow(FIN)){
+    year = FIN[f,1]
+    
+    #separate out alive in current year -- Janna did these from year born and year died column
+    data = pop[pop[,8]>0, , drop =FALSE]
+    
+    x=NULL
+    x = try(length(data[,1]), silent=TRUE)
+    if(is.null(x)){break}
+    if(x<1){break}
+    if(!is.numeric(x)){break}
+    
+    #number of indv
+    FIN[f,2] = nrow(data)
+    
+    #proportion migrants in population
+    FIN[f,3] = 1 - sum(data[,2]==-1)/length(data[,1])
     
     #He and Ho - neutral (?)
+    genotype = data[, -c(ncol(data)-(nSNP*2):ncol(data))]
+    SNPs = rep(c(1,2),ncol(genotype)/2)
+    
     HE = NULL
     HO = NULL
     
     loc.pos = seq(1, (nSNP*2), 2)
     for(lp in loc.pos){
-      locus <- genotype[, c(1, lp+1), drop=FALSE]
+      #per locus heterozygostiy
+      locus <- genotype[, c(lp, lp+1), drop=FALSE]
       geno  <- length(locus[,1])
       het   <- length(which(locus[,1] != locus[,2]))
       het.observed <- het/geno
@@ -57,19 +80,22 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
       freqs <- table(locus)
       homozygous = NULL
       for(v in 1:length(freqs)){
-        homozygous = c(homozygous, (freqs[1]/sum(freqs)*freqs[1]/sum(freqs)))
+        homozygous = c(homozygous, (freqs[v]/sum(freqs)*freqs[v]/sum(freqs)))
       }
-      het.expected <- 1- sum(homozygous)
+      het.expected <- 1 - sum(homozygous)
       HE = c(HE, het.expected)
     }
+    FIN[f,4] <- mean(HE)
+    FIN[f,5] <- mean(HO)
+    
+    #figure out how to find RRS, I think we need fecundity/indv LRS first
+    FIN[f,6] = NA #mean(data[REPRODUCTIVE SUCCESS COLUMN])
   }
-  FIN[g,3] <- mean(HE)
-  FIN[g,4] <- mean(HO)
   
-  #figure out how to find RRS, I think we need fecundity/indv LRS first
+  params = parameters[rep(r, nrow(FIN)),]
+  out = cbind(FIN,params)
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS",
+                    "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
-  #ages = (?)
-  
-  
+  write.table(out, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 }
-#would it be helpful to know proportion of population that is a migrant?
