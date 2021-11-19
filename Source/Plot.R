@@ -1,0 +1,83 @@
+#this is for the complex model for aBM class
+#this is taken somewhat from Janna's plot functions
+
+#notes from Janna 11/19
+#Do you remember the figures I showed in class where I plotted output varying only one parameter at a time? That's what I'd suggest. But, you def don't need ALL combinations. Probably you'll want like a control (no migrants?) and then you can use different colors to show output for levels of a particular variable.
+#But, you'll still have to explore your output to know which variables are imporatn.
+#(check Janna's figures from her paper to reference)
+
+Plot = function(theEND){
+  #PLOT IT
+  
+  ##CONSIDER WHETHER YOU WANT A LINE OR DOTS (for dots, instead of line(xxx), do plot(xxx))
+  #all parameters and replicates are being plotted at once. will need to clean this up
+    #to do that, will probably need to subser theEND -- ex try::   for(parameters$k[r] == r){N = theEND[,2]}
+  
+  if(parameters$plotit[r]==1){
+    #loop through each replicate
+    for(rep in 1:replicates){
+      #for each parameter combo
+      for(pp in 1:nrow(parameters)){
+        
+        #number of alive, number of adults alive
+        plot(-100, -100 , xlab="time (years)", ylab="population size", xlim=c(0, max(theEND[,1])), ylim=c(0, parameters$k[r]*2)) 
+        #plot(theEND[,1],theEND[,2])
+        
+        N       = theEND[,2]               #c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
+        adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
+        #Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
+        #lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
+        lines(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
+        lines(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="blue", lwd=5)
+        
+        #proportion of migrants
+        plot(-100, -100 , xlab="time (years)", ylab="proprtion of migrants in population", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        mig     = theEND[,3]
+        lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="black", lwd=5)
+        
+        #observed vs expected hetero
+        plot(-100, -100 , xlab="expected heterozygosity", ylab="observed heterozygosity", xlim=c(0, 1), ylim=c(0, 1)) 
+        Ho     = theEND[,5]
+        He     = theEND[,4]
+        lines(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        
+        #observed hetero over time
+        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        Ho     = theEND[,5]
+        lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        
+        #observed hetero over time with number of migrants
+        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
+        
+        #proportion of migrant genomes in population (use migrant alleles)
+      }
+    }
+  }else{print(paste("no plotting today!"))}
+  
+  
+}
+#columns in theEND:
+  #1 > year
+  #2 > popsize
+  #3 > propmig
+  #4 > He
+  #5 > Ho
+  #6 > meanRRS         #still need to add
+  #7 > nadults
+  #8 > k
+  #9 > allele          
+  #10 > nSNP
+  #11> nMicro
+  #12> sex
+  #13> maxage
+  #14> broodsize
+  #15> sexratio
+  #16>maturity
+  #17>years
+  #18>r0
+  #19>ratemort
+  #20>replicates (no column header)
+
+#columns to add=== replicate #, 

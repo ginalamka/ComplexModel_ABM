@@ -16,6 +16,7 @@ RunModel = function(parameters, r, directory, replicates){
     r0            = parameters$r0[r]
     ratemort      = parameters$ratemort[r]
     #nSNP.mig     = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+    plotit       = parameters$plotit[r]
     
     #initialize population
     pop = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -177,6 +178,7 @@ RunModel = function(parameters, r, directory, replicates){
       #analyze each replicate
       out = Analyze(parameters, r, pop)
       out[1,1] = y
+      out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
       
     }

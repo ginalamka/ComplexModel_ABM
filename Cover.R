@@ -20,11 +20,13 @@ years.V       = 100  #scaleup               #total run time; 200 year run follow
 reps.V        = 5 #scaleup                 #number of replications of the simulation
 r0.V          = 0.1                 #per capita growth rate
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
-#nSNP.mig     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+#nSNP.mig.V     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+plotit.V       = 1    #1=yes, 0=no
+### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V, ratemort.V)
-colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort")
+parameters = expand.grid(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V, ratemort.V, plotit.V)
+colnames(parameters) = c("k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort", "plotit")
 
 #clean up, remember that these are still available in parameters
 remove(k.V, allele.V, nSNP.V, nMicro.V, sex.V, maxage.V, broodsize.V, sexratio.V, maturity.V, years.V, r0.V, ratemort.V)
@@ -47,17 +49,11 @@ write.table(theEND, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep
 #summary table should have nrows = nparameters * nyears * nreplicates
   #^^ may have some fewer than above because some simulations may break before all years are able to be run
 
+Plot(theEND)
+
 
 ##############################################################
-#PLOT IT
-#if(runvars$plotit[r]==1){
-#  Na      = c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
-#  alive   = population[population[,9]==1, ,drop=FALSE]
-#  Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
-#  lines(c(0:g), Na , xlab="generation", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
-#  lines(c(0:g), Nadults , xlab="generation", ylab="population size", cex = 2, lty = 1, col="blue", lwd=5)
-#  remove(alive)
-#}
+
 
 ##############################################################
 
