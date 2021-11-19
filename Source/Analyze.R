@@ -17,7 +17,8 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   years         = parameters$years[r]
   r0            = parameters$r0[r]
   ratemort      = parameters$ratemort[r]
-  #nSNP.mig     = parameters$nSNP.mig[r]    
+  #nSNP.mig     = parameters$nSNP.mig[r] 
+  plotit       = parameters$plotit[r]
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
   #write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
@@ -37,8 +38,8 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years, ncol=6)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS")
+  FIN = matrix(nrow=years, ncol=7)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults")
   
   #add year to summary matrix
   FIN[,1] = c(1:nrow(FIN))
@@ -60,7 +61,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     FIN[f,2] = nrow(data)
     
     #proportion migrants in population
-    FIN[f,3] = 1 - sum(data[,2]==-1)/length(data[,1])
+    FIN[f,3] =  sum(data[,2]==-1)/length(data[,1])   #1 - sum(data[,2]==-1)/length(data[,1])
     
     #He and Ho - neutral (?)
     genotype = data[, -c(ncol(data)-(nSNP*2):ncol(data))]
@@ -91,17 +92,24 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     
     #figure out how to find RRS, I think we need fecundity/indv LRS first
     FIN[f,6] = NA #mean(data[REPRODUCTIVE SUCCESS COLUMN])
+    
+    #find number of adults per year
+    adults = data[data[,4]>= maturity, , drop = FALSE]
+    FIN[f,7] = nrow(adults)
+    
   #}
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS",
-                    "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults",
+                    "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort", "plotit") #add nSNP.mig if in data
   
   return(out)
 }
 #problems: not sure how to do RRS
 #only analyzes once and pastes down all columns
+
+#SHOULD y=0 be the initialized pop?? that would allow a comparison
 
 #additional possible values
   #number of unique breeders unique(pop[,2])+unique(pop[,3])
