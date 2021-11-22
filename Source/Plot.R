@@ -15,9 +15,9 @@ Plot = function(theEND){
   
   if(plotit==1){
     #loop through each replicate
-    for(rep in 1:replicates){
+    #for(rep in 1:replicates){
       #for each parameter combo
-      for(pp in 1:nrow(parameters)){
+      #for(pp in 1:nrow(parameters)){
         
         #number of alive, number of adults alive
         plot(-100, -100 , xlab="time (years)", ylab="population size", xlim=c(0, max(theEND[,1])), ylim=c(0, parameters$k[r]*2)) 
@@ -51,9 +51,18 @@ Plot = function(theEND){
         lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
         lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
         
+        
+        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        par(mar = c(5,4,4,4)+0.3)
+        plot(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        par(new = TRUE)
+        plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
+        axis(side = 4, at = NULL, labels = TRUE)
+        mtext("proportion of migrants in population", side=4, line =3)
+        
         #proportion of migrant genomes in population (use migrant alleles)
-      }
-    }
+      #}
+    #}
   }else{print(paste("no plotting today!"))}
   
   
@@ -79,3 +88,5 @@ Plot = function(theEND){
   #18>r0
   #19>ratemort
   #20>replicates (no column header)
+
+#link for some good plotting tips: http://www.sthda.com/english/wiki/graphical-parameters
