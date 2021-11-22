@@ -4,19 +4,18 @@ RunModel = function(parameters, r, directory, replicates){
   FINAL = NULL
   for(rr in 1:replicates){
     k             = parameters$k[r]
-    allele        = parameters$allele[r]
+    #REMOVED###allele        = parameters$allele[r]
     nSNP          = parameters$nSNP[r]
     nMicro        = parameters$nMicro[r]
-    sex           = parameters$sex[r]
+    #REMOVED###sex           = parameters$sex[r]
     maxage        = parameters$maxage[r]
     broodsize     = parameters$broodsize[r]
-    sexratio      = parameters$sexratio[r]
+    #REMOVED###sexratio      = parameters$sexratio[r]
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
     ratemort      = parameters$ratemort[r]
     #nSNP.mig     = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
-    plotit       = parameters$plotit[r]
     
     #initialize population
     pop = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -25,7 +24,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
     #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
     #pop[,3] = rep(0,k)                      #dad id - later will not be 0, this is useful for debugging
-    pop[,4] = rpois(k,1)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation
+    pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation
     pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     pop[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
@@ -165,7 +164,7 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("No new babies, skip breed"))
         break
       }
-      ttt = Breed(pop, pairs, numboff, k, sz, nSNP) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb

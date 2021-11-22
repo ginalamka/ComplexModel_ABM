@@ -6,19 +6,18 @@
 Analyze = function(parameters, r, pop){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
-  allele        = parameters$allele[r]
+  #REMOVED###allele        = parameters$allele[r]
   nSNP          = parameters$nSNP[r]
   nMicro        = parameters$nMicro[r]
-  sex           = parameters$sex[r]
+  #REMOVED###sex           = parameters$sex[r]
   maxage        = parameters$maxage[r]
   broodsize     = parameters$broodsize[r]
-  sexratio      = parameters$sexratio[r]
+  #REMOVED###sexratio      = parameters$sexratio[r]
   maturity      = parameters$maturity[r]
   years         = parameters$years[r]
   r0            = parameters$r0[r]
   ratemort      = parameters$ratemort[r]
   #nSNP.mig     = parameters$nSNP.mig[r] 
-  plotit       = parameters$plotit[r]
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
   #write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
@@ -102,7 +101,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults",
-                    "k", "allele", "nSNP", "nMicro", "sex", "maxage", "broodsize", "sexratio", "maturity", "years", "r0", "ratemort", "plotit") #add nSNP.mig if in data
+                    "k", "nSNP", "nMicro", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
   return(out)
 }

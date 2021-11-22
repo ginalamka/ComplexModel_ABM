@@ -13,7 +13,7 @@ Plot = function(theEND){
   #all parameters and replicates are being plotted at once. will need to clean this up
     #to do that, will probably need to subser theEND -- ex try::   for(parameters$k[r] == r){N = theEND[,2]}
   
-  if(parameters$plotit[r]==1){
+  if(plotit==1){
     #loop through each replicate
     for(rep in 1:replicates){
       #for each parameter combo
@@ -67,17 +67,15 @@ Plot = function(theEND){
   #6 > meanRRS         #still need to add
   #7 > nadults
   #8 > k
-  #9 > allele          
+  #9 > #REMOVED###allele          
   #10 > nSNP
   #11> nMicro
-  #12> sex
+  #12> #REMOVED###sex
   #13> maxage
   #14> broodsize
-  #15> sexratio
+  #15> #REMOVED###sexratio
   #16>maturity
   #17>years
   #18>r0
   #19>ratemort
   #20>replicates (no column header)
-
-#columns to add=== replicate #, 
