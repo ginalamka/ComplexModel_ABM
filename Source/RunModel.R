@@ -88,7 +88,7 @@ RunModel = function(parameters, r, directory, replicates){
     #initialize source population 
     source = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe
     colnames(source) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive") #just to give a better understanding of what these variables are, set names
-    source[,1] = seq(-1000,-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
+    source[,1] = seq(-k,-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
     source[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex

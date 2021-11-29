@@ -7,7 +7,7 @@ outdir = paste(directory, "/Output/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
-k.V           = 1000                #carrying capacity
+k.V           = c(1000, 5000, 10000)                #carrying capacity
 #REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
 nSNP.V        = 10  #scaleup                #number of SNPs simulated
 nMicro.V      = 100 #tbd                 #number of microsats simulated
@@ -30,7 +30,7 @@ colnames(parameters) = c("k", "nSNP", "nMicro", "maxage", "broodsize", "maturity
 #clean up, remember that these are still available in parameters
 remove(k.V, nSNP.V, nMicro.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
 
-replicates    = 3 #10
+replicates    = 10 #10
 plotit        = 1    #1=yes, 0=no
 r             = 1
 
