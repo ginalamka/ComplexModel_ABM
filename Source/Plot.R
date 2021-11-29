@@ -20,22 +20,32 @@ Plot = function(theEND){
       #for(pp in 1:nrow(parameters)){
         
         #number of alive, number of adults alive
-        plot(-100, -100 , xlab="time (years)", ylab="population size", xlim=c(0, max(theEND[,1])), ylim=c(0, parameters$k[r]*2)) 
+        plot(-100, -100 , xlab="time (years)", ylab="population size", xlim=c(0, parameters$years[r]), ylim=c(0, parameters$k[r])) 
         #plot(theEND[,1],theEND[,2])
         
         N       = theEND[,2]               #c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
         adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
         #Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
         #lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
-        lines(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
-        lines(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="blue", lwd=5)
+        for(q in unique(theEND[,8])){
+          temp <- theEND[theEND[,8] ==q,]
+          for(i in unique(theEND[,17])){  
+            sub <- theEND[theEND[,17] == i,]
+            lines(sub[,1], sub[,2], lwd=2)
+            lines(sub[,1], sub[,7], col="blue", lwd=2)
+          }
+        }
+        #points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
+        #points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
         
         #proportion of migrants
         plot(-100, -100 , xlab="time (years)", ylab="proprtion of migrants in population", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
         mig     = theEND[,3]
-        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[theEND[,17] == i,]
-          lines(sub[,1], sub[,3])
+        for(q in unique(theEND[,8])){
+          for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+            sub <- theEND[theEND[,17] == i,]
+            lines(sub[,1], sub[,3], lwd=2)
+          }
         }
         #REMOVED### lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="black", lwd=5)
         
@@ -43,27 +53,53 @@ Plot = function(theEND){
         plot(-100, -100 , xlab="expected heterozygosity", ylab="observed heterozygosity", xlim=c(0, 1), ylim=c(0, 1)) 
         Ho     = theEND[,5]
         He     = theEND[,4]
-        lines(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,17] == i,]
+          points(He, Ho, lwd=2)
+        }
+        #points(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 1, lty = 1, col="black", lwd=5)
         
         #observed hetero over time
         plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        Ho     = theEND[,5]
-        lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        #Ho     = theEND[,5]
+        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,17] == i,]
+          Ho <- sub[,5]
+          lines(sub[,1], Ho, lwd=2) #points(sub[,1], Ho, lwd=2)
+        }
+        #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
         
         #observed hetero over time with number of migrants
-        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
-        lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
+        #plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        #lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
+        
+        #observed heteroz and proportion of migrants in pop
+        #par(mar = c(5,4,4,4)+0.3)
+        #plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+        #lines(theEND[,1], Ho , cex = 2, lty = 1, col="black", lwd=2) #NOTICE points, not plot  #xlab="time (years)", ylab="observed heterozygosity",
+        #par(new = TRUE)
+        #lines(theEND[,1], mig , xlab="", ylab="", xlim=c(0, max(theEND[,1])), ylim=c(0,1), cex = 2, lty = 1, col="blue", lwd=2)
+        #plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
+        #axis(side = 4, at = NULL, labels = TRUE)
+        #mtext("proportion of migrants in population", side=4, line =3)
         
         #observed heteroz and proportion of migrants in pop
         par(mar = c(5,4,4,4)+0.3)
         plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        points(theEND[,1], Ho , cex = 2, lty = 1, col="black", lwd=2) #NOTICE points, not plot  #xlab="time (years)", ylab="observed heterozygosity",
+        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,17] == i,]
+          Ho <- sub[,5]
+          lines(sub[,1], Ho, lwd=2)
+        }
         par(new = TRUE)
-        points(theEND[,1], mig , xlab="", ylab="", xlim=c(0, max(theEND[,1])), ylim=c(0,1), cex = 2, lty = 1, col="blue", lwd=2)
-        #plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
-        axis(side = 4, at = NULL, labels = TRUE)
-        mtext("proportion of migrants in population", side=4, line =3)
+        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,17] == i,]
+          mig <- sub[,3]
+          lines(sub[,1], mig, lwd=2, col = "blue")
+        }
+        axis(side = 4, at = NULL, labels = TRUE, col = "blue")
+        mtext("proportion of migrants in population", side=4, line =3, col = "blue")
         
         #proportion of migrant genomes in population (use migrant alleles)
       #}
