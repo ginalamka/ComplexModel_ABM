@@ -18,10 +18,12 @@ broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMO
 maturity.V    = 1                   #age indv becomes reproductively mature
 years.V       = 100  #scaleup               #total run time; 200 year run following 50 year stabilization period
 #REMOVED###reps.V        = 5 #scaleup                 #number of replications of the simulation
-r0.V          = c(0.1, 0.2)                 #per capita growth rate
+r0.V          = 0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 #nSNP.mig.V     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 ### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
+
+#potential migration rates: 1-5 indv, 5-10 indv, no migration
 
 #generate list of parameter combinations
 parameters = expand.grid(k.V, nSNP.V, nMicro.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
