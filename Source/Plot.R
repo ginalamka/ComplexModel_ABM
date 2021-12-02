@@ -39,6 +39,8 @@ Plot = function(theEND){
                col=c("black", "blue"), lty=1:1, cex=0.8)
         #points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
         #points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
+        dev.copy(png, "../Output/total_and_adult_population_size_over_time.png")
+        dev.off()
         
         #proportion of migrants
         plot(-100, -100 , xlab="time (years)", ylab="proprtion of migrants in population", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
@@ -49,6 +51,8 @@ Plot = function(theEND){
             lines(sub[,1], sub[,3], lwd=2)
           }
         }
+        dev.copy(png, "../Output/proportion_of_migrants_in_the_population_over_time.png")
+        dev.off()
         #REMOVED### lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="black", lwd=5)
         
         #observed vs expected hetero
@@ -60,6 +64,8 @@ Plot = function(theEND){
           points(He, Ho, lwd=2)
         }
         #points(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 1, lty = 1, col="black", lwd=5)
+        dev.copy(png, "../Output/observed_vs_expected_heterozygosity.png")
+        dev.off()
         
         #observed hetero over time
         plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
@@ -70,6 +76,8 @@ Plot = function(theEND){
           lines(sub[,1], Ho, lwd=2) #points(sub[,1], Ho, lwd=2)
         }
         #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+        dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
+        dev.off()
         
         #observed hetero over time with number of migrants
         #plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
@@ -102,6 +110,8 @@ Plot = function(theEND){
         }
         axis(side = 4, at = NULL, labels = TRUE, col = "blue")
         mtext("proportion of migrants in population", side=4, line =3, col = "blue")
+        dev.copy(png, "../Output/observed_het_and_proportion_migrants_over_time.png")
+        dev.off()
         
         #proportion of migrant genomes in population (use migrant alleles)
       #}
