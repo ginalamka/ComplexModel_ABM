@@ -7,7 +7,7 @@ outdir = paste(directory, "/Output/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
-k.V           = 1000#c(1000, 5000, 10000)                #carrying capacity
+k.V           = 1000 #c(1000, 5000, 10000)                #carrying capacity
 #REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
 nSNP.V        = 10  #scaleup                #number of SNPs simulated
 nMicro.V      = 100 #tbd                 #number of microsats simulated
