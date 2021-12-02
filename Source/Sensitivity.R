@@ -2,6 +2,8 @@
 #parameters of interest: K, pop growth rate, migration rate
 #other potential parameters -- maxage, brood size, maturity, mortrate
 
+#notes on figure help http://www.sthda.com/english/wiki/add-legends-to-plots-in-r-software-the-easiest-way#:~:text=1%20R%20legend%20function.%20To%20add%20legends%20to,statistical%20software%20%28ver.%203.1.0%29.%20Enjoyed%20this%20article%3F%20
+
 #put all combos in one matrix
 theEND[,18] = 1
 theENDa[,18] = 2
