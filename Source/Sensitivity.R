@@ -38,7 +38,7 @@ for(i in unique(theEND2[,17])){  #this allows each rep to be a dif line rather t
   lines(tem2[,1], Ho2, lwd=2, col="brown") #points(sub[,1], Ho, lwd=2)
 }
 legend("topright", legend=c("k = 1000", "k = 5000", "k = 10000"),
-       col=c("red", "yellow", "brown"), lty=1:2, cex=0.8)
+       col=c("red", "yellow", "brown"), lty=1:1, cex=0.8)
 
 dev.copy(png, "../Output/Sensitivity/changingK.png")
 dev.off()
@@ -64,7 +64,7 @@ for(i in unique(theENDb[,17])){  #this allows each rep to be a dif line rather t
   lines(tem2[,1], Ho2, lwd=2, col="brown") #points(sub[,1], Ho, lwd=2)
 }
 legend("topright", legend=c("growth = 0.1", "growth = 0.2", "growth = 0.5"),
-       col=c("red", "yellow", "brown"), lty=1:2, cex=0.8)
+       col=c("red", "yellow", "brown"), lty=1:1, cex=0.8)
 
 dev.copy(png, "../Output/Sensitivity/changinggrowthrates.png")
 dev.off()
@@ -92,7 +92,7 @@ for(i in unique(theEND_[,17])){  #this allows each rep to be a dif line rather t
   lines(tem2[,1], Ho2, lwd=2, col="brown") #points(sub[,1], Ho, lwd=2)
 }
 legend("topright", legend=c("migration 1-5 indv", "migration 5-10 indv", "no migration"),
-       col=c("red", "yellow", "brown"), lty=1:2, cex=0.8)
+       col=c("red", "yellow", "brown"), lty=1:1, cex=0.8)
 
 dev.copy(png, "../Output/Sensitivity/changingmigrationrates.png")
 dev.off()
@@ -118,7 +118,7 @@ for(i in unique(theEND_[,17])){  #this allows each rep to be a dif line rather t
   lines(tem2[,1], tem2[,2], lwd=2, col="brown") #points(sub[,1], Ho, lwd=2)
 }
 legend("topright", legend=c("migration 1-5 indv", "migration 5-10 indv", "no migration"),
-       col=c("red", "yellow", "brown"), lty=1:2, cex=0.8)
+       col=c("red", "yellow", "brown"), lty=1:1, cex=0.8)
 
 dev.copy(png, "../Output/Sensitivity/popsizewithchangingmigrationrates.png")
 dev.off()
@@ -142,7 +142,7 @@ for(i in unique(theENDb[,17])){  #this allows each rep to be a dif line rather t
   lines(tem2[,1], tem2[,2], lwd=2, col="brown") #points(sub[,1], Ho, lwd=2)
 }
 legend("topright", legend=c("growth = 0.1", "growth = 0.2", "growth = 0.5"),
-       col=c("red", "yellow", "brown"), lty=1:2, cex=0.8)
+       col=c("red", "yellow", "brown"), lty=1:1, cex=0.8)
 
 dev.copy(png, "../Output/Sensitivity/changingpopsizewithgrowthrates.png")
 dev.off()
