@@ -1,6 +1,24 @@
 ### Eco-evolutionary models of population decline: how does migration effect long-term population persistence when extirpation risk is high?
 **Gina Lamka and Dr. Janna Willoughby**
 
+When the parameter set includes 1000 individuals in the starting population, a population
+growth rate of 0.1, and a migration rate of 1-5 individuals per generation, the total population
+size drops quickly for the first nine years, and stabilizes around ~160(+/- 30) individuals around and after year 10. This
+drop in the population size is an artifact of the relationship of the death function and max age in the the simulation, 
+and is cause for a removal of the first 10+ generations for stabilization.
+The number of adults in the population is fewer than the number of total individuals, as expected.
+Similarly, the proportion of the population that are migrants increases with time, stabilizing around 
+20% for 100 years. The proportion of the population with migrant ancestry would be higher, though, and will 
+require more investigation in future analyses. Statistical tests will be necessary to evaluate if
+the ratio of expected to observed heterozygosity is significantly different than one, visualized with 
+observed heterozygosity having a slightly smaller value than expected heterozygosity. The observed heterozygosity 
+is highly variable between runs and replicates, a range of approximately 0.2-0.4(+/-0.1 in both directions) after 100 years. 
+Further analyses would be required to determine if there is a relationship between the proportion of migrants 
+in the population and observed heterozygosity. These results, in addition to the sensitivity analysis below, suggest 
+that adding migrants into the population is necessary to maintain a population with these conditions, though the genetic benefits (in 
+terms of heterozygosity) are highly variable. Next steps to further analyze these data include statistically evaluating results, 
+adding additional genetic determinates of fitness and population persistence, and increasing the number of years and parameters. 
+
 
 **Question 1:** *Does population size and stability change with varying population growth rates, when mortality rate is constant?*
 
