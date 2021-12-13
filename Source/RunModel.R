@@ -188,14 +188,10 @@ RunModel = function(parameters, r, directory, replicates){
 }
 
 #OLD NOTES
-#dead = sample(seq(1,nrow(pop),1),1,replace=F) #take a sample of the sequence 1-all the rows in matrix "pop", take out 1 individual and do not replace it
-#pop = pop[-dead,] #now re-create "pop" with this change
 
 ##Remember that whatever you return at the end of the function is what you set the function equal to in RunModel
 
 
-##new notes in Jannas office 10/28
-#look up break, next, try -- make sure to get these because they are helpful
 #next will go to the next loop AKA the next year
 #break will completely stop the loop AKA the next replicate
 
@@ -209,10 +205,3 @@ RunModel = function(parameters, r, directory, replicates){
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
-
-#Places my code is breaking
-  #within breed (line 64 AND fem, mal)
-  #within RAndom Death
-#step through several times until pop crashes and figure out each place the error happens. then debug!
-#after that, can run multiple years/replicates, but since it is breaking, the next run doesnt go
-#ways to potentially fix this, instead of removing dead, put in a column for dead v alive?

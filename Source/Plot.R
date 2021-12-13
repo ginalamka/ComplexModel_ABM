@@ -143,3 +143,7 @@ Plot = function(theEND){
   #20>replicates (no column header)
 
 #link for some good plotting tips: http://www.sthda.com/english/wiki/graphical-parameters
+
+#thoughts after class>>   
+  #consider comparing N and Ne (effective breeders)
+  #should migrants always be the breeders? (that would be effective migrants, not just n migrants)

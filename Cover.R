@@ -55,8 +55,6 @@ Plot(theEND)
 
 
 ##############################################################
-
-
 ##############################################################
 
 #WAIT FOR REPRODUCTIVE SUCCESS UNTIL AFTER THE CLASS IS OVER!!!!! 
@@ -67,29 +65,15 @@ Plot(theEND)
     #would probably need to hold pop because you need to run the whole simulation before knowing repro success
     #mayyyy need to be its own function within cover? or within replicates? or maybe just for each 100 years. think about this later
 
-#notice as written, goes through 12 times because there are 12 sets of parameters
 
-#Questions for class today 11/4/2021
-#how do I get multiple replicates and years to run??
-#How do I get my writeout table (csv) to be in each column?
-
-#consider adding in rbinom() ?? not sure why it would be relevant yet
+#consider adding in rbinom() ?? not sure why it would be relevant yet >>> binomials are for success/failures. would that be helpful?
 
 
-#Use Janna's papers to look at inbreeding - heck other models to see how to put an inbreeding cost on indvs
+#Use Janna's papers to look at inbreeding - check other models to see how to put an **inbreeding cost on indvs
   #things that her paper has: 
     #survival to maturity             .981 and .988
     #lifespan (years)                1.971 and 1.986
     #juvenile offspring              3.149 and 3.171
     #lifetime reproductive success   4.662 nd 4.707
 
-#notes 11/8
-#problem with pop crashing after 6 years is because I am killing too much
-#therefore, instead of random death, put in a age-related increase of chances of death
-#maybe will want to make sure that only adults are mating, not babies -- important for age at maturity -- make temp pop to make sure that only adults are in pop
-#age/lifespan for all individyuals to get this age/random mortality
-    #could do a loop or could use the apply function
-    #apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-1
-    #make sure that the values spit it out corrrectly, i.e. kills 30% not 70$ based on incorrect putting in probabilities
-
-#for the column alive v dead, make sure that the functions taht need pop get a temp pop for only adults (mate choice, breeding) but hten make sure to add the indv (breed) to the main pop, not temp pop
+#apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-149

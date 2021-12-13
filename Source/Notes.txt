@@ -73,3 +73,10 @@ if a parent or ancestor is a migrant (a negative ID number), then the allele sho
 tried if, ifelse, apply
 
 instead of the above idea, add 1000 additional migratory SNPs so that migrants all =1 and nonmig=0 and then go through mendelian genetics from then on. 
+
+#from SourcePop.R
+  #consider if new alleles should be given here, and what the implications would be
+  #consider altering the allele frequencies at the source and focal populations 
+  #consider altering the population size of source population, think about why indv disperse 
+    #i.e. if they are looking for resources vs more mates vs want less competition
+  #think about age and sex biases
