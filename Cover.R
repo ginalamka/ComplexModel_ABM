@@ -47,7 +47,7 @@ for(r in 1:nrow(parameters)){
  
   theEND = rbind(theEND, FINAL)
 }
-write.table(theEND, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+#write.table(theEND, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 #summary table should have nrows = nparameters * nyears * nreplicates
   #^^ may have some fewer than above because some simulations may break before all years are able to be run
 
