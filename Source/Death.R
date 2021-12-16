@@ -3,7 +3,7 @@
 #used for complex model for ABM class 2021
 
 #this will impose an increase in probability of death wiht increasing age
-Death = function(pop, maxage, ratemort){
+Death = function(pop, maxage, ratemort, y){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   #alreadydead = pop[-which(pop[,1]%NOTin%dead),]
   #pop = pop[-which(pop[,1]%in%dead),]
@@ -20,7 +20,7 @@ Death = function(pop, maxage, ratemort){
 
   if(nrow(pop)>1){
     pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
-    #pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
+    pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
     oldies = pop[(pop[,8] == 0), , drop = FALSE]
     pop = pop[(pop[,8] == 1), , drop = FALSE]
     
@@ -29,7 +29,7 @@ Death = function(pop, maxage, ratemort){
     if((nkill>0)){
       kill  = sample(1:length(pop[,1]), nkill, replace=FALSE)
       pop[kill,8]  = 0
-      #pop[kill,10] = g   #this is if I have a generation died column
+      pop[kill,10] = y   #this is if I have a generation died column
       
       totalkilled = nkill + nrow(oldies)
       print(paste("killed", totalkilled, "individuals"))

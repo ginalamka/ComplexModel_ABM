@@ -18,8 +18,8 @@ RunModel = function(parameters, r, directory, replicates){
     #nSNP.mig     = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
     
     #initialize population
-    pop = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive") #just to give a better understanding of what these variables are, set names
+    pop = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                    #each individual has unique ID name; sequence starting at 1, through k, with each 1 interation
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
     #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
@@ -29,6 +29,8 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
+    pop[,9] = 0                             #generation born
+    pop[,10] = 0                            #generation died
     sz = k #to keep track of the number of indv for ID'ing later
     
     #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
@@ -86,8 +88,8 @@ RunModel = function(parameters, r, directory, replicates){
     #implications of each decision is based on calculating heterozygosity vs generating offspring
     
     #initialize source population 
-    source = matrix(nrow=k, ncol=8)            #each individual gets its own row.. matrix > dataframe
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive") #just to give a better understanding of what these variables are, set names
+    source = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(k),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
@@ -95,6 +97,8 @@ RunModel = function(parameters, r, directory, replicates){
     source[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     source[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
+    source[,9] = 0                             #generation born
+    source[,10] = 0                            #generation died
     
     #generate source gentoypes
     sourcegen = matrix(nrow=k, ncol=nSNP*2)
@@ -138,7 +142,7 @@ RunModel = function(parameters, r, directory, replicates){
     #create for loop for each time step
     for(y in 1:years){
       pop = AgeUp(pop)                        #age pop + 1 year
-      pop = Death(pop, maxage, ratemort)                #kill indv
+      pop = Death(pop, maxage, ratemort, y)                #kill indv
       #pop = DeathByAge(pop, maxage)           #age-dependent mortality
       if(nrow(pop) <= 10){
         print(paste("Population low, less than 10 indv"))
@@ -164,7 +168,7 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("No new babies, skip breed"))
         next
       }
-      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize, y) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb

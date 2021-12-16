@@ -4,7 +4,7 @@
 ##{THIS STILL DOES NOT RUN}
 #rethink the steps to make this happen
 
-Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
@@ -52,8 +52,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize){
   ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
-  babies = matrix(nrow=nrow(parents), ncol=8) #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive")
+  babies = matrix(nrow=nrow(parents), ncol=10) #make new matrix for offspring     
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died")
   babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
@@ -62,6 +62,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize){
   babies[,6] = 0                #####sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
   babies[,7] =                 #####sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   babies[,8] = 1      #make every baby alive
+  babies[,9] = y  #MUST feed y to function   #generation born
+  babies[,10] = 0      #generation died
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
