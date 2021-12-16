@@ -19,6 +19,10 @@ Migrate = function(pop, source){
   return(list(pop, mig, source))
 }
 
+#NOTES 12/16/2021
+#consider if migrants should have a generation born of 0, the year they migrated, or the year they migrated minus their age.
+#think about the implications of each choice.
+
 #source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
 
 
