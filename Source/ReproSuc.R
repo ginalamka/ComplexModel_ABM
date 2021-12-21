@@ -52,6 +52,8 @@ ReproSuc = function(pop){
 
 }
 
+#still not sure if the number of times being a parent should be added when in Breed.R or after all years. 
+
 #links for some of the errors I've been getting
 #https://www.programmingr.com/r-error-messages/error-the-condition-has-length-1-and-only-the-first-element-will-be-used/
 #https://data-flair.training/blogs/r-list-tutorial/#:~:text=%20How%20to%20Access%20R%20List%20Elements%20,an%20example.%20Give%20names%20to%20the...%20More%20
