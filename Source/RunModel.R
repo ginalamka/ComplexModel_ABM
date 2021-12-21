@@ -186,6 +186,7 @@ RunModel = function(parameters, r, directory, replicates){
       
     }
     
+    #THIS IS WHERE I CALC RRS using pop data
     
   } 
   return(FINAL)

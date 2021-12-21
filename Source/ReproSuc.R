@@ -7,9 +7,14 @@
 ReproSuc = function(pop){
  
   moms = pop[,2]
-  moms = subset(moms, moms>0) #select moms from focal pop, if 0, founder, if -1, migrant
+  mo = subset(moms, moms >0, drop =FALSE)
+  ms = subset(moms, moms <(-1), drop = FALSE)
+  rbind(mo,ms)
+  #moms = moms[-which(moms==0&-1), , drop=FALSE] #subset(moms, moms !is.true == 0|-1) #select moms from focal pop, if 0, founder, if -1, source pop migrant
   dads = pop[,3]
-  dads = subset(dads, dads>0) #select dads from focal pop, if 0, founder, if -1, migrant
+  da = subset(dads, dads>0) #select dads from focal pop, if 0, founder, if -1, source pop migrant
+  ds = subset(dads, dads<-1)
+  rbind(da,ds)
   
   for(m in 1:length(moms)){   #spits out number of objects in the list
     for(i in moms[m]){        #selects value of m for ID
@@ -46,6 +51,10 @@ ReproSuc = function(pop){
   }
 
 }
+
+#links for some of the errors I've been getting
+#https://www.programmingr.com/r-error-messages/error-the-condition-has-length-1-and-only-the-first-element-will-be-used/
+#https://data-flair.training/blogs/r-list-tutorial/#:~:text=%20How%20to%20Access%20R%20List%20Elements%20,an%20example.%20Give%20names%20to%20the...%20More%20
 
 
 for(q in unique(theEND[,8])){
