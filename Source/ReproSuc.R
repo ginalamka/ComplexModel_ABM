@@ -14,8 +14,11 @@ ReproSuc = function(pop){
   for(m in 1:length(moms)){   #spits out number of objects in the list
     for(i in moms[m]){        #selects value of m for ID
       if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
-        add <- pop[i,6] +1
-        lapply(pop[,1], pop[i,6]+1)
+        a <- pop[pop[,1]==i,, drop=FALSE]
+        
+        add <- function(a){a[,6]+1}
+        
+        sapply(a, add)
         
         #pop[,6] = pop[,6]+1   #adds offspring
         
