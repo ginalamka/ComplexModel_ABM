@@ -150,6 +150,15 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
     mal = pop[-which(pop[,1]%NOTin%m), ,drop=FALSE]
     
+    ###NEED to add the number of offpsring generated for parents fitness
+    ##REMEMBER this will have to be done here and for when nbabies>numboff
+    #issue is with parents who sire more than one offspring
+    #is this better here or better after the whole simulation
+      #then I can find all adults and for all mothers and fathers, add to offpsring?
+    #for(l in 1:length(f)){
+    #  fem[l]
+    #}
+    
     if(nrow(mal) == 0){
       print(paste("can't generate father genotypes"))
       break
