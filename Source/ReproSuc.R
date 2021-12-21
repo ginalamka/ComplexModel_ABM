@@ -7,11 +7,20 @@
 ReproSuc = function(pop){
  
   moms = pop[,2]
-  moms = moms[-which(moms <=0), , drop = FALSE]
+  moms = subset(moms, moms>0) #select moms from focal pop, if 0, founder, if -1, migrant
   dads = pop[,3]
+  dads = subset(dads, dads>0) #select dads from focal pop, if 0, founder, if -1, migrant
   
-  for(m in 1:length(moms)){
-    pop[,1]
+  for(m in 1:length(moms)){   #spits out number of objects in the list
+    for(i in moms[m]){        #selects value of m for ID
+      if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
+        add <- pop[i,6] +1
+        lapply(pop[,1], pop[i,6]+1)
+        
+        #pop[,6] = pop[,6]+1   #adds offspring
+        
+      } #else{print(paste("error in finding mom"))}
+    }
   }
   
   fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
