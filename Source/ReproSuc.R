@@ -5,6 +5,19 @@
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
 ReproSuc = function(pop){
+ 
+  moms = pop[,2]
+  moms = moms[-which(moms <=0), , drop = FALSE]
+  dads = pop[,3]
+  
+  for(m in 1:length(moms)){
+    pop[,1]
+  }
+  
+  fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
+  mal = pop[-which(pop[,1]%NOTin%m), ,drop=FALSE]
+  
+  
   moms = pop[pop[,1] == moms, , drop = FALSE]
   dads = pop[pop[,3] == TRUE, , drop = FALSE]
   
