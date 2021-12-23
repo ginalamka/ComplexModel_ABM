@@ -25,19 +25,18 @@ ReproSuc = function(pop){
   dads = rbind(da,ds)
   
   for(i in 1:nrow(moms)){
-    rowCounts(moms, rows = NULL, cols = NULL, value = TRUE, na.rm = FALSE,
-              dim. = dim(x), ..., useNames = NA)
+    x <- colCounts(moms, value = i)
     
-    rowCounts(moms, value = 20)
-    
-    
-    
-    if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
-      a <- pop[pop[,1]==i,, drop=FALSE]
-      a[,6] = a[,6]+1
+    while(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
+      pop[,6] = x
+      #takes a LONGGG time and may or may not work..
+      
+      #a <- pop[pop[,1]==i,, drop=FALSE]
+      #a[,6] = a[,6]+1
       #from AgeUp.R:   pop[,4] = pop[,4] + 1
     }
   }
+  #colCounts(dads, value = -107)
   
   for(m in 1:length(moms)){   #spits out number of objects in the list
     for(i in moms[m]){        #selects value of m for ID
