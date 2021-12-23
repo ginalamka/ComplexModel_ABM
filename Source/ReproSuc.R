@@ -25,6 +25,13 @@ ReproSuc = function(pop){
   dads = rbind(da,ds)
   
   for(i in 1:nrow(moms)){
+    rowCounts(moms, rows = NULL, cols = NULL, value = TRUE, na.rm = FALSE,
+              dim. = dim(x), ..., useNames = NA)
+    
+    rowCounts(moms, value = 20)
+    
+    
+    
     if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
       a <- pop[pop[,1]==i,, drop=FALSE]
       a[,6] = a[,6]+1
