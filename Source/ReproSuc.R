@@ -47,16 +47,34 @@ ReproSuc = function(pop){
     }
   }
   
-  fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
-  mal = pop[-which(pop[,1]%NOTin%m), ,drop=FALSE]
+  for(u in unique(sub$id)){
+    d = subset(sub, sub$id == u)
+    ####d = sort(d, d$year, decreasing = FALSE,)
+    
+    r <- 1
+    while(r < nrow(d)){
+      x.1 <- d$adjlat[r]
+      x.2 <- d$adjlat[r+1]
+      y.1 <- d$adjlong[r]
+      y.2 <- d$adjlong[r+1]
+      
+      
+      c <- sqrt((x.1 - x.2)^2 + (y.1 - y.2)^2) 
+      m = matrix(nrow=1, ncol=5)
+      m[,1] = u
+      m[,2] = c
+      m[,3] = d$year[r+1]
+      m[,4] = d$sex[r]
+      
+      r <- r+1
+      fm = rbind(fm,m)
+    } 
+    #dst = rbind(dst, fm)
+    colnames(fm) <- c("id", "distance", "year", "sex")
+  }
   
   
-  moms = pop[pop[,1] == moms, , drop = FALSE]
-  dads = pop[pop[,3] == TRUE, , drop = FALSE]
   
-  #pop1 = pop[-which(pop[,4] >= maxage),]
-  
-  moms = pop[,2]
   
   for(q in unique(pop[,2])){
     sub <- pop[pop[,2] == q,]
