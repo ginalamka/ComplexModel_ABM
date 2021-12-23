@@ -7,6 +7,7 @@ setwd(paste(directory,"/source/", sep = '')) #set temp working directory
 #import packages
 #library()
 library(scales) #may need this for plotting, this allows transparency in colors for overlapping lines
+library(matrixStats) #need this for colCount and rowCount in ReproSuc.R
 
 '%NOTin%' <- Negate(`%in%`) #this defines the not in function so that I can select identities that are not defined by something (see RandomDeaths.R for an example)
 #note that the ' ' is not included in the %NOTin% operator -- see https://r-lang.com/not-in-r/#:~:text=The%20not%20in%20operator%20is%20a%20logical%20vector%2C,a%20vector.%20The%20%21%20indicates%20logical%20negation%20%28NOT%29.
@@ -22,6 +23,9 @@ source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))
+source(paste(getwd(), "/ReproSuc.R", sep = ''))
+
+source(paste(getwd(), "/Sensitivity.R", sep = '')) #may not actually need this here but will keep for now
 
 ####old, removed functions
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
