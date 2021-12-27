@@ -14,6 +14,7 @@ ReproSuc = function(pop){
   mo = matrix(unlist(mo), nrow = length(mo), byrow = TRUE)
   ms = matrix(unlist(ms), nrow = length(ms), byrow = TRUE)
   moms = rbind(mo,ms)
+  remove(mo, ms)
   
   dads = pop[,3]
   da = subset(dads, dads>0) #select dads from focal pop, if 0, founder, if -1, source pop migrant
@@ -21,19 +22,23 @@ ReproSuc = function(pop){
   
   da = matrix(unlist(da), nrow = length(da), byrow = TRUE)
   ds = matrix(unlist(ds), nrow = length(ds), byrow = TRUE)
-  
   dads = rbind(da,ds)
+  remove(da, ds)
   
-  for(i in 1:nrow(moms)){
-    x <- colCounts(moms, value = i)
+  for(i in 1:nrow(moms)){                           #i is the row number in moms
+    x<- moms[i,]                                    #x is the value of the mom's id
+    n <- colCounts(moms, value = x)                 #n is the number of times x is a mom
     
-    while(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
-      pop[,6] = x
+    #pop[pop[,1]==x,]   #to select the row of pop where id = x
+    
+    while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
+      #REMOBVEDpop[,6] = n
       #takes a LONGGG time and may or may not work..
       
-      #a <- pop[pop[,1]==i,, drop=FALSE]
-      #a[,6] = a[,6]+1
-      #from AgeUp.R:   pop[,4] = pop[,4] + 1
+      a <- pop[pop[,1]==x,, drop=FALSE]
+      a[,6] =  n  #a[,6]+1
+      
+      #now I need to figure out how ot move ot the next one
     }
   }
   #colCounts(dads, value = -107)
