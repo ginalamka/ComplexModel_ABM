@@ -38,8 +38,10 @@ ReproSuc = function(pop){
       a <- pop[pop[,1]==x,, drop=FALSE]
       a[,6] =  n  #a[,6]+1
       
+      i = i+1
+      next
       #now I need to figure out how ot move ot the next one
-    }
+    } 
   }
   #colCounts(dads, value = -107)
   
