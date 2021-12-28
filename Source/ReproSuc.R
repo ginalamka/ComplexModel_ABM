@@ -1,5 +1,5 @@
 #to calculate the reproductive success in my pop extinction model going into spring 2022
-#flow: calc total number of times being a parent > calc how many survive greater than 1 year > then in writeout figure out the rest??
+#flow: calc total number of times being a parent > calc how many offspring survive greater than 1 year > then in writeout figure out the rest??
 
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
@@ -32,15 +32,15 @@ ReproSuc = function(pop){
     #pop[pop[,1]==x,]   #to select the row of pop where id = x
     
     while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
-      #REMOBVEDpop[,6] = n
+      #REMOBVED#pop[,6] = n
       #takes a LONGGG time and may or may not work..
       
       a <- pop[pop[,1]==x,, drop=FALSE]
-      a[,6] =  n  #a[,6]+1
+      a[,6] =  n      ##a[,6]+1
       
-      i = i+1
-      next
       #now I need to figure out how ot move ot the next one
+      i = i+1               #dont think this is right. not sure how to step though?
+      next                  #so far this seems to do nothing but get stuck in the loop?
     } 
   }
   #colCounts(dads, value = -107)
