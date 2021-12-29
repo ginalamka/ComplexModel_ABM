@@ -45,6 +45,8 @@ ReproSuc = function(pop){
       #i = i+1               #dont think this is right. not sure how to step though?
       #next                  #so far this seems to do nothing but get stuck in the loop?
       #warnings suggest using ifelse() but not sure how to make that work yet
+      
+      #apply may work here, though not sure how??
     } 
   }
   #colCounts(dads, value = -107)
