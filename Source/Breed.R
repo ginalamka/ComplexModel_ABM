@@ -212,6 +212,14 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
 }
 
 
+#notes 12/29/2021
+#ADDING MUTATION
+#within the Breed.R function, add in a probability of mutation. (randomly assigned or related to something..?)
+#mutate 0->1 or 1->0
+  #meaning the genotype should be generated, then a random switch across SNPs... right?
+  #at what frequency should the mutation occur?
+
+
 
 #BREEDING NOTES FROM JANNA 10/19/2021  
 #next steps: make sure to randomize the order of the pairs table before breeding
