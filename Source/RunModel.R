@@ -200,13 +200,7 @@ RunModel = function(parameters, r, directory, replicates){
 #next will go to the next loop AKA the next year
 #break will completely stop the loop AKA the next replicate
 
-#notes from class 10/28
-#do I need generation born/died or should I just continue removing those that died? what would be the benefit of having this? longevity == fitness??
-#pop[,9] = y                 #birth year
-#~function to kill indv~
-#~tokill = indv xyz~
-#pop[tokill,10] = y          #gives the year they were killed
-#pop[tokill,11] = 0          #this is for dead/alive = 0 is dead, 1 is alive
+#longevity == fitness??
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
