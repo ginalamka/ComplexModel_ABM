@@ -26,6 +26,7 @@ source(paste(getwd(), "/Plot.R", sep = ''))
 source(paste(getwd(), "/ReproSuc.R", sep = ''))
 
 source(paste(getwd(), "/Sensitivity.R", sep = '')) #may not actually need this here but will keep for now
+source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch. will need to develop this more
 
 ####old, removed functions
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
