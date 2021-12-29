@@ -105,12 +105,12 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   
   return(out)
 }
-#problems: not sure how to do RRS
-#only analyzes once and pastes down all columns
 
-#SHOULD y=0 be the initialized pop?? that would allow a comparison
-
-#additional possible values
-  #number of unique breeders unique(pop[,2])+unique(pop[,3])
-  #mating success = total number of mates with whome an indv produced offspring
-#DO REPRODUCTIVE SUCCESS LATER
+#to add: (noted 12/29/2021)
+  #LRS, RRS >> must use info from ReproSuc.R, so maybe better to calculate there and then feed to Plot.R
+  #number of alleles over time
+  #number of migrant alleles in population over time
+  #additional possible values
+    #number of unique breeders unique(pop[,2])+unique(pop[,3])
+    #mating success = total number of mates with whome an indv produced offspring
+#-- also check the vortex abm paper to add any things they have that might be useful and informative here
