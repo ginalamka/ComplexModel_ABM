@@ -1,4 +1,5 @@
 #to calculate the reproductive success in my pop extinction model going into spring 2022
+#need: year born, year died, # times being a parent, amount of babies that survived to maturity
 #flow: calc total number of times being a parent > calc how many offspring survive greater than 1 year > then in writeout figure out the rest??
 
 #designated location for this will be in RunModel.R, after runing a replicate
@@ -31,6 +32,8 @@ ReproSuc = function(pop){
     
     #pop[pop[,1]==x,]   #to select the row of pop where id = x
     
+    
+    
     while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
       #REMOBVED#pop[,6] = n
       #takes a LONGGG time and may or may not work..
@@ -39,8 +42,9 @@ ReproSuc = function(pop){
       a[,6] =  n      ##a[,6]+1
       
       #now I need to figure out how ot move ot the next one
-      i = i+1               #dont think this is right. not sure how to step though?
-      next                  #so far this seems to do nothing but get stuck in the loop?
+      #i = i+1               #dont think this is right. not sure how to step though?
+      #next                  #so far this seems to do nothing but get stuck in the loop?
+      #warnings suggest using ifelse() but not sure how to make that work yet
     } 
   }
   #colCounts(dads, value = -107)
