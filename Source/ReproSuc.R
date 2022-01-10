@@ -32,14 +32,14 @@ ReproSuc = function(pop){
     
     #pop[pop[,1]==x,]   #to select the row of pop where id = x
     
+    pop[pop[,1] == x, 6] <- n          #thanks Avril!
     
-    
-    while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
+    #while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
       #REMOBVED#pop[,6] = n
       #takes a LONGGG time and may or may not work..
       
-      a <- pop[pop[,1]==x,, drop=FALSE]
-      a[,6] =  n      ##a[,6]+1
+     # a <- pop[pop[,1]==x,, drop=FALSE]
+     # a[,6] =  n      ##a[,6]+1
       
       #now I need to figure out how ot move ot the next one
       #i = i+1               #dont think this is right. not sure how to step though?
@@ -47,63 +47,76 @@ ReproSuc = function(pop){
       #warnings suggest using ifelse() but not sure how to make that work yet
       
       #apply may work here, though not sure how??
-    } 
+    #} 
   }
+  
+  for(i in 1:nrow(dads)){                           #i is the row number in dads
+    y <- dads[i,]                                   #y is the value of dad's id 
+    p <- colCounts(dads, value = y)                 #p is the number of times y is a dad
+    
+    pop[pop[,1] == y, 6] <- p
+  }
+  
+  #WHY ARE THERE ZEROS???  >> make test matrix and double check that this is calculating correctly
+  
+  #next will need to turn NA's = 0 ???
+  
+}
   #colCounts(dads, value = -107)
   
-  for(m in 1:length(moms)){   #spits out number of objects in the list
-    for(i in moms[m]){        #selects value of m for ID
-      if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
-        a <- pop[pop[,1]==i,, drop=FALSE]
+#  for(m in 1:length(moms)){   #spits out number of objects in the list
+#    for(i in moms[m]){        #selects value of m for ID
+#      if(pop[pop[,1]==i,]){         #finds when ID = value of m, aka i
+#        a <- pop[pop[,1]==i,, drop=FALSE]
+#        
+#        add <- function(a){a[,6]+1}
         
-        add <- function(a){a[,6]+1}
-        
-        sapply(a, add)
+#        sapply(a, add)
         
         #pop[,6] = pop[,6]+1   #adds offspring
         
-      } #else{print(paste("error in finding mom"))}
-    }
-  }
+#      } #else{print(paste("error in finding mom"))}
+#    }
+#  }
   
-  for(u in unique(sub$id)){
-    d = subset(sub, sub$id == u)
-    ####d = sort(d, d$year, decreasing = FALSE,)
+#  for(u in unique(sub$id)){
+#    d = subset(sub, sub$id == u)
+#    ####d = sort(d, d$year, decreasing = FALSE,)
     
-    r <- 1
-    while(r < nrow(d)){
-      x.1 <- d$adjlat[r]
-      x.2 <- d$adjlat[r+1]
-      y.1 <- d$adjlong[r]
-      y.2 <- d$adjlong[r+1]
+#    r <- 1
+#    while(r < nrow(d)){
+#      x.1 <- d$adjlat[r]
+#      x.2 <- d$adjlat[r+1]
+#      y.1 <- d$adjlong[r]
+#      y.2 <- d$adjlong[r+1]
       
       
-      c <- sqrt((x.1 - x.2)^2 + (y.1 - y.2)^2) 
-      m = matrix(nrow=1, ncol=5)
-      m[,1] = u
-      m[,2] = c
-      m[,3] = d$year[r+1]
-      m[,4] = d$sex[r]
+#      c <- sqrt((x.1 - x.2)^2 + (y.1 - y.2)^2) 
+#      m = matrix(nrow=1, ncol=5)
+#      m[,1] = u
+#      m[,2] = c
+#      m[,3] = d$year[r+1]
+#      m[,4] = d$sex[r]
       
-      r <- r+1
-      fm = rbind(fm,m)
-    } 
+#      r <- r+1
+#      fm = rbind(fm,m)
+#    } 
     #dst = rbind(dst, fm)
-    colnames(fm) <- c("id", "distance", "year", "sex")
-  }
+#    colnames(fm) <- c("id", "distance", "year", "sex")
+#  }
   
   
   
   
-  for(q in unique(pop[,2])){
-    sub <- pop[pop[,2] == q,]
-    for(i in unique(pop[,1])){
-      temp <- pop[pop[,1]==i,]
-      print()
-    }
-  }
+#  for(q in unique(pop[,2])){
+#    sub <- pop[pop[,2] == q,]
+#    for(i in unique(pop[,1])){
+#      temp <- pop[pop[,1]==i,]
+#      print()
+#    }
+#  }
 
-}
+#}
 
 #still not sure if the number of times being a parent should be added when in Breed.R or after all years. 
 
@@ -113,10 +126,10 @@ ReproSuc = function(pop){
 #https://r-coder.com/list-r/#Extract_elements_from_list_in_R
 
 
-for(q in unique(theEND[,8])){
-  temp <- theEND[theEND[,8] ==q,]
-  for(i in unique(theEND[,17])){  
-    sub <- theEND[theEND[,17] == i,]
-    lines(sub[,1], sub[,2], lwd=2)
-    lines(sub[,1], sub[,7], col="blue", lwd=2)
-  }
+#for(q in unique(theEND[,8])){
+#  temp <- theEND[theEND[,8] ==q,]
+#  for(i in unique(theEND[,17])){  
+#    sub <- theEND[theEND[,17] == i,]
+#    lines(sub[,1], sub[,2], lwd=2)
+#    lines(sub[,1], sub[,7], col="blue", lwd=2)
+#  }
