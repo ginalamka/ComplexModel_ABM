@@ -59,8 +59,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
   babies[,3] = parents[,2]
   babies[,4] = 0    #first of the year - consider if these should be 0 or -1
   babies[,5] = sample(c(0,1),nrow(babies),replace=T)    #each individual assigned male (1) or female (0) #sample from zero nrow times, with replacements. aka set sex
-  babies[,6] = 0                #####sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
-  babies[,7] =                 #####sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
+  babies[,6] = NA #REMOVED##0                #####sample(c(0,1),nrow(babies),replace=T)    #set allele 1 as either A=1 or a=0
+  babies[,7] = NA                 #####sample(c(0,1),nrow(babies),replace=T)    #set allele 2 as either A=1 or a=0
   babies[,8] = 1      #make every baby alive
   babies[,9] = y  #MUST feed y to function   #generation born
   babies[,10] = 0      #generation died

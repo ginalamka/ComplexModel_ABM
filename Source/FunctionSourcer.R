@@ -23,11 +23,12 @@ source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))
-source(paste(getwd(), "/ReproSuc.R", sep = ''))
+source(paste(getwd(), "/RepSucc.R", sep = ''))
 
-source(paste(getwd(), "/Sensitivity.R", sep = '')) #may not actually need this here but will keep for now
+#source(paste(getwd(), "/Sensitivity.R", sep = '')) #turn on as needed
 source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch. will need to develop this more
 
 ####old, removed functions
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
 #source(paste(getwd(), "/RandomDeath.R", sep = ''))
+#source(paste(getwd(), "/ReproSuc.R", sep = ''))   #new function is RepSucc.R
