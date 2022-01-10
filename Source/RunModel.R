@@ -26,7 +26,7 @@ RunModel = function(parameters, r, directory, replicates){
     #pop[,3] = rep(0,k)                      #dad id - later will not be 0, this is useful for debugging
     pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation
     pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
-    pop[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
+    pop[,6] = NA #this will be for number of times as a parent  #REMOVED###sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
     pop[,9] = 0                             #generation born
@@ -94,7 +94,7 @@ RunModel = function(parameters, r, directory, replicates){
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
     source[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
-    source[,6] = sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
+    source[,6] = NA #this will be for number of times as a parent   #REMOVED##sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     source[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
     source[,9] = 0                             #generation born
