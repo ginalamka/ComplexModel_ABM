@@ -19,7 +19,7 @@ RunModel = function(parameters, r, directory, replicates){
     
     #initialize population
     pop = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                    #each individual has unique ID name; sequence starting at 1, through k, with each 1 interation
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
     #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
@@ -27,7 +27,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation
     pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     pop[,6] = NA #this will be for number of times as a parent  #REMOVED###sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
-    pop[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
+    pop[,7] = NA #this will be for number of times offspring survive to maturity   #REMOVED###sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
     pop[,9] = 0                             #generation born
     pop[,10] = 0                            #generation died
@@ -89,13 +89,13 @@ RunModel = function(parameters, r, directory, replicates){
     
     #initialize source population 
     source = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(k),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
     source[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     source[,6] = NA #this will be for number of times as a parent   #REMOVED##sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
-    source[,7] = sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
+    source[,7] = NA #for number of offspring that reach maturity ##REMOVED#### sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
     source[,9] = 0                             #generation born
     source[,10] = 0                            #generation died
@@ -191,6 +191,12 @@ RunModel = function(parameters, r, directory, replicates){
   } 
   return(FINAL)
 }
+#notes
+#question that is unresolved: when creating a generation born column, should migrants have a gen born of 0 (which is what I have for the starting pop) or should they have a the year that they migrated as the gen born?
+#or year they migrated minus their age?
+#currently, I have it still set to 0 (aka all migrants are still marked at gen born column as 0) 
+#depending on how I calculate reproductive success, this may matter***
+
 
 #OLD NOTES
 
