@@ -1,3 +1,6 @@
+#SOMEWHAT works...BUT...changed to RepSucc.R instead!!!
+
+
 #to calculate the reproductive success in my pop extinction model going into spring 2022
 #need: year born, year died, # times being a parent, amount of babies that survived to maturity
 #flow: calc total number of times being a parent > calc how many offspring survive greater than 1 year > then in writeout figure out the rest??
@@ -8,8 +11,8 @@
 ReproSuc = function(pop){
  
   moms = pop[,2]
-  mo = subset(moms, moms >0) #, drop =FALSE)
-  ms = subset(moms, moms <(-1)) #, drop = FALSE)
+  mo = subset(moms, moms >0) #, drop =FALSE)         #0 in moms place means it is from initial pop
+  ms = subset(moms, moms <(-1)) #, drop = FALSE)     #-1 in moms place means it is from source pop
   #moms = moms[-which(moms==0&-1), , drop=FALSE] #subset(moms, moms !is.true == 0|-1) #select moms from focal pop, if 0, founder, if -1, source pop migrant
   
   mo = matrix(unlist(mo), nrow = length(mo), byrow = TRUE)
@@ -32,7 +35,10 @@ ReproSuc = function(pop){
     
     #pop[pop[,1]==x,]   #to select the row of pop where id = x
     
-    pop[pop[,1] == x, 6] <- n          #thanks Avril!
+    if(n > 0){
+      pop[pop[,1] == x, 6] <- n          #thanks Avril!
+    }
+    
     
     #while(pop[pop[,1]==x,]){         #finds when ID = value of m, aka i
       #REMOBVED#pop[,6] = n
@@ -54,10 +60,14 @@ ReproSuc = function(pop){
     y <- dads[i,]                                   #y is the value of dad's id 
     p <- colCounts(dads, value = y)                 #p is the number of times y is a dad
     
-    pop[pop[,1] == y, 6] <- p
+    if(p > 0){
+      pop[pop[,1] == y, 6] <- p
+    }
+    
   }
   
   #WHY ARE THERE ZEROS???  >> make test matrix and double check that this is calculating correctly
+  #the values are correct, but I still dont know why some will be zeros and others are not??
   
   #next will need to turn NA's = 0 ???
   
@@ -133,3 +143,17 @@ ReproSuc = function(pop){
 #    lines(sub[,1], sub[,2], lwd=2)
 #    lines(sub[,1], sub[,7], col="blue", lwd=2)
 #  }
+
+
+#this shows that this should work
+"test = matrix(nrow =10, ncol =1)
+test[,1] = c(1, 1, 2, 3, 3, 3, 4, 5, 6, 7)
+test
+for(i in 1:nrow(test)){
+  s<- test[i,]                                    #x is the value of the mom's id
+  g <- colCounts(test, value = s)                 #n is the number of times x is a mom
+  
+  #pop[pop[,1]==x,]   #to select the row of pop where id = x
+  
+  mmm[mmm[,1] == s, 2] <- g  
+}"
