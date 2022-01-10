@@ -1,3 +1,17 @@
+New thoughts and issues as of 2022
+- what should the generation born column say for migrants? 
+  options:  0 to mark as source pop
+            year they migrated
+            year they migrated minus age
+
+- should mutation occur throughout the genome? this should occur when generating babies, correct? 
+  I think what I will do is create a Mutation.R function, but place it in Breed.R rather than RunModel.R
+  make sure to have an on/off switch for this also
+
+
+
+
+NOT YET UPDATED:
 Project Flow:
 set parameters >                                 #set variables
   init pop and source >                          #create pops
