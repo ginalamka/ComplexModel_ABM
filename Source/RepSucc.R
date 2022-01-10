@@ -33,6 +33,7 @@ RepSucc = function(pop, maturity){
 ##EXCEPT for babies created in the last year (becuse they havent been able to age yet)
 ##THEREFORE, columns 6 and 7 should be *nearly* identical - numboff in y ...IF MATURITY = 1 
 ###** this would be more different (probably) if maturity is a different value
+###*MIGHT need to remove those that havent died anyways because those wouldnt be complete measures of repro success****
 
 
 #Next steps: 

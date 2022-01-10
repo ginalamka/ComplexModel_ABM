@@ -1,4 +1,10 @@
 New thoughts and issues as of 2022
+
+- STILL having issues with the population CRASHING for the first several years until maxage
+  locations where maxage is used: initializing pop and source, death
+  this means it might be because the init ages are screwey, or because I am killing them weird. 
+  **NEED to figure this out
+
 - what should the generation born column say for migrants? 
   options:  0 to mark as source pop
             year they migrated
@@ -7,6 +13,12 @@ New thoughts and issues as of 2022
 - should mutation occur throughout the genome? this should occur when generating babies, correct? 
   I think what I will do is create a Mutation.R function, but place it in Breed.R rather than RunModel.R
   make sure to have an on/off switch for this also
+  
+- note that currenly migration happens EVERY year since nmig is between 1-5
+
+- note that migrants are not preferentially marked for breeding, so migrants =/= effective migrants
+
+- still need to add in the migrant tracked SNPs
 
 
 
