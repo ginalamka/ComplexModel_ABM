@@ -1,9 +1,6 @@
 #Breed
 #for complex model for ABM class
 
-##{THIS STILL DOES NOT RUN}
-#rethink the steps to make this happen
-
 Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
@@ -53,7 +50,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
   babies = matrix(nrow=nrow(parents), ncol=10) #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "allele1", "allele2", "alive", "gen born", "gen died")
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died")
   babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
@@ -202,6 +199,25 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     print(paste("need more offspring generated"))
     next
   }
+  
+  if(mutate == 1){  #if mutate is turned "on"
+    x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
+    u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
+    
+    if(babies[x, (ncol(babies)-u)] == 1){
+      babies[x, (ncol(babies)-u)] = 0
+      print(paste("mutated 1 -> 0"))
+    }else if(babies[x, (ncol(babies)-u)] == 0){
+      babies[x, (ncol(babies)-u)] = 1
+      print(paste("mutated 0 -> 1"))
+    }
+    
+  }else{
+    print(paste("no mutation"))
+    next
+  }
+  #IS THERE A REASON TO TRACK MUTATIONS? i.e. a column with the number SNP mutated ? would that be beneficial to track or just confusing?
+  #should mutation happen later also (i.e. when parents are breeding?)
   
   #check out lines 129 from Jannas Repro.R in CaptiveBreedingIBM for generating genotypes
   #the suggestion is to cbind the genotypes to the babies matrix to better keep track of column numbers
