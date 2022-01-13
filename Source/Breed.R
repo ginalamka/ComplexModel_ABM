@@ -214,7 +214,6 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     
   }else{
     print(paste("no mutation"))
-    next
   }
   #IS THERE A REASON TO TRACK MUTATIONS? i.e. a column with the number SNP mutated ? would that be beneficial to track or just confusing?
   #should mutation happen later also (i.e. when parents are breeding?)
