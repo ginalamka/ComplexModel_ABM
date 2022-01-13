@@ -143,6 +143,7 @@ Plot = function(theEND){
   #20>replicates (no column header)
 
 #link for some good plotting tips: http://www.sthda.com/english/wiki/graphical-parameters
+#https://bookdown.org/rdpeng/exdata/exploratory-graphs.html#scatterplot---using-color
 
 #thoughts after class>>   
   #consider comparing N and Ne (effective breeders)
