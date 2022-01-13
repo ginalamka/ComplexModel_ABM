@@ -8,20 +8,21 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
 k.V           = 1000 #c(1000, 5000, 10000)                #carrying capacity
-#REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
 nSNP.V        = 10  #scaleup                #number of SNPs simulated
-#REMOVED###nMicro.V      = 100 #tbd                 #number of microsats simulated
-#REMOVED###sex.V         = c(0,1)              #males and females in population, 0 = Female, 1 = Male
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
-#REMOVED###sexratio.V    = 0.5                 #equal ratio of females:males; consider a more real life value here, taken from pedigree data with Poisson dist
 maturity.V    = 1                   #age indv becomes reproductively mature
 years.V       = 100  #scaleup               #total run time; 200 year run following 50 year stabilization period
-#REMOVED###reps.V        = 5 #scaleup                 #number of replications of the simulation
 r0.V          = 0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 #nSNP.mig.V     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 ### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
+
+#REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
+#REMOVED###nMicro.V      = 100 #tbd                 #number of microsats simulated
+#REMOVED###sex.V         = c(0,1)              #males and females in population, 0 = Female, 1 = Male
+#REMOVED###sexratio.V    = 0.5                 #equal ratio of females:males; consider a more real life value here, taken from pedigree data with Poisson dist
+#REMOVED###reps.V        = 5 #scaleup                 #number of replications of the simulation
 
 #potential migration rates: 1-5 indv, 5-10 indv, no migration
 
