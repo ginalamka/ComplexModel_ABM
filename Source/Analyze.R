@@ -106,6 +106,8 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   return(out)
 }
 
+#consider adding number/proportion of migrants vs number/proportion of effective migrants
+
 #to add: (noted 12/29/2021)
   #LRS, RRS >> must use info from ReproSuc.R, so maybe better to calculate there and then feed to Plot.R
   #number of alleles over time
