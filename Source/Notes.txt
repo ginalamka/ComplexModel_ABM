@@ -2,7 +2,7 @@ New thoughts and issues as of 2022
 
 - STILL having issues with the population CRASHING for the first several years until maxage
   locations where maxage is used: initializing pop and source, death
-  this means it might be because the init ages are screwey, or because I am killing them weird. 
+  this means it might be because the init ages are screwey, or because I am killing them weird. (maybe not generating enough babies?)
   **NEED to figure this out
 
 - what should the generation born column say for migrants? 
@@ -106,3 +106,11 @@ instead of the above idea, add 1000 additional migratory SNPs so that migrants a
   #consider altering the population size of source population, think about why indv disperse 
     #i.e. if they are looking for resources vs more mates vs want less competition
   #think about age and sex biases
+  
+Different distributions 
+  poisson - dpois
+  uniform - dunif
+  gamma - dgamma
+  log-normal - dlnorm
+  exponential - dexp
+  normal - dnorm

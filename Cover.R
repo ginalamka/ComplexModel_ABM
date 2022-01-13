@@ -10,7 +10,7 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 k.V           = 1000 #c(1000, 5000, 10000)                #carrying capacity
 #REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
 nSNP.V        = 10  #scaleup                #number of SNPs simulated
-nMicro.V      = 100 #tbd                 #number of microsats simulated
+#REMOVED###nMicro.V      = 100 #tbd                 #number of microsats simulated
 #REMOVED###sex.V         = c(0,1)              #males and females in population, 0 = Female, 1 = Male
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution

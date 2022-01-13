@@ -24,7 +24,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
     #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
     #pop[,3] = rep(0,k)                      #dad id - later will not be 0, this is useful for debugging
-    pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation
+    pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1 
     pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     pop[,6] = NA #this will be for number of times as a parent  #REMOVED###sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     pop[,7] = NA #this will be for number of times offspring survive to maturity   #REMOVED###sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0

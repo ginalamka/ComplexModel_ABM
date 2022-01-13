@@ -106,7 +106,11 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   return(out)
 }
 
-#consider adding number/proportion of migrants vs number/proportion of effective migrants
+#consider adding 
+  #number/proportion of migrants vs number/proportion of effective migrants
+  #genome-wide Fst (compare across loci or in source vs pop)
+  #a way to track inbreeding?? we know the pedigree so maybe if have a great grand parent in common? -- maybe can relate with real krat inbreeding data??
+  #relationship between fitness and heterozygosity (hetero advantage)? is this a thing since most things are random, not selected for?
 
 #to add: (noted 12/29/2021)
   #LRS, RRS >> must use info from ReproSuc.R, so maybe better to calculate there and then feed to Plot.R
