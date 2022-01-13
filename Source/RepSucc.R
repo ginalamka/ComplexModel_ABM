@@ -29,9 +29,15 @@ RepSucc = function(pop, maturity){
     }
   }
 }
+
+#main question: Does the reproductive success change over time?
+  #by birth year? -- may be influenced by age classes
+  #by if alive in given year? -- interaction with longevity (esp for long lived sp)
+
+
 #NOTE: because I 1) breed, then 2)immediately age, then 3)death... that makes it so that all indv that are created, stay alive *at least until 1 year* 
 ##EXCEPT for babies created in the last year (becuse they havent been able to age yet)
-##THEREFORE, columns 6 and 7 should be *nearly* identical - numboff in y ...IF MATURITY = 1 
+##THEREFORE, columns 6 and 7 should be *nearly* identical - numboff in y ...**IF MATURITY = 1 **
 ###** this would be more different (probably) if maturity is a different value
 ###*MIGHT need to remove those that havent died anyways because those wouldnt be complete measures of repro success****
 

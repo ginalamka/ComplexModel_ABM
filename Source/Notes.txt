@@ -20,7 +20,10 @@ New thoughts and issues as of 2022
 
 - still need to add in the migrant tracked SNPs
 
-
+- 1/13/22 -- create generation born/generation died/and generation entered so that migrants are analyzed correctly
+  gen born and died will be used for longevity calculations
+  gen entered and gen died will be used for reproductive success calculations
+  *consider what to do for reproductive success for migrants before moving into pop cuz unlikely that they will be zero*
 
 
 NOT YET UPDATED:

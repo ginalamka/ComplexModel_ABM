@@ -233,7 +233,9 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
 #mutate 0->1 or 1->0
   #meaning the genotype should be generated, then a random switch across SNPs... right?
   #at what frequency should the mutation occur?
-
+#MUTATION NOTES 1/13 -- if happens throughout lifetime, that it more like epi effects** table this idea for another day!
+#now, set a MUTATION RATE so that each SNP has a chance of mutating
+  #think about later when will need to do a sensitivity to make sure that the mutation rate doesnt affect extinction risk. if it does, figure out why and see if it matters! would expect it will be uniform
 
 
 #BREEDING NOTES FROM JANNA 10/19/2021  
