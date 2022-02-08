@@ -24,6 +24,11 @@ New thoughts and issues as of 2022
   gen born and died will be used for longevity calculations
   gen entered and gen died will be used for reproductive success calculations
   *consider what to do for reproductive success for migrants before moving into pop cuz unlikely that they will be zero*
+  
+- 2/8/22 -- consider Ne - perhaps the crash is cuz NE is too small?
+  remember that bottlenecks have greater effect on allelic diverstiy than heterozygosity
+  difference is driven by skewed sex ratio (keep track of sex ratio?)
+  look at chapter 7 of allendorf's book for inspiration
 
 
 NOT YET UPDATED:
