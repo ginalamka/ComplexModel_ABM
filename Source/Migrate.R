@@ -3,7 +3,14 @@
 
 Migrate = function(pop, source){
   #select number of migrants, from 1-5
-  mig = sample(c(1:5), 1, replace=T)
+#  N = sum(pop[,8])  #gets census size
+#  Nmig = round(N*.05)  #5% of N will be new migrants == vary this later == perhaps as a parameter???
+#  Vmig = round(N*.01)  #adds 1% variance +/- Nmig 
+#  mig = sample(c((Nmig-Vmig):(Nmig+Vmig)), 1, replace=T) #randomly sample within the variance of Nmig the number of migrants that year
+  #NOTE-- TO IMPLEMENT THIS, will need to change the number of indv in the source pop, probs around 10k. this will take time tho so I will do this later
+  #remember that H DROPS significantly when there is only 1-5 migrants per year when K stays around 1000. this is an argument AGAINST the 1 mig per generation rule
+  
+  mig = sample(c(1:5), 1, replace=T) #OLD
   
   print(paste("there are", mig, "migrants this year"))
   
