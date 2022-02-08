@@ -200,6 +200,10 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     next
   }
   
+  #CHANGES TO MUTATION THAT NEED TO BE MADE - 1.13.22
+    #set a mutation rate so that each SNP has XX chance of mutating
+    #this should be within Breed.R, not through the lifetime
+    #make it a reasonable rate for each SNP
   if(mutate == 1){  #if mutate is turned "on"
     x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
     u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
