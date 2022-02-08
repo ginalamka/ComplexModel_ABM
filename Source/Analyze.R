@@ -8,7 +8,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
   nSNP          = parameters$nSNP[r]
-  nMicro        = parameters$nMicro[r]
+  #REMOVED###nMicro        = parameters$nMicro[r]
   #REMOVED###sex           = parameters$sex[r]
   maxage        = parameters$maxage[r]
   broodsize     = parameters$broodsize[r]
@@ -101,7 +101,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults",
-                    "k", "nSNP", "nMicro", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
+                    "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
   return(out)
 }

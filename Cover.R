@@ -27,11 +27,11 @@ ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion 
 #potential migration rates: 1-5 indv, 5-10 indv, no migration
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, nSNP.V, nMicro.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
-colnames(parameters) = c("k", "nSNP", "nMicro", "maxage", "broodsize", "maturity", "years", "r0", "ratemort")
+parameters = expand.grid(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
+colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort")
 
 #clean up, remember that these are still available in parameters
-remove(k.V, nSNP.V, nMicro.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
+remove(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
 
 replicates    = 5 #10
 plotit        = 1    #1=yes, 0=no

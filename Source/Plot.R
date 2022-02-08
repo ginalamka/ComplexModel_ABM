@@ -27,10 +27,10 @@ Plot = function(theEND){
         adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
         #Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
         #lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
-        for(q in unique(theEND[,8])){
+        for(q in unique(theEND[,8])){       #unique K
           temp <- theEND[theEND[,8] ==q,]
-          for(i in unique(theEND[,17])){  
-            sub <- theEND[theEND[,17] == i,]
+          for(i in unique(theEND[,16])){  
+            sub <- theEND[theEND[,16] == i,] #unique replicate
             lines(sub[,1], sub[,2], lwd=2)
             lines(sub[,1], sub[,7], col="blue", lwd=2)
           }
@@ -45,9 +45,9 @@ Plot = function(theEND){
         #proportion of migrants
         plot(-100, -100 , xlab="time (years)", ylab="proprtion of migrants in population", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
         mig     = theEND[,3]
-        for(q in unique(theEND[,8])){
-          for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-            sub <- theEND[theEND[,17] == i,]
+        for(q in unique(theEND[,8])){    #unique K
+          for(i in unique(theEND[,16])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+            sub <- theEND[theEND[,16] == i,]  #unique replicate
             lines(sub[,1], sub[,3], lwd=2)
           }
         }
@@ -59,8 +59,8 @@ Plot = function(theEND){
         plot(-100, -100 , xlab="expected heterozygosity", ylab="observed heterozygosity", xlim=c(0, 1), ylim=c(0, 1)) 
         Ho     = theEND[,5]
         He     = theEND[,4]
-        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[theEND[,17] == i,]
+        for(i in unique(theEND[,16])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,16] == i,] #unique replicate
           points(He, Ho, lwd=2)
         }
         #points(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 1, lty = 1, col="black", lwd=5)
@@ -70,8 +70,8 @@ Plot = function(theEND){
         #observed hetero over time
         plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
         #Ho     = theEND[,5]
-        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[theEND[,17] == i,]
+        for(i in unique(theEND[,16])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,16] == i,] #unique replicate
           Ho <- sub[,5]
           lines(sub[,1], Ho, lwd=2) #points(sub[,1], Ho, lwd=2)
         }
@@ -97,15 +97,15 @@ Plot = function(theEND){
         #observed heteroz and proportion of migrants in pop
         par(mar = c(5,4,4,4)+0.3)
         plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[theEND[,17] == i,]
+        for(i in unique(theEND[,16])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,16] == i,]  #unique replicate
           Ho <- sub[,5]
           lines(sub[,1], Ho, lwd=2)
         }
         par(new = TRUE)
-        for(i in unique(theEND[,17])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[theEND[,17] == i,]
-          mig <- sub[,3]
+        for(i in unique(theEND[,16])){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+          sub <- theEND[theEND[,16] == i,] #unique replicate
+          mig <- sub[,3]  #prop migrants
           lines(sub[,1], mig, lwd=2, col = "blue")
         }
         axis(side = 4, at = NULL, labels = TRUE, col = "blue")
@@ -129,18 +129,14 @@ Plot = function(theEND){
   #6 > meanRRS         #still need to add
   #7 > nadults
   #8 > k
-  #9 > #REMOVED###allele          
-  #10 > nSNP
-  #11> nMicro
-  #12> #REMOVED###sex
-  #13> maxage
-  #14> broodsize
-  #15> #REMOVED###sexratio
-  #16>maturity
-  #17>years
-  #18>r0
-  #19>ratemort
-  #20>replicates (no column header)
+  #9 > nSNP
+  #10> maxage
+  #11> broodsize
+  #12>maturity
+  #13>years
+  #14>r0
+  #15>ratemort
+  #16>replicates (no column header)
 
 #link for some good plotting tips: http://www.sthda.com/english/wiki/graphical-parameters
 #https://bookdown.org/rdpeng/exdata/exploratory-graphs.html#scatterplot---using-color
