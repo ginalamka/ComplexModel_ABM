@@ -36,16 +36,15 @@ Project Flow:
 set parameters >                                 #set variables
   init pop and source >                          #create pops
     AgeUp >                                      #age pop + 1 year
-      DeathbyAge >                               #age-dependent mortality
-        RandomDeath >                            #random mortality
-          Migrate >                              #subpop migration
-            MateChoice >                         #find partner(s)
-              PopSizeNext >                      #determine pop size and trend
-                Breed >                          #get freaky
-                  OffspringAssign >              #assign offspring alleles
-                    Repeat >                     #replicate
-                      Analyze >                  #analyze the outcome
-                        Validate                 #compare to real data
+      Death >                                    #mortality
+        Migrate >                                #subpop migration
+          MateChoice >                           #find partner(s)
+            PopSizeNext >                        #determine pop size and trend
+              Breed >                            #get freaky
+                Repeat >                         #100 years
+                  Replicate >                    #Add reps
+                    Analyze >                    #analyze the outcome
+                      Validate                   #compare to real data
 
 
 Notes that may be helpful in the future:
