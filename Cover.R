@@ -36,6 +36,7 @@ remove(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V
 replicates    = 5 #10
 plotit        = 1    #1=yes, 0=no
 r             = 1
+stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
 mutate        = 0    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
 
