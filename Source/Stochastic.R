@@ -45,4 +45,22 @@ Stochastic = function(pop, stoch, k){
   
   return(alive)
 }
-#need to figure out how to regulate what years this occurs. that will depend on the stochastic type and where this is placed
+#need to figure out how to regulate what years this occurs. that will depend on the stochastic type and where this is placed 
+
+#notes from talking with Janna 2/14
+#dont forget to add a check to make sure that k > 20 (or whatever makes sense/is my popsize cutoff)
+#need to add new parameters: decline start year, decline end year, end year + duration at low k
+  #will also need to know what the drop percent is, but will do that as we go
+  #then after year+duration, will want logistic growth rate to take over for the population to recover
+
+#also note modulus 
+  #for example, if want to select every other year, will do "year % 2" -- will give true/false 
+    #if want a value divisible by 5, do value % 5
+
+
+#notes on mutation 2/14: 
+#set mutation rate as mu, feed in nSNPs (?)
+ #loop over each indv in breed:  
+  #mut = sample(c("mutate":"no mutate"), 2*nSNPs, prob = (1-mu, mu))   #sample to either mutate or not for each indv allele with a probability of mu
+  #indv[mut[mut=="mutate"]&indv[indv==1]] = 0                          #if it should be mutated, if it is a 1, go to zero
+  #indv[mut[mut=="mutate"]&indv[indv==0]] = 1                          #same as above but vise versa
