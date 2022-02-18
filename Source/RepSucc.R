@@ -8,6 +8,7 @@
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
 RepSucc = function(pop, maturity){
+  #calc the total number of offspring
   for(i in unique(pop[,1])){                          #iterate over id
     if(!is.null(nrow(pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]))){
       temp = pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]           #find if id is in mom OR dad column
@@ -19,6 +20,7 @@ RepSucc = function(pop, maturity){
 
   }
   
+  #calc the total number of adult offspring
   for(j in unique(pop[,1])){                          #iterate over id
     if(!is.null(nrow(pop[which(pop[,2] == j | pop[,3] == j & pop[,4] >= maturity),, drop=FALSE]))){
       tem = pop[which(pop[,2] == j | pop[,3] == j & pop[,4] >= maturity),, drop = FALSE]           #find if id is in mom OR dad column
@@ -28,6 +30,13 @@ RepSucc = function(pop, maturity){
       next
     }
   }
+  
+  #calc the longevity of indv
+  alive = pop[pop[,8] == 1, , drop=FALSE]          #remove dead indvs
+  
+  long = pop[-which(pop[,1]%in%alive), , drop=FALSE]
+  table(long[,4])
+  hist(long[,4])
 }
 
 #main question: Does the reproductive success change over time?
