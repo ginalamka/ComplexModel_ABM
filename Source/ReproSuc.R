@@ -65,6 +65,7 @@ ReproSuc = function(pop){
     }
     
   }
+
   
   #WHY ARE THERE ZEROS???  >> make test matrix and double check that this is calculating correctly
   #the values are correct, but I still dont know why some will be zeros and others are not??
