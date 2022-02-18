@@ -1,7 +1,7 @@
 #Breed
 #for complex model for ABM class
 
-Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
@@ -129,6 +129,21 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
+    #2/18 for some reason, these tend to fixate ?? check with Janna to figure out why??
+    
+    if(mutate == 1){  #if mutate is turned "on"
+      for(x in 1:nrow(babygeno)){    #iterate over indv
+        mut <- sample(c("Y","N"), 2*nSNP, replace = TRUE, prob = c(mu,1-mu))
+        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
+        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
+        ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
+        ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
+        mut[which(mut=='Y' & init==1)] <- 'N'
+        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
+      }
+    }else{
+      print(paste("no mutation"))
+    }
     
     babies = cbind(babies, babygeno)
     
@@ -192,6 +207,22 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
     
+    #2/18 for some reason, these tend to fixate ?? check with Janna to figure out why??
+    
+    if(mutate == 1){  #if mutate is turned "on"
+      for(x in 1:nrow(babygeno)){    #iterate over indv
+        mut <- sample(c("Y","N"), 2*nSNP, replace = TRUE, prob = c(mu,1-mu))
+        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
+        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
+        ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
+        ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
+        mut[which(mut=='Y' & init==1)] <- 'N'
+        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
+      }
+    }else{
+      print(paste("no mutation"))
+    }
+    
     babies = cbind(babies, babygeno)
     
     pop = rbind(pop, babies)
@@ -204,21 +235,36 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y){
     #set a mutation rate so that each SNP has XX chance of mutating
     #this should be within Breed.R, not through the lifetime
     #make it a reasonable rate for each SNP
-  if(mutate == 1){  #if mutate is turned "on"
-    x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
-    u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
+
+      
     
-    if(babies[x, (ncol(babies)-u)] == 1){
-      babies[x, (ncol(babies)-u)] = 0
-      print(paste("mutated 1 -> 0"))
-    }else if(babies[x, (ncol(babies)-u)] == 0){
-      babies[x, (ncol(babies)-u)] = 1
-      print(paste("mutated 0 -> 1"))
-    }
+          #x[mut[mut=="Y"]&x[x==1]] = 0                          #if it should be mutated, if it is a 1, go to zero
+          #x[mut[mut=="Y"]&x[x==0]] = 1                          #same as above but vise versa
+      
     
-  }else{
-    print(paste("no mutation"))
-  }
+    
+    
+    
+    #REMOVED#x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
+    #REMOVED#u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
+    
+    #REMOVED#if(babies[x, (ncol(babies)-u)] == 1){
+      #REMOVED#babies[x, (ncol(babies)-u)] = 0
+      #REMOVED#print(paste("mutated 1 -> 0"))
+    #REMOVED#}else if(babies[x, (ncol(babies)-u)] == 0){
+      #REMOVED#babies[x, (ncol(babies)-u)] = 1
+      #REMOVED#print(paste("mutated 0 -> 1"))
+    #}
+    
+  
+  
+  #notes on mutation 2/14: 
+  #set mutation rate as mu, feed in nSNPs (?)
+  #loop over each indv in breed:  
+  #mut = sample(c("mutate":"no mutate"), 2*nSNPs, prob = (1-mu, mu))   #sample to either mutate or not for each indv allele with a probability of mu
+  #indv[mut[mut=="mutate"]&indv[indv==1]] = 0                          #if it should be mutated, if it is a 1, go to zero
+  #indv[mut[mut=="mutate"]&indv[indv==0]] = 1                          #same as above but vise versa
+  
   #IS THERE A REASON TO TRACK MUTATIONS? i.e. a column with the number SNP mutated ? would that be beneficial to track or just confusing?
   #should mutation happen later also (i.e. when parents are breeding?)
   
