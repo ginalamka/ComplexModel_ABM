@@ -168,7 +168,7 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("No new babies, skip breed"))
         next
       }
-      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize, y) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
