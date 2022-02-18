@@ -63,6 +63,7 @@ Plot = function(theEND){
           sub <- theEND[theEND[,16] == i,] #unique replicate
           points(He, Ho, lwd=2)
         }
+        abline(coef = c(0,1), col = "red")
         #points(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 1, lty = 1, col="black", lwd=5)
         dev.copy(png, "../Output/observed_vs_expected_heterozygosity.png")
         dev.off()
@@ -140,6 +141,7 @@ Plot = function(theEND){
 
 #link for some good plotting tips: http://www.sthda.com/english/wiki/graphical-parameters
 #https://bookdown.org/rdpeng/exdata/exploratory-graphs.html#scatterplot---using-color
+#https://www.statology.org/abline-in-r/#:~:text=How%20to%20Use%20abline%20%28%29%20in%20R%20to,line.%20h%3A%20the%20y-value%20for%20the%20horizontal%20line.
 
 #thoughts after class>>   
   #consider comparing N and Ne (effective breeders)
