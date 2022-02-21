@@ -26,6 +26,9 @@ Migrate = function(pop, source){
   return(list(pop, mig, source))
 }
 
+#things to remember from Allendorf's book, pg 209: the larger the demes, the slower they are diverging through drift; 
+  #therefore proportionally fewer migrants needed to counteract drift
+
 #NOTES 12/16/2021
 #consider if migrants should have a generation born of 0, the year they migrated, or the year they migrated minus their age.
 #think about the implications of each choice.
