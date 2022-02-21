@@ -41,6 +41,11 @@ mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
 mu            = 0.001  #mutation rate
 
+styr          = 100 #year to start pop decline
+edyr          = 150 #year to end pop decline, first year at low pop size
+nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+dur           = 50  #duration of small pop size before pop growth 
+
 #run model iterating over parameters 
 theEND = NULL
 for(r in 1:nrow(parameters)){

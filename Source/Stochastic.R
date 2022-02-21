@@ -17,6 +17,12 @@
 
 #set up is similar to & modeled after RandomDeath.R
 
+"new parameters:
+styr          = 100 #year to start pop decline
+edyr          = 150 #year to end pop decline, first year at low pop size
+nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+dur           = 50  #duration of small pop size before pop growth "
+
 Stochastic = function(pop, stoch, k){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
   alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
