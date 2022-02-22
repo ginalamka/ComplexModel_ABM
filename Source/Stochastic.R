@@ -23,7 +23,59 @@ edyr          = 150 #year to end pop decline, first year at low pop size
 nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
 dur           = 50  #duration of small pop size before pop growth "
 
-Stochastic = function(pop, stoch, k){
+#put this function after PopSizeNext, before Breed. 
+  #this allows me to kill those still alive but not kill the new babies. 
+  #I *think* that means I should make sure not to kill parents from MateChoice
+    #to make it easier -- just put this after Breed, at the very end. 
+Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y){
+  if(y < styr | y > edyr+dur){
+    next
+    #if it is before the stochastic decline period, skip this function
+  }else if(styr <= y & y < edyr){
+    dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+    pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+    
+    killrate = (nrow(pop)-nwk)/(edyr-styr)   #the number to decrease in k per year
+    
+    k <- k-killrate
+    
+    numbkill = nrow(pop) - k #- numboff    #add this if I am protecting the new babies and not killing them. consider implications
+    
+    stkill = sample(pop[,1], numbkill, replace = FALSE)
+    killed = pop[-which(pop[,1]%NOT in%stkill), , drop = FALSE]
+    if(!is.null(nrow(killed))){
+      killed[,8] = 0
+    }
+    pop <- rbind(pop, killed)
+  }else(y > edyr & y <= edyr+dur){
+    dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+    pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+    
+    v = nrow(pop) - nwk
+    if(v > 0){
+      stkill = sample(pop[,1], v, replace = FALSE)
+      killed = pop[-which(pop[,1]%NOT in%stkill), , drop = FALSE]
+      if(!is.null(nrow(killed))){
+        killed[,8] = 0
+      }else if(v<=0){
+        next
+      }
+      pop <- rbind(pop, killed)
+      
+    }
+    
+  }
+  
+  print(paste("K is now", k, ". ", nrow(killed), "have been killed"))
+  
+  pop = rbind(dead, pop)
+  return(pop, k)
+}
+  
+  
+  
+  
+#OLD ATTEMPT
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
   alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
   #since only returning numboff, dont need to rbind dead and alive into pop
@@ -50,7 +102,7 @@ Stochastic = function(pop, stoch, k){
   print(paste("K is now", k, ". ", nrow(kill), "have been killed"))
   
   return(alive)
-}
+
 #need to figure out how to regulate what years this occurs. that will depend on the stochastic type and where this is placed 
 
 #notes from talking with Janna 2/14
