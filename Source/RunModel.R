@@ -88,12 +88,12 @@ RunModel = function(parameters, r, directory, replicates){
     #implications of each decision is based on calculating heterozygosity vs generating offspring
     
     #initialize source population 
-    source = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe
+    source = matrix(nrow=s, ncol=10)            #each individual gets its own row.. matrix > dataframe
     colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
-    source[,1] = seq(-(k),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
+    source[,1] = seq(-(s),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
-    source[,4] = sample(seq(0,maxage,1),k,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
-    source[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
+    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
+    source[,5] = sample(c(0,1),s,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
     source[,6] = NA #this will be for number of times as a parent   #REMOVED##sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     source[,7] = NA #for number of offspring that reach maturity ##REMOVED#### sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
@@ -101,27 +101,27 @@ RunModel = function(parameters, r, directory, replicates){
     source[,10] = 0                            #generation died
     
     #generate source gentoypes
-    sourcegen = matrix(nrow=k, ncol=nSNP*2)
+    sourcegen = matrix(nrow=s, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
       p = sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
-      pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
-               rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
-               rep(2, k-(round(k*p*p, 0)+(round(k*(1-p)*(1-p), 0))))         #heterozygous
+      pool = c(rep(0, round(s*p*p, 0)),                                      #homozygous p*p
+               rep(1, round(s*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
+               rep(2, s-(round(s*p*p, 0)+(round(s*(1-p)*(1-p), 0))))         #heterozygous
       )
-      gtype = sample(pool, k, replace = FALSE)
-      for(kk in 1:k){
-        if(gtype[kk]==0){                 #homo (0,0)
-          sourcegen[kk,columns[l]]   = 0
-          sourcegen[kk,columns[l]+1] = 0
+      gtype = sample(pool, s, replace = FALSE)
+      for(ss in 1:s){
+        if(gtype[ss]==0){                 #homo (0,0)
+          sourcegen[ss,columns[l]]   = 0
+          sourcegen[ss,columns[l]+1] = 0
           next
-        }else if(gtype[kk]==1){           #hetero (0,1)
-          sourcegen[kk,columns[l]]   = 0
-          sourcegen[kk,columns[l]+1] = 1
+        }else if(gtype[ss]==1){           #hetero (0,1)
+          sourcegen[ss,columns[l]]   = 0
+          sourcegen[ss,columns[l]+1] = 1
         }else{                            #homo (1,1)
-          sourcegen[kk,columns[l]]   = 1
-          sourcegen[kk,columns[l]+1] = 1
+          sourcegen[ss,columns[l]]   = 1
+          sourcegen[ss,columns[l]+1] = 1
         }
       }
       #colnames(sourcegen) <- c('SNP', l)
@@ -172,6 +172,9 @@ RunModel = function(parameters, r, directory, replicates){
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
+      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y)
+      pop = tttt[[1]]
+      k = tttt[[2]]
       
       print(paste("DONE!", y))
       
