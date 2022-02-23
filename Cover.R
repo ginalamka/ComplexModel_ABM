@@ -12,7 +12,7 @@ nSNP.V        = 10  #scaleup                #number of SNPs simulated
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
-years.V       = 100  #scaleup               #total run time; 200 year run following 50 year stabilization period
+years.V       = 250  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #1 is stable, <1 is decreasing, >1 is increasing
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 #nSNP.mig.V     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
@@ -45,6 +45,8 @@ styr          = 100 #year to start pop decline
 edyr          = 150 #year to end pop decline, first year at low pop size
 nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
 dur           = 50  #duration of small pop size before pop growth 
+
+s             = 5000 #size of source pop
 
 #run model iterating over parameters 
 theEND = NULL
