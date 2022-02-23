@@ -30,12 +30,11 @@ dur           = 50  #duration of small pop size before pop growth "
 Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y){   #may not need stoch (if will always have stoch change) or numboff (if kill fresh babies too)
   ##check out Analyze.R -- I think I can just do multiple returns for each if statement?
   
-  #if(y < styr | y > edyr+dur){   #think about what to do with K after the decline - when do I set K back?
-   # killed = NULL
-    #next
+  if(y < styr | y > edyr+dur){   #think about what to do with K after the decline - when do I set K back?
+    killed = NULL
+    return()
     #if it is before the stochastic decline period, skip this function
-  #}
-  if(styr <= y & y < edyr){
+  }else if(styr <= y & y < edyr){
     dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
     pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
     
