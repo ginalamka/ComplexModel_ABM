@@ -106,6 +106,13 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   return(out)
 }
 
+#notes 2/28/22
+  #add in Fst. do this for every year, and then later will cherry pick the results for every generation
+  #compare the Fst of the starting pop to the Fst of successive years to see how fst changes. 
+  #use the Weir and Cockerheim's Fst-- this should be a function/package in R to calculate this to make it easier
+    #consider any biases in independence, but that may not be an issue
+      #POTENTIAL APPLICATION is trying to create a calculation for estimating migrants from Fst values. --could be linked to our data?
+
 #consider adding 
   #number/proportion of migrants vs number/proportion of effective migrants
   #genome-wide Fst (compare across loci or in source vs pop)

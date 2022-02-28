@@ -121,6 +121,9 @@ Plot = function(theEND){
   
   
 }
+
+#notes 2/28/22 -- still need to add Fst calcuations. check in Analyze.R for more details
+
 #columns in theEND:
   #1 > year
   #2 > popsize
