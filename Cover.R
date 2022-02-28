@@ -31,7 +31,8 @@ parameters = expand.grid(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V
 colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort")
 
 #clean up, remember that these are still available in parameters
-remove(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V)
+remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V) #k.V
+#2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 5 #10
 plotit        = 1    #1=yes, 0=no
