@@ -172,7 +172,7 @@ RunModel = function(parameters, r, directory, replicates){
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
-      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y)
+      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years)
       pop = tttt[[1]]
       k = tttt[[2]]
       
