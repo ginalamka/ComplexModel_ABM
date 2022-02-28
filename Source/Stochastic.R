@@ -27,50 +27,74 @@ dur           = 50  #duration of small pop size before pop growth "
   #this allows me to kill those still alive but not kill the new babies. 
   #I *think* that means I should make sure not to kill parents from MateChoice
     #to make it easier -- just put this after Breed, at the very end. 
-Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y){   #may not need stoch (if will always have stoch change) or numboff (if kill fresh babies too)
+Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years){   #may not need stoch (if will always have stoch change) or numboff (if kill fresh babies too)
   ##check out Analyze.R -- I think I can just do multiple returns for each if statement?
+  stkilled = NULL
   
-  if(y < styr | y > edyr+dur){   #think about what to do with K after the decline - when do I set K back?
-    killed = NULL
-    return()
+  if(y < styr){   
     #if it is before the stochastic decline period, skip this function
+    #k= k.V #probs not necessary -- only necessary for the increase -- rememebr to remove this again later
+    stkilled = NULL
+    dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+    pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+    #just doing this to set the data up like the others
+    
+  }else if(y > edyr+dur){   #think about what to do with K after the decline - when do I set K back?
+    #if it is before the stochastic decline period, skip this function
+    stkilled = NULL
+    dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+    pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+    #just doing this to set the data up like the others
+    
+    incrate = round((k.V - nrow(pop))/(years-y))   #another way to do this would be to use teh intrinsic growth rate from PopSizeNext.
+    k <- k + incrate
+    
   }else if(styr <= y & y < edyr){
     dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
     pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
     
-    killrate = round((nrow(pop)-nwk)/(edyr-styr))   #the number to decrease in k per year
+    killrate = round((nrow(pop)-nwk)/(edyr-styr))   #the number to decrease in k per year ---THIS NEEDS TO BE UPDATED
     
     k <- k-killrate                          #new k
     
     numbkill = nrow(pop) - k #- numboff    #add this if I am protecting the new babies and not killing them. consider implications
     
-    stkill = sample(pop[,1], numbkill, replace = FALSE)     #randomly select those to kill
-    killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]   #kill them
-    if(!is.null(nrow(killed))){
-      killed[,8] = 0
+    if(numbkill > 0){
+      stkill = sample(1:nrow(pop), numbkill, replace = FALSE)     #randomly select those to kill
+      pop[stkill,8] = 0
+      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]   #kill them
+      #pop = pop[-which(pop[,1]%in%stkill), , drop = FALSE] 
     }
-    pop <- rbind(pop, killed)
+#    if(!is.null(nrow(killed))){
+ #     killed[,8] = 0
+  #    pop <- rbind(pop, killed)
+   # }
+    
     
   }else{                  #if during the duration period of bottleneck, maintain small pop size ##REMOVED#(y > edyr & y <= edyr+dur)
     dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
     pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
     
-    v = nrow(pop) - nwk          #find if too many have been created and kill some
-    if(v > 0){
-      stkill = sample(pop[,1], v, replace = FALSE)     #randomly select
-      killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]
-      if(!is.null(nrow(killed))){                      #kill them
-        killed[,8] = 0
-      }else if(v<=0){
-        next
-      }
-      pop <- rbind(pop, killed)
+    numbkill = nrow(pop) - nwk          #find if too many have been created and kill some
+    if(numbkill > 0){
+      stkill = sample(1:nrow(pop), numbkill, replace = FALSE)     #randomly select those to kill
+      pop[stkill,8] = 0
+      
+      #stkill = sample(pop[,1], v, replace = FALSE)     #randomly select
+      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]
+      
+      #if(!is.null(nrow(killed))){                      #kill them
+      #  killed[,8] = 0
+      #}else if(v<=0){
+      #  next
+      #}
+      #pop <- rbind(pop, killed)
       
     }
     
   }
   
-  print(paste("K is now", k, ".", nrow(killed), "have been killed"))
+  print(paste("K is now", k, ".", length(stkilled), "have been killed"))
   
   pop = rbind(dead, pop)
   return(list(pop,k)) #dont forget to split these when going back into RunModel
@@ -118,3 +142,6 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y){   #may 
 #also note modulus 
   #for example, if want to select every other year, will do "year % 2" -- will give true/false 
     #if want a value divisible by 5, do value % 5
+
+
+#str(object) tells type of object
