@@ -35,7 +35,7 @@ Plot = function(theEND){
             lines(sub[,1], sub[,7], col="blue", lwd=2)
           }
         }
-        legend("bottomright", legend=c("total population size", "total number of adults"),
+        legend("bottomleft", legend=c("total population size", "total number of adults"),
                col=c("black", "blue"), lty=1:1, cex=0.8)
         #points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
         #points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
