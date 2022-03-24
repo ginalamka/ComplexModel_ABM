@@ -17,7 +17,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   years         = parameters$years[r]
   r0            = parameters$r0[r]
   ratemort      = parameters$ratemort[r]
-  #nSNP.mig     = parameters$nSNP.mig[r] 
+  nSNP.mig      = parameters$nSNP.mig[r] 
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
   #write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
@@ -63,13 +63,14 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     FIN[f,3] =  sum(data[,2]==-1)/length(data[,1])   #1 - sum(data[,2]==-1)/length(data[,1])
     
     #He and Ho - neutral (?)
-    genotype = data[, -c(ncol(data)-(nSNP*2):ncol(data))]
-    SNPs = rep(c(1,2),ncol(genotype)/2)
+    SNPS = (nSNP*2) + (nSNP.mig*2)
+    genotype = data[, -c(ncol(data)-SNPS:ncol(data))]
+    snps = rep(c(1,2),ncol(genotype)/2)
     
     HE = NULL
     HO = NULL
     
-    loc.pos = seq(1, (nSNP*2), 2)
+    loc.pos = seq(1, SNPS, 2)
     for(lp in loc.pos){
       #per locus heterozygostiy
       locus <- genotype[, c(lp, lp+1), drop=FALSE]

@@ -1,7 +1,7 @@
 #Breed
 #for complex model for ABM class
 
-Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate){
   #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
@@ -103,8 +103,10 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
       break
     }
     
-    fg = fem[, -c(ncol(fem)-(nSNP*2):ncol(fem))]
-    mg = mal[, -c(ncol(mal)-(nSNP*2):ncol(mal))]
+    SNPS = (nSNP*2) + (nSNP.mig*2)
+    
+    fg = fem[, -c(ncol(fem)-(SNPS):ncol(fem))]
+    mg = mal[, -c(ncol(mal)-(SNPS):ncol(mal))]
 
     #check 
     #if(nrow(fg)==nrow(mg)){
@@ -113,19 +115,19 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
     #  print(paste("error in parent genotypes"))
     #}
     
-    babygeno = matrix(nrow=bb, ncol=(nSNP*2))
+    babygeno = matrix(nrow=bb, ncol=SNPS)
     
     #allele 1 positions
-    pos = seq(1, (nSNP*2), 2)
+    pos = seq(1, SNPS, 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
+    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)      #divide SNPS by 2 because half SNPs come from mom
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
     
-    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
+    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)      #divide SNPS by 2 because half SNPs come from dad
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
@@ -133,7 +135,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
     
     if(mutate == 1){  #if mutate is turned "on"
       for(x in 1:nrow(babygeno)){    #iterate over indv
-        mut <- sample(c("Y","N"), 2*nSNP, replace = TRUE, prob = c(mu,1-mu))
+        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))
         init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
         babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
         ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
@@ -180,8 +182,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
       break
     }
     
-    fg = fem[, -c(ncol(fem)-(nSNP*2):ncol(fem))]
-    mg = mal[, -c(ncol(mal)-(nSNP*2):ncol(mal))]
+    fg = fem[, -c(ncol(fem)-SNPS:ncol(fem))]
+    mg = mal[, -c(ncol(mal)-SNPS:ncol(mal))]
     
     #check 
     #if(nrow(fg)==nrow(mg)){
@@ -190,19 +192,19 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
     #  print(paste("error in parent genotypes"))
     #}
     
-    babygeno = matrix(nrow=bb, ncol=(nSNP*2))
+    babygeno = matrix(nrow=bb, ncol=SNPS)
     
     #allele 1 positions
-    pos = seq(1, (nSNP*2), 2)
+    pos = seq(1, SNPS, 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
+    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)          #divide SNPS by 2 because half SNPs come from mom
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
     
-    mallele  <- pos + sample(0:1, nSNP*bb, replace = TRUE,)
+    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)          #divide SNPS by 2 because half SNPs come from dad
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = nSNP, byrow = TRUE,)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
@@ -211,7 +213,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate){
     
     if(mutate == 1){  #if mutate is turned "on"
       for(x in 1:nrow(babygeno)){    #iterate over indv
-        mut <- sample(c("Y","N"), 2*nSNP, replace = TRUE, prob = c(mu,1-mu))
+        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))
         init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
         babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
         ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),

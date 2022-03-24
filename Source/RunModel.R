@@ -15,7 +15,7 @@ RunModel = function(parameters, r, directory, replicates){
     years         = parameters$years[r]
     r0            = parameters$r0[r]
     ratemort      = parameters$ratemort[r]
-    #nSNP.mig     = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+    nSNP.mig      = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
     
     #initialize population
     pop = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -62,14 +62,22 @@ RunModel = function(parameters, r, directory, replicates){
       
       #add genotypes to pop matrix
     }
-    focalpop <- cbind(pop, popgen)   ##??not sure why, but not binding correctly???
+    
+    #create migrant and nonmigrant unique SNPs 
+    popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
+    columnsb = seq(1,(nSNP.mig*2),2)
+    for(c in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+      popSNPs[c,] = 0
+    }
+    
+    focalpop <- cbind(pop, popgen, popSNPs)   ##??not sure why, but not binding correctly???
     pop <- focalpop
     
     #write starting pop to table
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, focalpop)
+    remove(popgen, focalpop, popSNPs)
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -130,14 +138,22 @@ RunModel = function(parameters, r, directory, replicates){
       #add genotypes to source matrix
       
     }
-    source1 <- cbind(source, sourcegen)        #also doesnt work????
+    
+    #create migrant and nonmigrant unique SNPs
+    migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
+    columnsc= seq(1,(nSNP.mig*2),2)
+    for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
+      migSNPs[d,] = 1
+    }
+    
+    source1 <- cbind(source, sourcegen, migSNPs)        #also doesnt work????
     source <- source1
     
     #write starting source to table
     #### REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(sourcegen, source1, pool)
+    remove(sourcegen, source1, pool, migSNPs, l, c, d, kk, ss)
     
     #create for loop for each time step
     for(y in 1:years){
@@ -168,7 +184,7 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("No new babies, skip breed"))
         next
       }
-      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, broodsize, y, mu, mutate) #still needs work 
+      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate) #still needs work 
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
