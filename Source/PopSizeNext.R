@@ -29,9 +29,7 @@ PopSizeNext = function(pop, k, r0, maturity){
   #turn numboff into an integer
   numboff = as.integer(numboff)
   print(paste("the number of offspring needed is", numboff))
-  #print(paste("numboff is an", typeof(numboff)))  #this check was to fix a bug, works now so not needed
   
   return(numboff)
 }
 
-#check type of object using typeof(numboff), want it to be an integer, not double

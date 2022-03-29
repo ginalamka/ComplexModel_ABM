@@ -2,7 +2,6 @@
 #for complex model for ABM class
 
 Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate){
-  #consider if fecundity should be generated here or added as a column in pairs in MateChoice.R
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   if(is.null(nrow(pairs))==TRUE){
@@ -24,7 +23,6 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   #parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
   
   nbabes = sum(parents[,3])
-  #consider changing the matrix so that nrow = nbabes, not number of parents - not sure how to make that function
   
   #currently this works so that each pair only makes 1 baby
   #figure this out so that we have varying fecundity and only some of the offspring survive

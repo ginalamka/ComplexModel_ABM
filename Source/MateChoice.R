@@ -43,15 +43,3 @@ MateChoice = function(pop, sex, maturity){
     return(pairs)
   }
 }
-#NOTES FROM JANNA 10/19/2021
-#try this flow: get all females that are mature, randomize them, then match them with males
-#that will rearrange this whole function, but can be done -- SIMPLIFY
-#the main thing is to randomize the pairs so that offspring generated are from a random pair
-# https://stackoverflow.com/questions/9081498/randomly-re-order-shuffle-rows-of-a-matrix
-
-#*note, because krats have a promiscuous system, allow replacement so multiple indv can mate more than once (monogamous would be set up different)
-#as set up currently, only the sex with the most indv will be used more than once (i.e. not both sexes with multiple mating events)
-#consider requiring that migrants mate, or dont and then can compare N and Ne(?)
-
-
-##MAKE SURE TO KNOW IF MALE/FEMALE IS MATE 1or2**

@@ -63,15 +63,8 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years){ 
     if(numbkill > 0){
       stkill = sample(1:nrow(pop), numbkill, replace = FALSE)     #randomly select those to kill
       pop[stkill,8] = 0
-      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]   #kill them
-      #pop = pop[-which(pop[,1]%in%stkill), , drop = FALSE] 
     }
-#    if(!is.null(nrow(killed))){
- #     killed[,8] = 0
-  #    pop <- rbind(pop, killed)
-   # }
-    
-    
+
   }else{                  #if during the duration period of bottleneck, maintain small pop size ##REMOVED#(y > edyr & y <= edyr+dur)
     dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
     pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
@@ -80,17 +73,6 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years){ 
     if(numbkill > 0){
       stkill = sample(1:nrow(pop), numbkill, replace = FALSE)     #randomly select those to kill
       pop[stkill,8] = 0
-      
-      #stkill = sample(pop[,1], v, replace = FALSE)     #randomly select
-      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]
-      
-      #if(!is.null(nrow(killed))){                      #kill them
-      #  killed[,8] = 0
-      #}else if(v<=0){
-      #  next
-      #}
-      #pop <- rbind(pop, killed)
-      
     }
     
   }
@@ -102,47 +84,6 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years){ 
 }
   
   
-
-  
-#OLD ATTEMPT
-#  dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
-#  alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
-#  #since only returning numboff, dont need to rbind dead and alive into pop
-  
-  #pop = pop[pop[,4] >= maturity, , drop=FALSE]          #isolate adults -- if only want effective pop size to count here
-  
-  #calculate the current population size
-#  Nt = nrow(alive)
-  
-  #find new K
-  #will k need to be changed for every year or can it get back to the original K? think about these implications
-#  if(stoch == 2){
-#    new_k = Nt * .95    #drop in K by 5% of pop size
-#  }else if(stoch == 1){
-#    new_k = Nt * .7    #drop in K by 30%
-#  }
-  #randomly select indv to die
-  #syntax: sample(group, X, replace) with group being the column in the matrix, X being the number to kill per run
-#  kill = sample(alive[,1], (Nt - new_k), replace = FALSE)
-#  alive = alive[-which(alive[,1]%in%kill),]
-  
-#  k <- new_k
-  
-#  print(paste("K is now", k, ". ", nrow(kill), "have been killed"))
-  
-#  return(alive)
-
-#need to figure out how to regulate what years this occurs. that will depend on the stochastic type and where this is placed 
-
-#notes from talking with Janna 2/14
-#dont forget to add a check to make sure that k > 20 (or whatever makes sense/is my popsize cutoff)
-#need to add new parameters: decline start year, decline end year, end year + duration at low k
-  #will also need to know what the drop percent is, but will do that as we go
-  #then after year+duration, will want logistic growth rate to take over for the population to recover
-
 #also note modulus 
   #for example, if want to select every other year, will do "year % 2" -- will give true/false 
     #if want a value divisible by 5, do value % 5
-
-
-#str(object) tells type of object

@@ -15,11 +15,3 @@ AgeUp = function(pop){
   remove(dead)
   return(pop)
 }
-
-#testing
-## AgeUp(pop)
-
-#must remove dead before aging -- taken from MateChoice.R
-
-#12/28/2021
-#note that sometimes the age is 10. check how that can be and what might need to be done to fix that. 

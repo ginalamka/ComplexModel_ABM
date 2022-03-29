@@ -47,28 +47,6 @@ Death = function(pop, maxage, ratemort, y){
   
   return(pop)
 }
-  
-#notes 11/8
-#problem with pop crashing after 6 years is because I am killing too much
-#therefore, instead of random death, put in a age-related increase of chances of death
-#maybe will want to make sure that only adults are mating, not babies -- important for age at maturity -- make temp pop to make sure that only adults are in pop
-#age/lifespan for all individyuals to get this age/random mortality
-#could do a loop or could use the apply function
-#apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-1
-#make sure that the values spit it out corrrectly, i.e. kills 30% not 70$ based on incorrect putting in probabilities
-
-#for the column alive v dead, make sure that the functions taht need pop get a temp pop for only adults (mate choice, breeding) but hten make sure to add the indv (breed) to the main pop, not temp pop
-
-#fake = matrix(nrow=5, ncol = 5)
-#fake[,1] = c(1:5)
-#fake[,2] = c(-2:2)
-#m = fake[fake[,2] <=0, , drop=FALSE]
-#m
-#if(fake[,1]%in%m){
-#  fake[,3] = 1
-#}else{
-#  fake[,3] = 0
-#}
 
 
 ##DOUBLE CHECK THAT NOT LOSING INDVS

@@ -66,27 +66,3 @@ for(r in 1:nrow(parameters)){
 
 Plot(theEND)
 
-
-##############################################################
-##############################################################
-
-#WAIT FOR REPRODUCTIVE SUCCESS UNTIL AFTER THE CLASS IS OVER!!!!! 
-  #things that would need to be done:
-    #year born and year died (would essentially need sliding window analysis per year)
-    #total number of times an adult was a parent
-    #amount of babies born to each parent that made it to maturity 
-    #would probably need to hold pop because you need to run the whole simulation before knowing repro success
-    #mayyyy need to be its own function within cover? or within replicates? or maybe just for each 100 years. think about this later
-
-
-#consider adding in rbinom() ?? not sure why it would be relevant yet >>> binomials are for success/failures. would that be helpful?
-
-
-#Use Janna's papers to look at inbreeding - check other models to see how to put an **inbreeding cost on indvs
-  #things that her paper has: 
-    #survival to maturity             .981 and .988
-    #lifespan (years)                1.971 and 1.986
-    #juvenile offspring              3.149 and 3.171
-    #lifetime reproductive success   4.662 nd 4.707
-
-#apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-149

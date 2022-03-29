@@ -29,13 +29,8 @@ Migrate = function(pop, source){
 #things to remember from Allendorf's book, pg 209: the larger the demes, the slower they are diverging through drift; 
   #therefore proportionally fewer migrants needed to counteract drift
 
-#NOTES 12/16/2021
-#consider if migrants should have a generation born of 0, the year they migrated, or the year they migrated minus their age.
-#think about the implications of each choice.
 
 #see https://doi.org/10.1023/A:1025563107092 for info about how they decided how many migrants to add - constant, attraction, and avoidance
-
-#source1 = source[-which(source[migrant,]),] #attempt to take out migrants from source pop >> currently not working
 
 
 #in function
