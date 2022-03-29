@@ -121,3 +121,9 @@ Different distributions
   log-normal - dlnorm
   exponential - dexp
   normal - dnorm
+  
+##Remember that whatever you return at the end of the function is what you set the function equal to in RunModel
+#str(object) tells type of object
+#check type of object using typeof(numboff), want it to be an integer, not double
+
+#for the column alive v dead, make sure that the functions taht need pop get a temp pop for only adults (mate choice, breeding) but hten make sure to add the indv (breed) to the main pop, not temp pop
