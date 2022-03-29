@@ -22,11 +22,11 @@ source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 source(paste(getwd(), "/Analyze.R", sep = ''))
-source(paste(getwd(), "/Plot.R", sep = ''))
+source(paste(getwd(), "/Plot.R", sep = ''))       #on/off switch
 source(paste(getwd(), "/RepSucc.R", sep = ''))
+source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch
 
 #source(paste(getwd(), "/Sensitivity.R", sep = '')) #turn on as needed
-source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch. will need to develop this more
 
 ####old, removed functions
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
