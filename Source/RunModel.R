@@ -206,26 +206,16 @@ RunModel = function(parameters, r, directory, replicates){
     }
     
     #THIS IS WHERE I CALC RRS using pop data
+    pop = RepSucc(pop, maturity)
+    #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
+    #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
   } 
   return(FINAL)
 }
-#notes
-#question that is unresolved: when creating a generation born column, should migrants have a gen born of 0 (which is what I have for the starting pop) or should they have a the year that they migrated as the gen born?
-#or year they migrated minus their age?
-#currently, I have it still set to 0 (aka all migrants are still marked at gen born column as 0) 
-#depending on how I calculate reproductive success, this may matter***
-
-
-#OLD NOTES
-
-##Remember that whatever you return at the end of the function is what you set the function equal to in RunModel
-
 
 #next will go to the next loop AKA the next year
 #break will completely stop the loop AKA the next replicate
-
-#longevity == fitness??
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
