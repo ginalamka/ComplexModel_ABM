@@ -1,4 +1,6 @@
 #SOMEWHAT works...BUT...changed to RepSucc.R instead!!!
+  #mainly cuz values are slightly off for founder indv
+  #plus, the code is much shorter and sweeter in RepSucc.R
 
 
 #to calculate the reproductive success in my pop extinction model going into spring 2022
@@ -8,7 +10,7 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-ReproSuc = function(pop){
+ReproSuc = function(pop, maturity){
  
   moms = pop[,2]
   mo = subset(moms, moms >0) #, drop =FALSE)         #0 in moms place means it is from initial pop
@@ -63,14 +65,54 @@ ReproSuc = function(pop){
     if(p > 0){
       pop[pop[,1] == y, 6] <- p
     }
-    
   }
-
   
-  #WHY ARE THERE ZEROS???  >> make test matrix and double check that this is calculating correctly
-  #the values are correct, but I still dont know why some will be zeros and others are not??
+  #next will need to turn NA's = 0 
+  pop[,6][is.na(pop[,6])] = 0
   
-  #next will need to turn NA's = 0 ???
+  ####Now do the same for adult offspring!
+  pp = pop[-which(pop[,4]< maturity),,drop=F]      #remove those that didn't reach maturity
+  moms = pp[,2]
+  mo = subset(moms, moms >0) #, drop =FALSE)         #0 in moms place means it is from initial pop
+  ms = subset(moms, moms <(-1)) #, drop = FALSE)     #-1 in moms place means it is from source pop
+  #moms = moms[-which(moms==0&-1), , drop=FALSE] #subset(moms, moms !is.true == 0|-1) #select moms from focal pop, if 0, founder, if -1, source pop migrant
+  
+  mo = matrix(unlist(mo), nrow = length(mo), byrow = TRUE)
+  ms = matrix(unlist(ms), nrow = length(ms), byrow = TRUE)
+  moms = rbind(mo,ms)
+  remove(mo, ms)
+  
+  dads = pp[,3]
+  da = subset(dads, dads>0) #select dads from focal pop, if 0, founder, if -1, source pop migrant
+  ds = subset(dads, dads<(-1))
+  
+  da = matrix(unlist(da), nrow = length(da), byrow = TRUE)
+  ds = matrix(unlist(ds), nrow = length(ds), byrow = TRUE)
+  dads = rbind(da,ds)
+  remove(da, ds)
+  
+  for(i in 1:nrow(moms)){                           #i is the row number in moms
+    x<- moms[i,]                                    #x is the value of the mom's id
+    n <- colCounts(moms, value = x)                 #n is the number of times x is a mom
+    
+    if(n > 0){
+      pop[pop[,1] == x, 7] <- n          #thanks Avril!
+    }
+  }
+  
+  for(i in 1:nrow(dads)){                           #i is the row number in dads
+    y <- dads[i,]                                   #y is the value of dad's id 
+    p <- colCounts(dads, value = y)                 #p is the number of times y is a dad
+    
+    if(p > 0){
+      pop[pop[,1] == y, 7] <- p
+    }
+  }
+  
+  #next will need to turn NA's = 0 
+  pop[,7][is.na(pop[,7])] = 0
+  
+  return(pop)
   
 }
   #colCounts(dads, value = -107)
