@@ -31,9 +31,39 @@ RepSucc = function(pop, maturity){
     }
   }
   
+  
+  ########################################################################################################
+  #set up for calculations
+  
+  
+  #NOTES 3/29/22
+  #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
+  #then will probably select years within each of the stages (+,-,stable pop size)
+  
+  REP = matrix(nrow=years, ncol=6)
+  colnames(REP) = c("year", "popsize", "meanLRS", "SD", "LRSfemale", "LRSmale")
+  
+  #add year to summary matrix
+  REP[,1] = c(1:nrow(REP))
+  
+  for(f in 1:nrow(REP)){
+    year = REP[f,1]
+  }
+  
+  for(q in unique(pop[,9])){       #unique generation born
+    temp <- pop[pop[,9] ==q,]
+    
+    REP[f,2] = nrow(temp[,9]==q)
+    
+    
+  }
+  
   return(pop)
 
 }
+
+
+
 
 #main question: Does the reproductive success change over time?
   #by birth year? -- may be influenced by age classes
