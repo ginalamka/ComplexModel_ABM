@@ -53,7 +53,8 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years){ 
     dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
     pop = pop[-which(pop[,1]%in%dead), , drop = FALSE]
     
-    killrate = round((nrow(pop)-nwk)/(edyr-styr))   #the number to decrease in k per year ---THIS NEEDS TO BE UPDATED
+    killrate = round((nrow(pop)-nwk)/(edyr-y))   #the number to decrease in k per year 
+    #previously ##killrate = round((nrow(pop)-nwk)/(edyr-styr))
     
     k <- k-killrate                          #new k
     
