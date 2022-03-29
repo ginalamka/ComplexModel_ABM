@@ -1,0 +1,26 @@
+Things that still need worked out
+
+*Plot.R
+the lines are not unique
+	(already ahve code for this)
+
+*Actual runs
+will need to scale up when run on Easly
+
+*RunModel.R
+question that is unresolved: when creating a generation born column, should migrants have a gen born of 0 (which is what I have for the starting pop) or should they have a the year that they migrated as the gen born?
+or year they migrated minus their age?
+currently, I have it still set to 0 (aka all migrants are still marked at gen born column as 0) 
+depending on how I calculate reproductive success, this may matter***
+
+*longevity = fitness?
+since we have both repro success and longevity, should this also be used?
+
+*FINAL and Pop
+note that sometimes the age is 10. check how that can be and what might need to be done to fix that. 
+
+*Things to analyze
+N vs Ne? (would Ne be those that are *able* to breed, or only those that *do*?)) -- could use matchoice numbers?
+
+*MateChoice.R
+#consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
