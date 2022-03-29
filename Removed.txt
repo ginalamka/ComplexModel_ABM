@@ -14,7 +14,22 @@ From Cover.R
 
 #apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-149
 
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+From MateChoice.R
+
+#NOTES FROM JANNA 10/19/2021
+#try this flow: get all females that are mature, randomize them, then match them with males
+#that will rearrange this whole function, but can be done -- SIMPLIFY
+#the main thing is to randomize the pairs so that offspring generated are from a random pair
+# https://stackoverflow.com/questions/9081498/randomly-re-order-shuffle-rows-of-a-matrix
+
+#*note, because krats have a promiscuous system, allow replacement so multiple indv can mate more than once (monogamous would be set up different)
+#as set up currently, only the sex with the most indv will be used more than once (i.e. not both sexes with multiple mating events)
+#consider requiring that migrants mate, or dont and then can compare N and Ne(?)
+
+
+##MAKE SURE TO KNOW IF MALE/FEMALE IS MATE 1or2**
 
 
 
@@ -83,3 +98,18 @@ REMOVED CODE
 #long = pop[-which(pop[,1]%in%alive), , drop=FALSE]
 #table(long[,4])
 #hist(long[,4])
+
+##################################################################################################################
+
+#REMOVED FROM DEATH.R
+
+#fake = matrix(nrow=5, ncol = 5)
+#fake[,1] = c(1:5)
+#fake[,2] = c(-2:2)
+#m = fake[fake[,2] <=0, , drop=FALSE]
+#m
+#if(fake[,1]%in%m){
+#  fake[,3] = 1
+#}else{
+#  fake[,3] = 0
+#}
