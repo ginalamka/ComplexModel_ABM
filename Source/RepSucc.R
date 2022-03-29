@@ -31,12 +31,8 @@ RepSucc = function(pop, maturity){
     }
   }
   
-  #calc the longevity of indv
-  alive = pop[pop[,8] == 1, , drop=FALSE]          #remove dead indvs
-  
-  long = pop[-which(pop[,1]%in%alive), , drop=FALSE]
-  table(long[,4])
-  hist(long[,4])
+  return(pop)
+
 }
 
 #main question: Does the reproductive success change over time?
