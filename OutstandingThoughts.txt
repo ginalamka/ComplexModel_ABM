@@ -24,3 +24,10 @@ N vs Ne? (would Ne be those that are *able* to breed, or only those that *do*?))
 
 *MateChoice.R
 #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
+	migrants =/= effective migrants
+	*consider what to do for reproductive success for migrants before moving into pop cuz unlikely that they will be zero*
+
+*Stochastic.R
+Can newly created babies die?
+
+Do I need to keep track of the sex ratio?
