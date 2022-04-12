@@ -7,7 +7,7 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-RepSucc = function(pop, maturity){
+RepSucc = function(pop, maturity, years){
   #calc the total number of offspring
   for(i in unique(pop[,1])){                          #iterate over id
     if(!is.null(nrow(pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]))){
@@ -22,8 +22,8 @@ RepSucc = function(pop, maturity){
   
   #calc the total number of adult offspring
   for(j in unique(pop[,1])){                          #iterate over id
-    if(!is.null(nrow(pop[which(pop[,2] == j | pop[,3] == j & pop[,4] >= maturity),, drop=FALSE]))){
-      tem = pop[which(pop[,2] == j | pop[,3] == j & pop[,4] >= maturity),, drop = FALSE]           #find if id is in mom OR dad column
+    if(!is.null(nrow(pop[which((pop[,2] == j | pop[,3] == j) & pop[,4] >= maturity),, drop=FALSE]))){
+      tem = pop[which((pop[,2] == j | pop[,3] == j) & pop[,4] >= maturity),, drop = FALSE]           #find if id is in mom OR dad column
       m = nrow(tem)
       pop[pop[,1] == j, 7] <- m                     #put the value in the noffspring column
     }else{
@@ -40,25 +40,48 @@ RepSucc = function(pop, maturity){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years, ncol=6)
-  colnames(REP) = c("year", "popsize", "meanLRS", "SD", "LRSfemale", "LRSmale")
+  REP = matrix(nrow=years+1, ncol=6)
+  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale")
   
   #add year to summary matrix
-  REP[,1] = c(1:nrow(REP))
+  REP[,1] = c(0:(nrow(REP)-1))  #0 to years cuz the initial pop has a generation born of 0
   
-  for(f in 1:nrow(REP)){
-    year = REP[f,1]
-  }
+  #don't think I need this cuz of the previous line
+  #for(f in 1:nrow(REP)){
+  #  year = REP[f,1]
+  #}
   
+  #calc number of indv born in this generation
   for(q in unique(pop[,9])){       #unique generation born
-    temp <- pop[pop[,9] ==q,]
+    temp <- pop[pop[,9] ==q,,drop=FALSE]
     
-    REP[f,2] = nrow(temp[,9]==q)
-    
-    
+    REP[(q+1),2] = nrow(temp)   #nrow(temp[,9]==q)
   }
   
-  return(pop)
+  #calc the mean LRS for this generation
+  for(e in unique(pop[,9])){       #unique generation born
+    te <- pop[pop[,9] ==e,,drop=FALSE]
+    
+    REP[(e+1),3] = mean(te[,7])   #find mean number of adult offspring
+    
+    REP[(e+1),4] = sd(te[,7])     #find standard deviation in number of adult offspring
+    
+    #calc mean LRS for males and females
+    females <- te[te[,5]==0,,drop=FALSE] #0=female
+    frs = mean(females[,7])
+    REP[(e+1),5] = frs
+    
+    males <- te[te[,5] ==1,,drop=FALSE] #1=male
+    mrs = mean(males[,7])
+    REP[(e+1),6] = mrs
+  }
+  
+  #note that for year 0, it includes migrants and pop founders
+  
+  #note that it is possible that some of the columns will be NA if there were no offspring produced that year
+
+  
+  return(list(pop, REP)) #need to return pop cuz calc repro success. need to return REP cuz want those for Plot.R
 
 }
 
