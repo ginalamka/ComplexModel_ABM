@@ -34,7 +34,7 @@ colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years"
 remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
-replicates    = 5 #10
+replicates    = 1 #5 #10
 plotit        = 1    #1=yes, 0=no
 r             = 1
 stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
@@ -52,7 +52,10 @@ s             = 5000 #size of source pop
 #run model iterating over parameters 
 theEND = NULL
 for(r in 1:nrow(parameters)){
-  FINAL = RunModel(parameters, r, directory, replicates)
+  ALL = RunModel(parameters, r, directory, replicates)
+  FINAL = ALL[[1]]
+  POP = ALL[[2]]
+  REP = ALL[[3]]
   
   ####REMOVED## POP = RunModel(parameters, r, directory, replicates)
   ####REMOVED## write.table(POP, paste(directory, "/Output/CoverPop", r, ".csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
