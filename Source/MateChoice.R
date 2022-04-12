@@ -43,3 +43,4 @@ MateChoice = function(pop, sex, maturity){
     return(pairs)
   }
 }
+#Reminder: migrants are not preferentially chosen, so migrants =/= effective migrants
