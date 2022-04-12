@@ -107,6 +107,15 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   return(out)
 }
 
+#additional things that I should make figs of that will need to be added to Analyze.R
+  #prop migrant alleles in pop
+  #number of males and females that bred in that year (may be able to replace Ne)
+  #number of mates (use the function "table"; data$habitat.mate (or could try "apply"))
+  #sex ratio
+  #number of new migrants that generation (?)
+  #Fst
+
+
 #notes 2/28/22
   #add in Fst. do this for every year, and then later will cherry pick the results for every generation
   #compare the Fst of the starting pop to the Fst of successive years to see how fst changes. 

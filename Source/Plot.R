@@ -115,6 +115,19 @@ Plot = function(theEND){
         dev.off()
         
         #proportion of migrant genomes in population (use migrant alleles)
+        
+        
+        #additional things that I should make figs of that will need to be added to Analyze.R
+          #prop migrant alleles in pop
+          #number of males and females that bred in that year (may be able to replace Ne)
+          #number of mates (use the function "table"; data$habitat.mate (or could try "apply"))
+          #sex ratio
+          #number of new migrants that generation (?)
+          #Fst
+        
+        
+        
+        
       #}
     #}
   }else{print(paste("no plotting today!"))}
