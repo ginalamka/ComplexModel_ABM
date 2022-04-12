@@ -179,6 +179,10 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("skipping pop size next, breed due to no parents"))
         break  #consider whether this should be next or break
       }
+      if(sum(pairs[,1]) < 0 | sum(pairs[,2]) < 0){
+        print(paste("Only migrants available as parents"))
+        break
+      }
       numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
       if(numboff <= 1){
         print(paste("No new babies, skip breed"))
