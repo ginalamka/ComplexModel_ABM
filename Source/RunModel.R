@@ -164,6 +164,13 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("Population low, less than 10 indv"))
         break
       }
+      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years)
+      pop = tttt[[1]]
+      k = tttt[[2]]
+      if(nrow(pop) <= 10){
+        print(paste("Population low, less than 10 indv"))
+        break
+      }
       #pop = RandomDeath(pop)                  #random mortality
       tt = Migrate(pop, source)             #subpop migration
       pop = tt[[1]]
@@ -192,9 +199,7 @@ RunModel = function(parameters, r, directory, replicates){
       pop = ttt[[1]]
       bb = ttt[[2]]
       sz = sz + bb
-      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years)
-      pop = tttt[[1]]
-      k = tttt[[2]]
+      
       
       print(paste("DONE!", y))
       
@@ -210,12 +215,14 @@ RunModel = function(parameters, r, directory, replicates){
     }
     
     #THIS IS WHERE I CALC RRS using pop data
-    pop = RepSucc(pop, maturity)
+    aa = RepSucc(pop, maturity, years)
+    POP = aa[[1]]  #this is the final pop with all indv and all indv data
+    REP = aa[[2]]
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
   } 
-  return(FINAL)
+  return(list(FINAL, POP, REP))
 }
 
 #next will go to the next loop AKA the next year
