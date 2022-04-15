@@ -37,8 +37,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years, ncol=7)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults")
+  FIN = matrix(nrow=years, ncol=9)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
