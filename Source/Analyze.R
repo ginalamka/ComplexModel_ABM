@@ -112,9 +112,12 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
     #?
     #?
     
+    #table function https://www.datasciencemadesimple.com/table-function-in-r/#:~:text=Table%20function%20in%20R%20-table%20%28%29%2C%20performs%20categorical,creating%20Frequency%20tables%20with%20condition%20and%20cross%20tabulations.
+    
     #calc Fst
     #Fst for this population compared to the initialized pop (aka focalpop)
-    
+    #https://bios1140.github.io/understanding-fst-the-fixation-index.html
+    #mark: https://www.molecularecologist.com/2012/05/14/calculating-pair-wise-unbiased-fst-with-r/   AND     https://www.molecularecologist.com/wp-content/uploads/2012/05/Pairwise-WeirCockerhams-FST.r1.txt
     
     #Fst for this pop compared to the source pop (aka source1)
     
@@ -129,7 +132,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig",
                     "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
   return(out)
