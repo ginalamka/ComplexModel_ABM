@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -39,6 +39,7 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
   #calculate summary stats for final pop
   FIN = matrix(nrow=years, ncol=7)
   colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults")
+  #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
   FIN[,1] = c(1:nrow(FIN))
@@ -96,6 +97,33 @@ Analyze = function(parameters, r, pop){  #should this be parameters or replicate
     #find number of adults per year
     adults = data[data[,4]>= maturity, , drop = FALSE]
     FIN[f,7] = nrow(adults)
+    
+    ########################################NEW####################################3
+    #find the sex ratio
+    FIN[f,8] = mean(data[,'sex']) #<0.5 female, >.5 male
+    #note this includes babies
+    
+    #note number of migrants
+    FIN[f,9] = mig  #generated in Migrate.R, passed to RunModel.R, and passed here in Analyze.R
+    
+    #calc the proportion of migrant alleles in the population
+    #do I want heterozygosity of mig alleles? or freq of mig alleles? or something different?
+    #?
+    #?
+    #?
+    
+    #calc Fst
+    #Fst for this population compared to the initialized pop (aka focalpop)
+    
+    
+    #Fst for this pop compared to the source pop (aka source1)
+    
+    
+    
+    #Fis for this pop
+    
+    
+
     
   #}
   

@@ -77,7 +77,7 @@ RunModel = function(parameters, r, directory, replicates){
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, focalpop, popSNPs)
+    remove(popgen, popSNPs) 
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -153,7 +153,7 @@ RunModel = function(parameters, r, directory, replicates){
     #### REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(sourcegen, source1, pool, migSNPs, l, c, d, kk, ss)
+    remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
     
     #create for loop for each time step
     for(y in 1:years){
@@ -207,7 +207,7 @@ RunModel = function(parameters, r, directory, replicates){
       ###REMOVED### return (pop)
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1)
       out[1,1] = y
       out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
