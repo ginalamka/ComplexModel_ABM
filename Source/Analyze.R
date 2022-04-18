@@ -125,7 +125,14 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
     
     #Fis for this pop
     
+    #NOTES 4/18/22 -- consider another pairwise measure tha tmay work rather than FST. potentially the number of unique alleles??
+    #this could be because FST is not sensitive to minor changes because the scale is in evolutionary time
+    #may also want to add the number of variable SNPS (across indvs) since heterozy is within an indv
     
+    #ALSO add from meeting 4/18/22
+    #year 0 should be in this table >> look at the photo I took to see how to do this. in short, will want to ski[ to analyze in year 0 and then go through all timesteps]
+    #that way, year 0 will be in the same tbale and iwll make it easier to analyze for following years
+    #ALSO will want to add SNPs that are the SAME between pop and source so that we can seperate mutation, migration, and drift forces. think about this more.
 
     
   #}
@@ -141,7 +148,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
 #additional things that I should make figs of that will need to be added to Analyze.R
   #prop migrant alleles in pop
   #number of males and females that bred in that year (may be able to replace Ne)
-  #number of mates (use the function "table"; data$habitat.mate (or could try "apply"))
+  #number of mates (use the function "table"; data$habitat.mate (or could try "apply")) >> TABLE THIS FOR NOW, PROB WONT NEED OR WANT THIS
   #sex ratio
   #number of new migrants that generation (?)
   #Fst
