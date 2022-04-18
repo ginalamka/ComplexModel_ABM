@@ -40,6 +40,7 @@ r             = 1
 stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
 mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
+#bannertailed 0.0081 mutants/generation/locus, in Busch, Waser, and DeWoody 2007 doi: 10.1111/j.1365-294X.2007.03283.x.
 mu            = 0.001  #mutation rate
 
 styr          = 100 #year to start pop decline
