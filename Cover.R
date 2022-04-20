@@ -34,7 +34,7 @@ colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years"
 remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
-replicates    = 1 #5 #10
+replicates    = 20 #5 #10
 plotit        = 1    #1=yes, 0=no
 r             = 1
 stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
