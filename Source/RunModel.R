@@ -164,7 +164,7 @@ RunModel = function(parameters, r, directory, replicates){
         print(paste("Population low, less than 10 indv"))
         break
       }
-      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years)
+      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, k.V)
       pop = tttt[[1]]
       k = tttt[[2]]
       if(nrow(pop) <= 10){
