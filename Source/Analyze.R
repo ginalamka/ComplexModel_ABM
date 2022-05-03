@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -37,17 +37,18 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years, ncol=9)
+  FIN = matrix(nrow=years+1, ncol=9)
   colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
-  FIN[,1] = c(1:nrow(FIN))
+  #FIN[,1] = c(0:nrow(FIN))
   
   f = 1
   #for(f in 1:nrow(FIN)){
-    year = FIN[f,1]
-    
+    #year = FIN[f,1] #-1 #doing this cuz also taking year 0 -- note that on 5/2/22 there were still errors with numbering on column 1
+    FIN[f,1] <- y
+  
     #separate out alive in current year -- Janna did these from year born and year died column
     data = alive[alive[,8]>0, , drop = FALSE]
     
@@ -104,7 +105,12 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1){  #should this be
     #note this includes babies
     
     #note number of migrants
-    FIN[f,9] = mig  #generated in Migrate.R, passed to RunModel.R, and passed here in Analyze.R
+    if(y != 0){
+      FIN[f,9] = mig  #generated in Migrate.R, passed to RunModel.R, and passed here in Analyze.R
+    }else{
+      FIN[f,9] = 0  #this is for year 0, there are no migrants in this pop
+    }
+    
     
     #calc the proportion of migrant alleles in the population
     #do I want heterozygosity of mig alleles? or freq of mig alleles? or something different?
