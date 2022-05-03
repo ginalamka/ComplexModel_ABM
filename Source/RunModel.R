@@ -156,58 +156,62 @@ RunModel = function(parameters, r, directory, replicates){
     remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
     
     #create for loop for each time step
-    for(y in 1:years){
-      pop = AgeUp(pop)                        #age pop + 1 year
-      pop = Death(pop, maxage, ratemort, y)                #kill indv
-      #pop = DeathByAge(pop, maxage)           #age-dependent mortality
-      if(nrow(pop) <= 10){
-        print(paste("Population low, less than 10 indv"))
-        break
+    for(y in 0:years){
+      if(y != 0){
+        pop = AgeUp(pop)                        #age pop + 1 year
+        pop = Death(pop, maxage, ratemort, y)                #kill indv
+        #pop = DeathByAge(pop, maxage)           #age-dependent mortality
+        if(nrow(pop) <= 10){
+          print(paste("Population low, less than 10 indv"))
+          break
+        }
+        tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, k.V)
+        pop = tttt[[1]]
+        k = tttt[[2]]
+        if(nrow(pop) <= 10){
+          print(paste("Population low, less than 10 indv"))
+          break
+        }
+        #pop = RandomDeath(pop)                  #random mortality
+        tt = Migrate(pop, source)             #subpop migration
+        pop = tt[[1]]
+        mig = tt[[2]]
+        sz = sz + mig #may need to edit since dead are not being removed from pop
+        source = tt[[3]]
+        if(nrow(pop) <= 4){
+          print(paste("Population crash @ MateChoice, less than 4 indv"))
+          break
+        }
+        pairs = MateChoice(pop, sex, maturity)  
+        if(is.null(pairs)==TRUE){
+          print(paste("skipping pop size next, breed due to no parents"))
+          break  #consider whether this should be next or break
+        }
+        if(sum(pairs[,1]) < 0 | sum(pairs[,2]) < 0){
+          print(paste("Only migrants available as parents"))
+          break
+        }
+        numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
+        if(numboff <= 1){
+          print(paste("No new babies, skip breed"))
+          next
+        }
+        ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate) #still needs work 
+        pop = ttt[[1]]
+        bb = ttt[[2]]
+        sz = sz + bb
+        
+        
+        print(paste("DONE!", y))
+        
+        ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
+        ###REMOVED### return (pop)
+        
+        #y <- y+1
       }
-      tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, k.V)
-      pop = tttt[[1]]
-      k = tttt[[2]]
-      if(nrow(pop) <= 10){
-        print(paste("Population low, less than 10 indv"))
-        break
-      }
-      #pop = RandomDeath(pop)                  #random mortality
-      tt = Migrate(pop, source)             #subpop migration
-      pop = tt[[1]]
-      mig = tt[[2]]
-      sz = sz + mig #may need to edit since dead are not being removed from pop
-      source = tt[[3]]
-      if(nrow(pop) <= 4){
-        print(paste("Population crash @ MateChoice, less than 4 indv"))
-        break
-      }
-      pairs = MateChoice(pop, sex, maturity)  
-      if(is.null(pairs)==TRUE){
-        print(paste("skipping pop size next, breed due to no parents"))
-        break  #consider whether this should be next or break
-      }
-      if(sum(pairs[,1]) < 0 | sum(pairs[,2]) < 0){
-        print(paste("Only migrants available as parents"))
-        break
-      }
-      numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
-      if(numboff <= 1){
-        print(paste("No new babies, skip breed"))
-        next
-      }
-      ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate) #still needs work 
-      pop = ttt[[1]]
-      bb = ttt[[2]]
-      sz = sz + bb
-      
-      
-      print(paste("DONE!", y))
-      
-      ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
-      ###REMOVED### return (pop)
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y)
       out[1,1] = y
       out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
