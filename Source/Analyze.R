@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -37,8 +37,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=9)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig")
+  FIN = matrix(nrow=years+1, ncol=10)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -92,6 +92,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this
     FIN[f,4] <- mean(HE)
     FIN[f,5] <- mean(HO)
     
+    
     #figure out how to find RRS, I think we need fecundity/indv LRS first
     FIN[f,6] = NA #mean(data[REPRODUCTIVE SUCCESS COLUMN])
     
@@ -126,7 +127,60 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this
     #mark: https://www.molecularecologist.com/2012/05/14/calculating-pair-wise-unbiased-fst-with-r/   AND     https://www.molecularecologist.com/wp-content/uploads/2012/05/Pairwise-WeirCockerhams-FST.r1.txt
     
     #Fst for this pop compared to the source pop (aka source1)
+
     
+    #Fst = (heterozy of total pop - heterozygosity of subpop) / heterozy of total pop
+    #if heterozy of focal pop is hetero in year 0 
+    #and subpop is the hetero for year y
+    #can't I use the previous calculations for Fst?
+    
+    if(y == 0){
+      
+      #first, get hetero values for the **source pop** to compare to the **initialized focal pop**
+      sSNPS = (nSNP*2) + (nSNP.mig*2)
+      sgenotype = source1[, -c(ncol(source1)-sSNPS:ncol(source1))]
+      ssnps = rep(c(1,2),ncol(sgenotype)/2)
+      
+      sHE = NULL
+      sHO = NULL
+      
+      sloc.pos = seq(1, sSNPS, 2)
+      for(slp in sloc.pos){
+        #per locus heterozygostiy
+        slocus <- sgenotype[, c(slp, slp+1), drop=FALSE]
+        sgeno  <- length(slocus[,1])
+        shet   <- length(which(slocus[,1] != slocus[,2]))
+        shet.observed <- shet/sgeno
+        sHO = c(sHO, shet.observed)
+        
+        sfreqs <- table(slocus)
+        shomozygous = NULL
+        for(sv in 1:length(sfreqs)){
+          shomozygous = c(shomozygous, (sfreqs[sv]/sum(sfreqs)*sfreqs[sv]/sum(sfreqs)))
+        }
+        shet.expected <- 1 - sum(shomozygous)
+        sHE = c(sHE, shet.expected)
+      }
+      
+      obs.source <- mean(sHO)
+      obs.foc <- mean(HO)
+      mean.OH <- (obs.source + obs.foc)/2
+      
+      fst <- (mean.OH - obs.foc) / mean.OH
+      
+      FIN[f,10] = fst  
+    }else{
+      
+      #calculate the Fst between **pop in year y** and the **initialized focal pop**
+      obs.init <- init.het #from year 0
+      obs.pop <- FIN[f,5]  #from year y
+      
+      mean.obs <- (obs.init + obs.pop)/2
+      FST <- (mean.obs - obs.pop) / mean.obs
+      
+      FIN[f,10] = FST
+      
+    }
     
     
     #Fis for this pop
@@ -145,7 +199,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst",
                     "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
   
   return(out)
@@ -182,3 +236,23 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y){  #should this
     #number of unique breeders unique(pop[,2])+unique(pop[,3])
     #mating success = total number of mates with whome an indv produced offspring
 #-- also check the vortex abm paper to add any things they have that might be useful and informative here
+
+
+#attempted and removed 5/3/2022
+#library(GeneClusterNet)
+
+#gtypes1 <- focalpop[,11:ncol(focalpop)] #focalpop is initialized pop
+#gtypes2 <- source1[,11:ncol(source1)]   #source1 is the initialized source
+#gtypes3 <- data[,11:ncol(data)]         #data are all current alive indv
+
+#if(!(ncol(gtypes1) == ncol(gtypes2) && ncol(gtypes1) == ncol(gtypes3))){
+#  print("GENOTYPE ERROR")
+#  return()
+#}
+#u <- ncol(gtypes1) + 1
+#gtypes1 <- cbind(c(1),gtypes1)
+#gtypes2 <- cbind(c(2),gtypes2)
+#gtypes3 <- cbind(c(3),gtypes3)
+
+#all.gtypes <- rbind(gtypes1, gtypes2, gtypes3)
+#fst <- fst(all.gtypes, all.gtypes[,1], 3)

@@ -211,10 +211,11 @@ RunModel = function(parameters, r, directory, replicates){
       }
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het)
       out[1,1] = y
       out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
+      init.het <- FINAL[1,5]
       
     }
     
