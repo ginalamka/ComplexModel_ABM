@@ -48,11 +48,11 @@ RepSucc = function(pop, maturity, years){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years+1, ncol=8)
+  REP = matrix(nrow=years+2, ncol=8) #to add source (-1) and init (0) pops
   colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS")
   
   #add year to summary matrix
-  REP[,1] = c(0:(nrow(REP)-1))  #0 to years cuz the initial pop has a generation born of 0
+  REP[,1] = c(-1:(nrow(REP)-2))  #-1 to years cuz the initial pop has a generation born of 0 and initial source has a gen born of -1
   
   #don't think I need this cuz of the previous line
   #for(f in 1:nrow(REP)){
@@ -63,34 +63,35 @@ RepSucc = function(pop, maturity, years){
   for(q in unique(pop[,9])){       #unique generation born
     temp <- pop[pop[,9] ==q,,drop=FALSE]
     
-    REP[(q+1),2] = nrow(temp)   #nrow(temp[,9]==q)
+    REP[(q+2),2] = nrow(temp)   #nrow(temp[,9]==q)
   }
   
   #calc the mean LRS for this generation
   for(e in unique(pop[,9])){       #unique generation born
     te <- pop[pop[,9] ==e,,drop=FALSE]
     
-    REP[(e+1),3] = mean(te[,7])   #find mean number of adult offspring
+    REP[(e+2),3] = mean(te[,7])   #find mean number of adult offspring
     #e+1 because year 0 is included
     
-    REP[(e+1),4] = sd(te[,7])     #find standard deviation in number of adult offspring
+    REP[(e+2),4] = sd(te[,7])     #find standard deviation in number of adult offspring
     
     #calc mean LRS for males and females
     females <- te[te[,5]==0,,drop=FALSE] #0=female
     frs = mean(females[,7])
-    REP[(e+1),5] = frs
+    REP[(e+2),5] = frs
     
     males <- te[te[,5] ==1,,drop=FALSE] #1=male
     mrs = mean(males[,7])
-    REP[(e+1),6] = mrs
+    REP[(e+2),6] = mrs
     
     #calc mean relative fitness
-    REP[(e+1),7] = mean(te[,11])  #find mean relative fitness
+    REP[(e+2),7] = mean(te[,11])  #find mean relative fitness
     
-    REP[(e+1),8] = sd(te[,7])     #find standard deviation in relative fitness
+    REP[(e+2),8] = sd(te[,7])     #find standard deviation in relative fitness
   }
   
-  #note that for year 0, it includes migrants and pop founders
+  #note that for year 0, it includes pop founders and -1 includes source pop (i.e., migrants)
+  #remember that the last few years will have odd values because they havent lived a lifetime yet
   
   #note that it is possible that some of the columns will be NA if there were no offspring produced that year
 

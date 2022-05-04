@@ -114,7 +114,7 @@ RunModel = function(parameters, r, directory, replicates){
     source[,6] = NA #this will be for number of times as a parent   #REMOVED##sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
     source[,7] = NA #for number of offspring that reach maturity ##REMOVED#### sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
-    source[,9] = 0                             #generation born
+    source[,9] = -1                            #generation born
     source[,10] = 0                            #generation died
     source[,11] = 0                            #relative fitness
     
