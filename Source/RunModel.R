@@ -238,7 +238,7 @@ RunModel = function(parameters, r, directory, replicates){
     }
     
     #THIS IS WHERE I CALC RRS using pop data
-    aa = RepSucc(pop, maturity, years)
+    aa = RepSucc(pop, maturity, years, rr)
     POP = aa[[1]]  #this is the final pop with all indv and all indv data
     REP = aa[[2]]
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.

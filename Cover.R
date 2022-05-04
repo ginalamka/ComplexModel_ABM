@@ -53,6 +53,7 @@ s             = 5000 #size of source pop
 
 #run model iterating over parameters 
 theEND = NULL
+repEND = NULL
 for(r in 1:nrow(parameters)){
   ALL = RunModel(parameters, r, directory, replicates)
   FINAL = ALL[[1]]
@@ -64,6 +65,7 @@ for(r in 1:nrow(parameters)){
   #####REMOVED##write.table(POP, paste(directory, "/Output/CoverPop.txt", sep=""), sep="\t", col.names=TRUE, row.names=F)  #use this for a .txt file, good for in a text editor. ; "/t" for macs
  
   theEND = rbind(theEND, FINAL)
+  repEND = rbind(repEND, REP)
 }
 #write.table(theEND, paste(directory, "/Output/summary_", r, ".csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 #summary table should have nrows = nparameters * nyears * nreplicates

@@ -7,7 +7,7 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-RepSucc = function(pop, maturity, years){
+RepSucc = function(pop, maturity, years, rr){
   #calc the total number of offspring
   for(i in unique(pop[,1])){                          #iterate over id
     if(!is.null(nrow(pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]))){
@@ -48,8 +48,8 @@ RepSucc = function(pop, maturity, years){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years+2, ncol=8) #to add source (-1) and init (0) pops
-  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS")
+  REP = matrix(nrow=years+2, ncol=9) #to add source (-1) and init (0) pops
+  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS", "replicate")
   
   #add year to summary matrix
   REP[,1] = c(-1:(nrow(REP)-2))  #-1 to years cuz the initial pop has a generation born of 0 and initial source has a gen born of -1
@@ -89,12 +89,14 @@ RepSucc = function(pop, maturity, years){
     
     REP[(e+2),8] = sd(te[,7])     #find standard deviation in relative fitness
   }
+  REP[,9] = rr #note replicate number
+  
+  #note, will probably want to add parameters here, but might not need to. consider this later. 
   
   #note that for year 0, it includes pop founders and -1 includes source pop (i.e., migrants)
   #remember that the last few years will have odd values because they havent lived a lifetime yet
   
   #note that it is possible that some of the columns will be NA if there were no offspring produced that year
-
   
   return(list(pop, REP)) #need to return pop cuz calc repro success. need to return REP cuz want those for Plot.R
 
