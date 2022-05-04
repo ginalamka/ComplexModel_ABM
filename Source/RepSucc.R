@@ -31,6 +31,14 @@ RepSucc = function(pop, maturity, years){
     }
   }
   
+  #calc the relative fitness - defined as repro succ of the indv/max repro succ
+  max <- max(pop[,7])
+  for(m in unique(pop[,1])){
+    rel <- pop[pop[,1] == m, 7]
+    rel.fit <- rel/max
+    
+    pop[pop[,1] == m, 11] <- rel.fit
+  }
   
   ########################################################################################################
   #set up for calculations
@@ -40,8 +48,8 @@ RepSucc = function(pop, maturity, years){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years+1, ncol=6)
-  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale")
+  REP = matrix(nrow=years+1, ncol=8)
+  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS")
   
   #add year to summary matrix
   REP[,1] = c(0:(nrow(REP)-1))  #0 to years cuz the initial pop has a generation born of 0
@@ -63,6 +71,7 @@ RepSucc = function(pop, maturity, years){
     te <- pop[pop[,9] ==e,,drop=FALSE]
     
     REP[(e+1),3] = mean(te[,7])   #find mean number of adult offspring
+    #e+1 because year 0 is included
     
     REP[(e+1),4] = sd(te[,7])     #find standard deviation in number of adult offspring
     
@@ -74,6 +83,11 @@ RepSucc = function(pop, maturity, years){
     males <- te[te[,5] ==1,,drop=FALSE] #1=male
     mrs = mean(males[,7])
     REP[(e+1),6] = mrs
+    
+    #calc mean relative fitness
+    REP[(e+1),7] = mean(te[,11])  #find mean relative fitness
+    
+    REP[(e+1),8] = sd(te[,7])     #find standard deviation in relative fitness
   }
   
   #note that for year 0, it includes migrants and pop founders

@@ -18,8 +18,8 @@ RunModel = function(parameters, r, directory, replicates){
     nSNP.mig      = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
     
     #initialize population
-    pop = matrix(nrow=k, ncol=10)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
+    pop = matrix(nrow=k, ncol=11)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                    #each individual has unique ID name; sequence starting at 1, through k, with each 1 interation
     pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
     #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
@@ -31,6 +31,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
     pop[,9] = 0                             #generation born
     pop[,10] = 0                            #generation died
+    pop[,11] = 0                            #relative fitness #at this point, we are putting all equal to zero because this is the initial generation
     sz = k #to keep track of the number of indv for ID'ing later
     
     #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
@@ -96,8 +97,8 @@ RunModel = function(parameters, r, directory, replicates){
     #implications of each decision is based on calculating heterozygosity vs generating offspring
     
     #initialize source population 
-    source = matrix(nrow=s, ncol=10)            #each individual gets its own row.. matrix > dataframe
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died") #just to give a better understanding of what these variables are, set names
+    source = matrix(nrow=s, ncol=11)            #each individual gets its own row.. matrix > dataframe
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(s),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
@@ -107,6 +108,7 @@ RunModel = function(parameters, r, directory, replicates){
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
     source[,9] = 0                             #generation born
     source[,10] = 0                            #generation died
+    source[,11] = 0                            #relative fitness
     
     #generate source gentoypes
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
