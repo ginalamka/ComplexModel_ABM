@@ -18,6 +18,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
   r0            = parameters$r0[r]
   ratemort      = parameters$ratemort[r]
   nSNP.mig      = parameters$nSNP.mig[r] 
+  nSNP.cons     = parameters$nSNP.cons[r]                  #number of conserved alleles
   
   #writeout final POP == compare this to the final pop in Cover.R, should be the same
   #write.table(pop, paste(directory, "/Output/WriteOutPop.csv", sep=""), sep=",", col.names=T, row.names=F) #since in RunModel, might not need to feed it pop
@@ -65,7 +66,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
     FIN[f,3] =  sum(data[,2]==-1)/length(data[,1])   #1 - sum(data[,2]==-1)/length(data[,1])
     
     #He and Ho - neutral (?)
-    SNPS = (nSNP*2) + (nSNP.mig*2)
+    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     genotype = data[, -c(ncol(data)-SNPS:ncol(data))]
     snps = rep(c(1,2),ncol(genotype)/2)
     
@@ -137,7 +138,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
     if(y == 0){
       
       #first, get hetero values for the **source pop** to compare to the **initialized focal pop**
-      sSNPS = (nSNP*2) + (nSNP.mig*2)
+      sSNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
       sgenotype = source1[, -c(ncol(source1)-sSNPS:ncol(source1))]
       ssnps = rep(c(1,2),ncol(sgenotype)/2)
       
