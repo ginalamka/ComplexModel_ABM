@@ -16,6 +16,7 @@ RunModel = function(parameters, r, directory, replicates){
     r0            = parameters$r0[r]
     ratemort      = parameters$ratemort[r]
     nSNP.mig      = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+    nSNP.cons     = parameters$nSNP.cons[r]                  #number of conserved alleles
     
     #initialize population
     pop = matrix(nrow=k, ncol=11)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
@@ -67,18 +68,25 @@ RunModel = function(parameters, r, directory, replicates){
     #create migrant and nonmigrant unique SNPs 
     popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
     columnsb = seq(1,(nSNP.mig*2),2)
-    for(c in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-      popSNPs[c,] = 0
+    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+      popSNPs[b,] = 0
     }
     
-    focalpop <- cbind(pop, popgen, popSNPs)   ##??not sure why, but not binding correctly???
+    #create conserved SNPs    
+    conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
+    columnsc = seq(1,(nSNP.cons*2),2)
+    for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+      conSNPs[c,] = 0
+    }
+    
+    focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##??not sure why, but not binding correctly???
     pop <- focalpop
     
     #write starting pop to table
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, popSNPs) 
+    remove(popgen, popSNPs, conSNPs) 
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -143,12 +151,19 @@ RunModel = function(parameters, r, directory, replicates){
     
     #create migrant and nonmigrant unique SNPs
     migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
-    columnsc= seq(1,(nSNP.mig*2),2)
+    columnsd= seq(1,(nSNP.mig*2),2)
     for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
       migSNPs[d,] = 1
     }
     
-    source1 <- cbind(source, sourcegen, migSNPs)        #also doesnt work????
+    #create conserved SNPs    
+    conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
+    columnse = seq(1,(nSNP.cons*2),2)
+    for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+      conSNPs[e,] = 0
+    }
+    
+    source1 <- cbind(source, sourcegen, migSNPs, conSNPs)        #also doesnt work????
     source <- source1
     
     #write starting source to table
@@ -156,6 +171,7 @@ RunModel = function(parameters, r, directory, replicates){
     
     #clean up
     remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
+    remove(gtype, columns, columnsb, columnsc, columnsd, columnse)
     
     #create for loop for each time step
     for(y in 0:years){
@@ -198,7 +214,7 @@ RunModel = function(parameters, r, directory, replicates){
           print(paste("No new babies, skip breed"))
           next
         }
-        ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate) #still needs work 
+        ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons) #still needs work 
         pop = ttt[[1]]
         bb = ttt[[2]]
         sz = sz + bb
