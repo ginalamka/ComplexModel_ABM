@@ -8,14 +8,15 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
 k.V           = 1000 #c(1000, 5000, 10000)                #carrying capacity
-nSNP.V        = 10  #scaleup                #number of SNPs simulated
+nSNP.V        = 10  #scaleup                #number of SNPs simulated, used to track drift
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
 years.V       = 250  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #1 is stable, <1 is decreasing, >1 is increasing
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
-nSNP.mig.V     = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+nSNP.mig.V    = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+nSNP.cons.V   = 10        #number of conserved alleles within species -- used to track mutation
 ### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
 
 #REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
@@ -27,18 +28,18 @@ nSNP.mig.V     = 10                   #number of special alleles for migrants --
 #potential migration rates: 1-5 indv, 5-10 indv, no migration
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V)
-colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig")
+parameters = expand.grid(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V)
+colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
 
 #clean up, remember that these are still available in parameters
-remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V) #k.V
+remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 20 #5 #10
 plotit        = 1    #1=yes, 0=no
 r             = 1
 stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
-mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
+mutate        = 0    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
 #bannertailed 0.0081 mutants/generation/locus, in Busch, Waser, and DeWoody 2007 doi: 10.1111/j.1365-294X.2007.03283.x.
 mu            = 0.001  #mutation rate
