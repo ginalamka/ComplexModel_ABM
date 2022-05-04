@@ -128,12 +128,17 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
     #mark: https://www.molecularecologist.com/2012/05/14/calculating-pair-wise-unbiased-fst-with-r/   AND     https://www.molecularecologist.com/wp-content/uploads/2012/05/Pairwise-WeirCockerhams-FST.r1.txt
     
     #Fst for this pop compared to the source pop (aka source1)
-
     
-    #Fst = (heterozy of total pop - heterozygosity of subpop) / heterozy of total pop
+    #DOUBLE CHECK THESE EQUATIONS
+    #https://www.uwyo.edu/dbmcd/popecol/maylects/fst.html
+    #I *think* I should be averaging between subpops for Hs but I'm not 100% sure
+    
+    #Fst = (expected heterozy of total pop - expected heterozygosity of subpop) / expected heterozy of total pop
     #if heterozy of focal pop is hetero in year 0 
     #and subpop is the hetero for year y
     #can't I use the previous calculations for Fst?
+    
+    #Fis = (expected heterozygosity of subpop - observed heterozygosity of indv) / expected hetero of subpop
     
     if(y == 0){
       
