@@ -37,6 +37,7 @@ remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSN
 
 replicates    = 20 #5 #10
 plotit        = 1    #1=yes, 0=no
+plotit2       = 1    #1=yes, 0=no
 r             = 1
 stoch         = 0    #2=stairstep decrease every year, 1=dramatic drop in k, 0=no
 mutate        = 0    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
@@ -72,4 +73,4 @@ for(r in 1:nrow(parameters)){
   #^^ may have some fewer than above because some simulations may break before all years are able to be run
 
 Plot(theEND)
-
+Plot2(repEND)
