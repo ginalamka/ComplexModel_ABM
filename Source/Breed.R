@@ -1,23 +1,23 @@
 #Breed
 #for complex model for ABM class
 
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons){
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   if(is.null(nrow(pairs))==TRUE){
     print(paste("no pairs of parents available"))
     break
   }else if(nrow(pairs)>= numboff*2){
-      pairings = sample(1:nrow(pairs), numboff*2, replace = F,)
+      pairings = sample(1:nrow(pairs), numboff*2, replace = F, prob = NULL)
   }else{
-    pairings = sample(1:nrow(pairs), numboff, replace = T,) ### DOUBLE CHECK THAT replace=T does not fuck this up, error tends to occurr when numboff = 2
+    pairings = sample(1:nrow(pairs), numboff, replace = T, prob = NULL) ### DOUBLE CHECK THAT replace=T does not fuck this up, error tends to occurr when numboff = 2
   }
   
   parents <- pairs[pairings,]
   #consider if migrants should be preferentially chosen to be parents - should we follow introduced alleles if this is the case?
   
   #generate fecundity for each set of parents
-  fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T,) #change the number of offspring to biologically relevant number later
+  fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T, prob = NULL) #change the number of offspring to biologically relevant number later
   parents <- cbind(parents, fecundity)
   
   #parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
@@ -47,8 +47,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
-  babies = matrix(nrow=nrow(parents), ncol=10) #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died")
+  babies = matrix(nrow=nrow(parents), ncol=11) #make new matrix for offspring     
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness")
   babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
@@ -59,10 +59,11 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,8] = 1      #make every baby alive
   babies[,9] = y  #MUST feed y to function   #generation born
   babies[,10] = 0      #generation died
+  babies[,11] = 0      #relative fitness
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) > numboff){
-    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE,) #remove babies so that you generate only the number needed
+    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
     babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
     
     if(is.null(nrow(babies))==TRUE){
@@ -101,7 +102,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
       break
     }
     
-    SNPS = (nSNP*2) + (nSNP.mig*2)
+    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     
     fg = fem[, -c(ncol(fem)-(SNPS):ncol(fem))]
     mg = mal[, -c(ncol(mal)-(SNPS):ncol(mal))]
@@ -119,13 +120,13 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     pos = seq(1, SNPS, 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)      #divide SNPS by 2 because half SNPs come from mom
+    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)      #divide SNPS by 2 because half SNPs come from mom
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
     
-    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)      #divide SNPS by 2 because half SNPs come from dad
+    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)      #divide SNPS by 2 because half SNPs come from dad
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
@@ -180,6 +181,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
       break
     }
     
+    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2) 
     fg = fem[, -c(ncol(fem)-SNPS:ncol(fem))]
     mg = mal[, -c(ncol(mal)-SNPS:ncol(mal))]
     
@@ -196,13 +198,13 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     pos = seq(1, SNPS, 2)
     
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)          #divide SNPS by 2 because half SNPs come from mom
+    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)          #divide SNPS by 2 because half SNPs come from mom
     fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
+    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
     
-    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE,)          #divide SNPS by 2 because half SNPs come from dad
+    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)          #divide SNPS by 2 because half SNPs come from dad
     mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE,)
+    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
     
     babygeno[, pos]       <- fallele3
     babygeno[, pos + 1]   <- mallele3
