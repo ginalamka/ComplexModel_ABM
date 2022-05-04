@@ -140,6 +140,20 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
     
     #Fis = (expected heterozygosity of subpop - observed heterozygosity of indv) / expected hetero of subpop
     
+    #LINKS FOR CALC FST USING HIERFSTAT
+    #https://rdrr.io/cran/hierfstat/
+    #https://rdrr.io/cran/hierfstat/#vignettes
+    #https://rdrr.io/cran/hierfstat/man/biall2dos.html
+    #https://rdrr.io/cran/hierfstat/man/fs.dosage.html
+    #https://rdrr.io/cran/hierfstat/man/fstat2dos.html
+    #https://rdrr.io/cran/hierfstat/man/nb.alleles.html
+    #https://rdrr.io/cran/hierfstat/man/pairwise.neifst.html
+    #https://rdrr.io/cran/hierfstat/man/pairwise.WCfst.html
+    #https://rdrr.io/cran/hierfstat/man/ppfst.html
+    
+    library(hierfstat)
+    
+    
     if(y == 0){
       
       #first, get hetero values for the **source pop** to compare to the **initialized focal pop**
