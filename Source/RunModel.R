@@ -229,18 +229,19 @@ RunModel = function(parameters, r, directory, replicates){
       }
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het)
-      out[1,1] = y
-      out[1,ncol(out)+1] = rr
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr)
+      #out[1,1] = y
+      #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
       init.het <- FINAL[1,5]
       
     }
     
     #THIS IS WHERE I CALC RRS using pop data
-    aa = RepSucc(pop, maturity, years, rr)
+    aa = RepSucc(pop, maturity, years, rr, r)
     POP = aa[[1]]  #this is the final pop with all indv and all indv data
     REP = aa[[2]]
+    
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
