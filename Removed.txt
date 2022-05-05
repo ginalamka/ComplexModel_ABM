@@ -113,3 +113,39 @@ REMOVED CODE
 #}else{
 #  fake[,3] = 0
 #}
+
+##################################################################################################################
+
+#REMOVED FROM PLOT.R
+
+#loop through each replicate
+#for(rep in 1:replicates){
+  #for each parameter combo
+  #for(pp in 1:nrow(parameters)){
+        
+
+#plot(theEND[,1],theEND[,2])
+        
+N       = theEND[,2]               #c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
+adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
+#Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
+
+#lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)  #easier to set up the figure first, then put on the lines
+
+#points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
+#points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
+
+#observed hetero over time with number of migrants
+#plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+#lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+#lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
+
+#observed heteroz and proportion of migrants in pop
+#par(mar = c(5,4,4,4)+0.3)
+#plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+#lines(theEND[,1], Ho , cex = 2, lty = 1, col="black", lwd=2) #NOTICE points, not plot  #xlab="time (years)", ylab="observed heterozygosity",
+#par(new = TRUE)
+#lines(theEND[,1], mig , xlab="", ylab="", xlim=c(0, max(theEND[,1])), ylim=c(0,1), cex = 2, lty = 1, col="blue", lwd=2)
+#plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
+#axis(side = 4, at = NULL, labels = TRUE)
+#mtext("proportion of migrants in population", side=4, line =3)
