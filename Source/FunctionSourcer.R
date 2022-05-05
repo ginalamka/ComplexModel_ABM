@@ -23,6 +23,7 @@ source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))       #on/off switch
+source(paste(getwd(), "/Plot2.R", sep = ''))       #on/off switch
 source(paste(getwd(), "/RepSucc.R", sep = ''))
 source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch
 
