@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -38,8 +38,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=10)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst")
+  FIN = matrix(nrow=years+1, ncol=12)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -201,6 +201,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
       FIN[f,10] = FST
       
     }
+    FIN[f,11] = rr   #add replicate number
+    FIN[f,12] = r    #add parameter set number
     
     
     #Fis for this pop
@@ -219,7 +221,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset",
                     "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
   
   return(out)
