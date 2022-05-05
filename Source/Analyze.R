@@ -220,7 +220,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het){  #s
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst",
-                    "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort") #add nSNP.mig if in data
+                    "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
   
   return(out)
 }
