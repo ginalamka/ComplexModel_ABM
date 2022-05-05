@@ -7,7 +7,7 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-RepSucc = function(pop, maturity, years, rr){
+RepSucc = function(pop, maturity, years, rr, r){
   #calc the total number of offspring
   for(i in unique(pop[,1])){                          #iterate over id
     if(!is.null(nrow(pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]))){
@@ -48,8 +48,8 @@ RepSucc = function(pop, maturity, years, rr){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years+2, ncol=9) #to add source (-1) and init (0) pops
-  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS", "replicate")
+  REP = matrix(nrow=years+2, ncol=10) #to add source (-1) and init (0) pops
+  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS", "replicate", "parameterset")
   
   #add year to summary matrix
   REP[,1] = c(-1:(nrow(REP)-2))  #-1 to years cuz the initial pop has a generation born of 0 and initial source has a gen born of -1
@@ -90,6 +90,8 @@ RepSucc = function(pop, maturity, years, rr){
     REP[(e+2),8] = sd(te[,7])     #find standard deviation in relative fitness
   }
   REP[,9] = rr #note replicate number
+  
+  REP[,10] = r #note the parameter set number
   
   #note, will probably want to add parameters here, but might not need to. consider this later. 
   
