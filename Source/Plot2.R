@@ -14,8 +14,9 @@ Plot2 = function(repEND){
   
   if(plotit==1){
     
+    ########################################################### 
     #LRS over time
-    plot(-100, -100 , xlab="generation born", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, (mxLRS+mxSDL))) 
+    plot(-100, -100 , xlab="Generation born", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, (mxLRS+mxSDL))) 
     for(p in unique(par)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
@@ -29,14 +30,12 @@ Plot2 = function(repEND){
         polygon(x = c(yr, rev(yr)), y = c(uppersd, rev(lowersd)), col = "lightblue", density = 40, angle = 90)
       }
     }
-    
-    #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
     dev.copy(png, "../Output/LRS_over_time.png")
     dev.off()
-    #will want to add a buffer with SD sometime too
     
+    ########################################################### 
     #RRS over time
-    plot(-100, -100 , xlab="generation born", ylab="RRS", xlim=c(min(yr), max(yr)), ylim=c(0, (mxRRS+mxSDR))) 
+    plot(-100, -100 , xlab="Generation born", ylab="RRS", xlim=c(min(yr), max(yr)), ylim=c(0, (mxRRS+mxSDR))) 
     for(p in unique(par)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
@@ -50,16 +49,13 @@ Plot2 = function(repEND){
         polygon(x = c(yr, rev(yr)), y = c(uppersd, rev(lowersd)), col = "lightpink", density = 40, angle = 45)
       }
     }
-    
-    #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
     dev.copy(png, "../Output/RRS_over_time.png")
     dev.off()
-    #will want to add a buffer with SD sometime too
     
-    
+    ########################################################### 
     #LRS for females vs males
     #observed vs expected hetero
-    plot(-100, -100 , xlab="male LRS", ylab="female LRS", xlim=c(0, mxLRS), ylim=c(0, mxLRS)) 
+    plot(-100, -100 , xlab="Male LRS", ylab="Female LRS", xlim=c(0, mxLRS), ylim=c(0, mxLRS)) 
     for(p in unique(par)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- repEND[rep == i,] #unique replicate
@@ -73,9 +69,10 @@ Plot2 = function(repEND){
     dev.copy(png, "../Output/LRS_fem_vs_mal.png")
     dev.off()
     
+    ########################################################### 
     #LRS for males vs females over time
     par(mar = c(5,4,4,4)+0.3)
-    plot(-100, -100 , xlab="generation born", ylab="female LRS", xlim=c(min(yr), max(yr)), ylim=c(0, mxLRS)) 
+    plot(-100, -100 , xlab="Generation born", ylab="Female LRS", xlim=c(min(yr), max(yr)), ylim=c(0, mxLRS)) 
     for(p in unique(par)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- repEND[rep == i,]  #unique replicate
@@ -90,12 +87,13 @@ Plot2 = function(repEND){
       }
     }
     axis(side = 4, at = NULL, labels = TRUE, col = "blue")
-    mtext("male LRS", side=4, line =3, col = "blue")
+    mtext("Male LRS", side=4, line =3, col = "blue")
     dev.copy(png, "../Output/LRS_male&female_overtime.png")
     dev.off()
     
+    ########################################################### 
     #number indv born in per generation
-    plot(-100, -100 , xlab="generation born", ylab="number of babies", xlim=c(min(yr), max(yr)), ylim=c(0, mxindv)) 
+    plot(-100, -100 , xlab="Generation born", ylab="Number of babies", xlim=c(min(yr), max(yr)), ylim=c(0, mxindv)) 
     for(p in unique(par)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
