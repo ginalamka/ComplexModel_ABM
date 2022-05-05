@@ -13,123 +13,126 @@ Plot = function(theEND){
   #all parameters and replicates are being plotted at once. will need to clean this up
     #to do that, will probably need to subser theEND -- ex try::   for(parameters$k[r] == r){N = theEND[,2]}
   
-  #identify unique replicates
+  #set up to subset by replicate and by year
   #remember that the replicate "r" will be the last column of theEND
-  rep = theEND[, (ncol(theEND))]
+  rep      = theEND[,11]                 #grabs replicate column
+  para      = theEND[,12]                 #grabs parameter set
+  yr       = unique(theEND[, 1])         #grabs unique years
+  mxk      = ceiling(max(theEND[,2]))    #rounds up the maximum pop size. Note should = k
+  N        = theEND[,2]                  #grabs population size
+  adults   = theEND[,7]                  #grabs total number of adults
+  He       = theEND[,4]                  #grabs expected heterozygosity
+  Ho       = theEND[,5]                  #grabs observed heterozygosity
+  sxratio  = theEND[,8]                  #grabs the sex ratio
+  migprop  = theEND[,3]                  #grabs the proportion of migrants in the population
+  nmig     = theEND[,9]                  #grabs the number of migrants in the population
+  fst      = theEND[,10]                 #grabs Fst 
+  
   
   if(plotit==1){
-    #loop through each replicate
-    #for(rep in 1:replicates){
-      #for each parameter combo
-      #for(pp in 1:nrow(parameters)){
+
+    #########################################################    
+    #Plot the population size and number of adults over time
+    plot(-100, -100 , xlab="Time (generation)", ylab="Population Size", xlim=c(0, max(yr)), ylim=c(0, mxk)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  
+        sub <- theEND[rep == i,] #unique replicate
+        lines(yr, sub[,2], lwd=2)
+        lines(yr, sub[,7], col="blue", lwd=2)
+      }
+    }
+    legend("bottomleft", legend=c("total population size", "total number of adults"),
+            col=c("black", "blue"), lty=1:1, cex=0.8)
+    dev.copy(png, "../Output/total_and_adult_population_size_over_time.png")
+    dev.off()
+    
+    ##########################################################    
+    #Plot the proportion of migrants in the population over time
+    plot(-100, -100 , xlab="Time (generation)", ylab="Proprtion of migrants in population", xlim=c(0, max(yr)), ylim=c(0, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,]  #unique replicate
+        lines(yr, sub[,3], lwd=2)
+      }
+    }
+    dev.copy(png, "../Output/proportion_of_migrants_in_the_population_over_time.png")
+    dev.off()
+    
+    ###########################################################
+    #Plot the observed vs expected hetero
+    plot(-100, -100 , xlab="Expected heterozygosity", ylab="Observed heterozygosity", xlim=c(0, 1), ylim=c(0, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,] #unique replicate
+        HE <- sub[,4]
+        HO <- sub[,5]
+        points(HE, HO, lwd=2)
+      }
+    }
+    abline(coef = c(0,1), col = "red")
+    dev.copy(png, "../Output/observed_vs_expected_heterozygosity.png")
+    dev.off()
         
-        #number of alive, number of adults alive
-        plot(-100, -100 , xlab="time (years)", ylab="population size", xlim=c(0, parameters$years[r]), ylim=c(0, parameters$k[r])) 
-        #plot(theEND[,1],theEND[,2])
-        
-        N       = theEND[,2]               #c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
-        adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
-        #Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
-        #lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)
-        for(q in unique(theEND[,8])){       #unique K
-          temp <- theEND[theEND[,8] ==q,]
-          for(i in unique(rep)){  
-            sub <- theEND[rep == i,] #unique replicate
-            lines(sub[,1], sub[,2], lwd=2)
-            lines(sub[,1], sub[,7], col="blue", lwd=2)
-          }
-        }
-        legend("bottomleft", legend=c("total population size", "total number of adults"),
-               col=c("black", "blue"), lty=1:1, cex=0.8)
-        #points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
-        #points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
-        dev.copy(png, "../Output/total_and_adult_population_size_over_time.png")
-        dev.off()
-        
-        #proportion of migrants
-        plot(-100, -100 , xlab="time (years)", ylab="proprtion of migrants in population", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        mig     = theEND[,3]
-        for(q in unique(theEND[,8])){    #unique K
-          for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-            sub <- theEND[rep == i,]  #unique replicate
-            lines(sub[,1], sub[,3], lwd=2)
-          }
-        }
-        dev.copy(png, "../Output/proportion_of_migrants_in_the_population_over_time.png")
-        dev.off()
-        #REMOVED### lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="black", lwd=5)
-        
-        #observed vs expected hetero
-        plot(-100, -100 , xlab="expected heterozygosity", ylab="observed heterozygosity", xlim=c(0, 1), ylim=c(0, 1)) 
-        Ho     = theEND[,5]
-        He     = theEND[,4]
-        for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[rep == i,] #unique replicate
-          points(He, Ho, lwd=2)
-        }
-        abline(coef = c(0,1), col = "red")
-        #points(He, Ho , xlab="expected heterozygosity", ylab="observed heterozygosity", cex = 1, lty = 1, col="black", lwd=5)
-        dev.copy(png, "../Output/observed_vs_expected_heterozygosity.png")
-        dev.off()
-        
-        #observed hetero over time
-        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        #Ho     = theEND[,5]
-        for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[rep == i,] #unique replicate
-          Ho <- sub[,5]
-          lines(sub[,1], Ho, lwd=2) #points(sub[,1], Ho, lwd=2)
-        }
-        #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
-        dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
-        dev.off()
-        
-        #observed hetero over time with number of migrants
-        #plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
-        #lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
-        
-        #observed heteroz and proportion of migrants in pop
-        #par(mar = c(5,4,4,4)+0.3)
-        #plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        #lines(theEND[,1], Ho , cex = 2, lty = 1, col="black", lwd=2) #NOTICE points, not plot  #xlab="time (years)", ylab="observed heterozygosity",
-        #par(new = TRUE)
-        #lines(theEND[,1], mig , xlab="", ylab="", xlim=c(0, max(theEND[,1])), ylim=c(0,1), cex = 2, lty = 1, col="blue", lwd=2)
-        #plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
-        #axis(side = 4, at = NULL, labels = TRUE)
-        #mtext("proportion of migrants in population", side=4, line =3)
-        
-        #observed heteroz and proportion of migrants in pop
-        par(mar = c(5,4,4,4)+0.3)
-        plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
-        for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[rep == i,]  #unique replicate
-          Ho <- sub[,5]
-          lines(sub[,1], Ho, lwd=2)
-        }
-        par(new = TRUE)
-        for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[rep == i,] #unique replicate
-          mig <- sub[,3]  #prop migrants
-          lines(sub[,1], mig, lwd=2, col = "blue")
-        }
-        axis(side = 4, at = NULL, labels = TRUE, col = "blue")
-        mtext("proportion of migrants in population", side=4, line =3, col = "blue")
-        dev.copy(png, "../Output/observed_het_and_proportion_migrants_over_time.png")
-        dev.off()
-        
-        #Fst over time
-        plot(-100, -100 , xlab="time (years)", ylab="Fst", xlim=c(0, max(theEND[,1])), ylim=c(-1, 1)) 
-        #Ho     = theEND[,5]
-        for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
-          sub <- theEND[rep == i,] #unique replicate
-          Ho <- sub[,5]
-          lines(sub[,1], Ho, lwd=2) #points(sub[,1], Ho, lwd=2)
-        }
-        #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
-        dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
-        dev.off()
-        
+    #########################################################
+    #Plot the observed hetero over time
+    plot(-100, -100 , xlab="Time (generation)", ylab="Observed heterozygosity", xlim=c(0, max(yr)), ylim=c(0, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,] #unique replicate
+        HO <- sub[,5]
+        lines(yr, HO, lwd=2) #points(sub[,1], Ho, lwd=2)
+      }
+    }
+    dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
+    dev.off()  
+    
+    
+    
+    
+    
+    
+    
+    
+    #not sure why, but 5/5/22 when trying to fix the functions below, plotting stopped and I cant view them
+    #will try again to complete this later. 
+    #**may** be because I had "par" as the label for parameters but when I ran par(mar...) I broke it?
+    #changed par to para --- will need to do above and finish fixing those changes below
+    
+    #########################################################
+    #Plot the observed heteroz and proportion of migrants in pop over time
+    par(mar = c(5,4,4,4)+0.3)
+    plot(-100, -100 , xlab="Time (generation)", ylab="Observed heterozygosity", xlim=c(0, max(yr)), ylim=c(0, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,]  #unique replicate
+        HO <- sub[,5]
+        lines(yr, HO, lwd=2)
+      }
+      par(new = TRUE)
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,] #unique replicate
+        mig <- sub[,3]  #prop migrants
+        lines(yr, mig, lwd=2, col = "blue")
+      }
+    }
+    axis(side = 4, at = NULL, labels = TRUE, col = "blue")
+    mtext("proportion of migrants in population", side=4, line =3, col = "blue")
+    dev.copy(png, "../Output/observed_het_and_proportion_migrants_over_time.png")
+    dev.off()
+    
+    ###########################################################        
+    #Plot Fst over time
+    plot(-100, -100 , xlab="Time (generation)", ylab="Fst", xlim=c(0, max(yr)), ylim=c(-1, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,] #unique replicate
+        FST <- sub[,10]
+        lines(yr, FST, lwd=2) #points(sub[,1], Ho, lwd=2)
+      }
+      dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
+      dev.off()
+    }  
+
         
         #additional things that I should make figs of that will need to be added to Analyze.R
           #prop migrant alleles in pop
@@ -137,10 +140,7 @@ Plot = function(theEND){
           #number of mates (use the function "table"; data$habitat.mate (or could try "apply"))
           #sex ratio
           #number of new migrants that generation (?)
-          #Fst
           #proportion of migrant genomes in population (use migrant alleles)
-        
-        
         
         
       #}
