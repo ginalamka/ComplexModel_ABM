@@ -2,6 +2,7 @@
 
 RunModel = function(parameters, r, directory, replicates){
   FINAL = NULL
+  REP   = NULL 
   for(rr in 1:replicates){
     k             = parameters$k[r]
     #REMOVED###allele        = parameters$allele[r]
@@ -240,7 +241,8 @@ RunModel = function(parameters, r, directory, replicates){
     #THIS IS WHERE I CALC RRS using pop data
     aa = RepSucc(pop, maturity, years, rr, r)
     POP = aa[[1]]  #this is the final pop with all indv and all indv data
-    REP = aa[[2]]
+    rep = aa[[2]]
+    REP = rbind(REP, rep)
     
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
