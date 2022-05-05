@@ -197,6 +197,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     #allele 1 positions
     pos = seq(1, SNPS, 2)
     
+    #THERE IS AN ERROR HERE IN GENERATING BABY GENOTYPES -- NEED TO FIX (5/5/2022)
+    
     #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
     fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)          #divide SNPS by 2 because half SNPs come from mom
     fallele2 <- fg[fallele]
