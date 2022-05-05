@@ -247,6 +247,8 @@ RunModel = function(parameters, r, directory, replicates){
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
+    print(paste("REPLICATE", rr, "DONE!"))
+    
   } 
   return(list(FINAL, POP, REP))
 }
