@@ -35,8 +35,9 @@ Plot = function(theEND){
     #Plot the population size and number of adults over time
     plot(-100, -100 , xlab="Time (generation)", ylab="Population Size", xlim=c(0, max(yr)), ylim=c(0, mxk)) 
     for(p in unique(para)){
+      temp <- theEND[para == p,]
       for(i in unique(rep)){  
-        sub <- theEND[rep == i,] #unique replicate
+        sub <- temp[rep == i,] #unique replicate
         lines(yr, sub[,2], lwd=2)
         lines(yr, sub[,7], col="blue", lwd=2)
       }
@@ -116,7 +117,7 @@ Plot = function(theEND){
       }
     }
     axis(side = 4, at = NULL, labels = TRUE, col = "blue")
-    mtext("proportion of migrants in population", side=4, line =3, col = "blue")
+    mtext("Proportion of migrants in population", side=4, line =3, col = "blue")
     dev.copy(png, "../Output/observed_het_and_proportion_migrants_over_time.png")
     dev.off()
     
@@ -129,7 +130,7 @@ Plot = function(theEND){
         FST <- sub[,10]
         lines(yr, FST, lwd=2) #points(sub[,1], Ho, lwd=2)
       }
-      dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
+      dev.copy(png, "../Output/FST_over_time.png")
       dev.off()
     }  
 
