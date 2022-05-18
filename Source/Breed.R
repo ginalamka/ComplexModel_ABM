@@ -116,6 +116,11 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     
     babygeno = matrix(nrow=bb, ncol=SNPS)
     
+    #notes 5/18 -- I believe x in "sample" needs to be altered but I'm not sure how or to what ??
+    #also might be an error if one parent generates more than one baby. what happens when nrow(babies) > nrow(fem/mal) ??
+    #I think will need to loop over baby and loop over pos, sample pos or pos+1, then merge mom and dad values ??
+    #NEEDS EDITING 
+    
     #allele 1 positions
     pos = seq(1, SNPS, 2)
     
