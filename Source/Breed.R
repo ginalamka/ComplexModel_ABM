@@ -104,6 +104,62 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     
+    ##################################################################################
+    #New script to fix genotype errors
+    
+    babygeno = matrix(nrow=bb, ncol=SNPS)
+    #loop over each row in babies
+    for(i in 1:nrow(babies)){
+      mom = babies[i,2]
+      dad = babies[i,3]
+      
+      mm = pop[pop[,1] == mom, , drop=FALSE]
+      dd = pop[pop[,1] == dad, , drop=FALSE]
+      
+      momgeno = mm[, -c(ncol(mm)-(SNPS):ncol(mm))] 
+      dadgeno = dd[, -c(ncol(dd)-(SNPS):ncol(dd))]
+      
+      #allele 1 positions, aka odd values
+      pos1 = seq(1, SNPS, 2)
+      pos2 = pos+1
+      
+      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+      #sample one allele from each SNP per parent for baby's genotype
+      #THIS IS WHERE MY PROBLEMS ARE
+      #UGHGHGHGHGHGHGHGHG
+      #attempts that didnt work:
+      posit = sample(momgeno, SNPS/2, replace = F)
+      posit = sample(seq())
+      sample(seq(0,maxage,1),s,replace=T)
+      
+      sample(seq(from=0, to=1, by=0.01), 1)
+      loc = sample(seq(1, SNPS,1), SNPS/2,replace=F)
+      loc = sample(seq(1, SNPS,2), SNPS/2,replace=F)
+      loc = sample(seq(from=1, to=SNPS, by=2),SNPS/2, replace=F)
+      loc = sample(seq(1|2, SNPS,1), SNPS/2,replace=F)
+      loc = sample(momgeno, SNPS, replace=F)
+      
+      yy =matrix(nrow = SNPS/2, ncol=2)
+      yy[,1] <- seq(1,60,2)
+      yy[,2] <- seq(2,60,2)
+      
+      for(l in 1:nrow(yy)){
+        locat <- sample(yy[l,], 1, replace=F)
+      }
+      
+    }
+    
+    
+    #####################################################################
+    
+    #old script below
+    
+    
+    
+    
+    
+    
+    
     fg = fem[, -c(ncol(fem)-(SNPS):ncol(fem))]
     mg = mal[, -c(ncol(mal)-(SNPS):ncol(mal))]
 
