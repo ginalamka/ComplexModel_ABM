@@ -2,6 +2,7 @@
 #used for the complex migration model
 
 setwd("C:/Users/HP/Box/New Computer/Auburn/Data/ComplexModel_ABM") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") #
+setwd("~/Desktop/ComplexModel_ABM/")
 directory = getwd()
 outdir = paste(directory, "/Output/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
