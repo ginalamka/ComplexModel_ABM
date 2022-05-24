@@ -24,13 +24,14 @@ Plot2 = function(repEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
         LRS <- temp[,3]
-        lines(yr, LRS, lwd=2) #points(sub[,1], Ho, lwd=2)
+        yyr <- temp[,1]
+        lines(yyr, LRS, lwd=2) #points(sub[,1], Ho, lwd=2)
         sd <- temp[,4]
         uppersd = LRS + sd
         lowersd = LRS - sd
-        lines(yr, uppersd, lwd=1)
-        lines(yr, lowersd, lwd=1)
-        polygon(x = c(yr, rev(yr)), y = c(uppersd, rev(lowersd)), col = "lightblue", density = 40, angle = 90)
+        lines(yyr, uppersd, lwd=1)
+        lines(yyr, lowersd, lwd=1)
+        polygon(x = c(yyr, rev(yyr)), y = c(uppersd, rev(lowersd)), col = "lightblue", density = 40, angle = 90)
       }
     }
     dev.copy(png, "../Output/LRS_over_time.png")
@@ -43,13 +44,14 @@ Plot2 = function(repEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
         RRS <- temp[,7]
-        lines(yr, RRS, lwd=2) #points(sub[,1], Ho, lwd=2)
+        yyr <- temp[,1]
+        lines(yyr, RRS, lwd=2) #points(sub[,1], Ho, lwd=2)
         sd <- temp[,8]
         uppersd = RRS + sd
         lowersd = RRS - sd
-        lines(yr, uppersd, lwd=1)
-        lines(yr, lowersd, lwd=1)
-        polygon(x = c(yr, rev(yr)), y = c(uppersd, rev(lowersd)), col = "lightpink", density = 40, angle = 45)
+        lines(yyr, uppersd, lwd=1)
+        lines(yyr, lowersd, lwd=1)
+        polygon(x = c(yyr, rev(yyr)), y = c(uppersd, rev(lowersd)), col = "lightpink", density = 40, angle = 45)
       }
     }
     dev.copy(png, "../Output/RRS_over_time.png")
@@ -80,13 +82,15 @@ Plot2 = function(repEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- repEND[rep == i,]  #unique replicate
         females = sub[,5]
-        lines(yr, females, lwd=2, col = "pink")
+        yyr <- sub[,1]
+        lines(yyr, females, lwd=2, col = "pink")
       }
       par(new = TRUE)
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- repEND[rep == i,] #unique replicate
+        yyr <- temp[,1]
         males = sub[,6]
-        lines(yr, males, lwd=2, col = "blue")
+        lines(yyr, males, lwd=2, col = "blue")
       }
     }
     axis(side = 4, at = NULL, labels = TRUE, col = "blue")
@@ -101,7 +105,8 @@ Plot2 = function(repEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         temp <- repEND[rep == i,] #create temp matrix for each unique replicate
         born <- temp[,2]
-        lines(yr, born, lwd=2) #points(sub[,1], Ho, lwd=2)
+        yyr <- temp[,1]
+        lines(yyr, born, lwd=2) #points(sub[,1], Ho, lwd=2)
       }
     }
     #lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
