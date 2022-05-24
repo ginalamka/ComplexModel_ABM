@@ -27,6 +27,7 @@ Plot = function(theEND){
   migprop  = theEND[,3]                  #grabs the proportion of migrants in the population
   nmig     = theEND[,9]                  #grabs the number of migrants in the population
   fst      = theEND[,10]                 #grabs Fst 
+  fis      = theEND[,6]                  #grabs Fis
   
   
   if(plotit==1){
@@ -135,6 +136,19 @@ Plot = function(theEND){
       dev.off()
     }  
 
+    ###########################################################        
+    #Plot Fis over time
+    plot(-100, -100 , xlab="Time (generation)", ylab="Fis", xlim=c(0, max(yr)), ylim=c(-1, 1)) 
+    for(p in unique(para)){
+      for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
+        sub <- theEND[rep == i,] #unique replicate
+        FIS <- sub[,6]
+        lines(sub[,1], FIS, lwd=2) #points(sub[,1], Ho, lwd=2)
+      }
+      abline(h = 0, col = "steelblue", lty = 2)
+      dev.copy(png, "../Output/FIS_over_time.png")
+      dev.off()
+    }  
         
         #additional things that I should make figs of that will need to be added to Analyze.R
           #prop migrant alleles in pop
