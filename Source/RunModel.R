@@ -40,7 +40,7 @@ RunModel = function(parameters, r, directory, replicates){
     popgen = matrix(nrow=k, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = sample(seq(from=0, to=1, by=0.01), 1)
+      p = 0.5 #sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
                rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
@@ -123,7 +123,7 @@ RunModel = function(parameters, r, directory, replicates){
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = sample(seq(from=0, to=1, by=0.01), 1)
+      p = 0.5 #sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(s*p*p, 0)),                                      #homozygous p*p
                rep(1, round(s*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  

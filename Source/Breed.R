@@ -1,6 +1,3 @@
-#Breed
-#for complex model for ABM class
-
 Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons){
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
@@ -19,14 +16,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   #generate fecundity for each set of parents
   fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T, prob = NULL) #change the number of offspring to biologically relevant number later
   parents <- cbind(parents, fecundity)
-  
-  #parents = parents[-which(parents[,3] == 0),] #consider if it makes sense having fecundity 0-2 or 1-2. remove this line if 0 is not possible
-  
   nbabes = sum(parents[,3])
-  
-  #currently this works so that each pair only makes 1 baby
-  #figure this out so that we have varying fecundity and only some of the offspring survive
-  
   TEMP = NULL
   for(n in 1:nrow(parents)){
     t = parents[n, ,drop=FALSE] #need drop = false or else will lose 
@@ -62,10 +52,19 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,11] = 0      #relative fitness
   
   #create a check to make sure the correct number of babies are being added to pop
-  if(nrow(babies) > numboff){
-    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
-    babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
-    
+  if(nrow(babies) < numboff){
+    print("no reproduction")
+    return(list(pop,0))
+  }
+  if(nrow(babies) >= numboff){
+    if(numboff == nrow(babies)){
+      bb = nrow(babies)
+    }  
+    if(nrow(babies) > numboff){ 
+      rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
+      babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
+      bb = nrow(babies)
+    }
     if(is.null(nrow(babies))==TRUE){
       bb = 1
       print(paste("only one new baby"))
@@ -76,13 +75,10 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
       
       #NEED TO FIGURE OUT SOLUTION FOR WHEN THERE IS ONLY ONE BABY 
       ##ERROR WILL CONTINUE ON LINE 79 UNTIL RESOLVED
-      
-    }else{
-      bb = nrow(babies)
     }
     
     #rename babies so count doesnt get messed up
-    babies =  as.matrix(babies)       #t(as.matrix(babies))
+    babies =  as.matrix(babies)
     babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
     
     #genotypes
@@ -104,9 +100,6 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     
-    ##################################################################################
-    #New script to fix genotype errors
-    
     babygeno = matrix(nrow=bb, ncol=SNPS)
     #loop over each row in babies
     for(i in 1:nrow(babies)){
@@ -121,206 +114,65 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
       
       #allele 1 positions, aka odd values
       pos1 = seq(1, SNPS, 2)
-      pos2 = pos+1
+      pos2 = pos1+1
       
-      #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-      #sample one allele from each SNP per parent for baby's genotype
-      #THIS IS WHERE MY PROBLEMS ARE
-      #UGHGHGHGHGHGHGHGHG
-      #attempts that didnt work:
-      posit = sample(momgeno, SNPS/2, replace = F)
-      posit = sample(seq())
-      sample(seq(0,maxage,1),s,replace=T)
+      #from each snp (2 columns), grab 1 of mom's alleles
+      momgeno.s = pos1 + (sample(0:1, length(pos1), replace=T)) #list of values to pull, exactly 1 allele (here it is index number) from each set of two columns
+      momgeno.s = momgeno[momgeno.s] #these are now the actual alleles
       
-      sample(seq(from=0, to=1, by=0.01), 1)
-      loc = sample(seq(1, SNPS,1), SNPS/2,replace=F)
-      loc = sample(seq(1, SNPS,2), SNPS/2,replace=F)
-      loc = sample(seq(from=1, to=SNPS, by=2),SNPS/2, replace=F)
-      loc = sample(seq(1|2, SNPS,1), SNPS/2,replace=F)
-      loc = sample(momgeno, SNPS, replace=F)
+      #from each snp (2 columns), grab 1 of dad's alleles
+      dadgeno.s = pos1 + (sample(0:1, length(pos1), replace=T)) #list of values to pull, exactly 1 allele (here it is index number) from each set of two columns
+      dadgeno.s = dadgeno[dadgeno.s] #these are now the actual alleles
       
-      yy =matrix(nrow = SNPS/2, ncol=2)
-      yy[,1] <- seq(1,60,2)
-      yy[,2] <- seq(2,60,2)
-      
-      for(l in 1:nrow(yy)){
-        locat <- sample(yy[l,], 1, replace=F)
-      }
-      
+      #now need to interweve mom and dad's genos so that the loci are jumbled
+      babygeno[i,pos1] = momgeno.s
+      babygeno[i,pos2] = dadgeno.s
     }
     
-    
-    #####################################################################
-    
-    #old script below
-    
-    
-    
-    
-    
-    
-    
-    fg = fem[, -c(ncol(fem)-(SNPS):ncol(fem))]
-    mg = mal[, -c(ncol(mal)-(SNPS):ncol(mal))]
+    if(mutate == 1){  #if mutate is turned "on"
+      for(x in 1:nrow(babygeno)){    #iterate over indv
+        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))
+        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
+        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
+        ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
+        ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
+        mut[which(mut=='Y' & init==1)] <- 'N'
+        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
+      }
+    }else{
+      print(paste("no mutation"))
+    }
+    babies = cbind(babies, babygeno)
+    pop = rbind(pop, babies)
 
-    #check 
-    #if(nrow(fg)==nrow(mg)){
-    #  next
-    #}else{
-    #  print(paste("error in parent genotypes"))
-    #}
-    
-    babygeno = matrix(nrow=bb, ncol=SNPS)
-    
-    #notes 5/18 -- I believe x in "sample" needs to be altered but I'm not sure how or to what ??
-    #also might be an error if one parent generates more than one baby. what happens when nrow(babies) > nrow(fem/mal) ??
-    #I think will need to loop over baby and loop over pos, sample pos or pos+1, then merge mom and dad values ??
-    #NEEDS EDITING 
-    
-    #allele 1 positions
-    pos = seq(1, SNPS, 2)
-    
-    #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)      #divide SNPS by 2 because half SNPs come from mom
-    fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
-    
-    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)      #divide SNPS by 2 because half SNPs come from dad
-    mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
-    
-    babygeno[, pos]       <- fallele3
-    babygeno[, pos + 1]   <- mallele3
-    #2/18 for some reason, these tend to fixate ?? check with Janna to figure out why??
-    
-    if(mutate == 1){  #if mutate is turned "on"
-      for(x in 1:nrow(babygeno)){    #iterate over indv
-        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))
-        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
-        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
-        ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
-        ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
-        mut[which(mut=='Y' & init==1)] <- 'N'
-        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
-      }
-    }else{
-      print(paste("no mutation"))
-    }
-    
-    babies = cbind(babies, babygeno)
-    
-    pop = rbind(pop, babies)
-  }else if(numboff == nrow(babies)){
-    bb = nrow(babies)
-    
-    #rename babies so count doesnt get messed up
-    babies[,1] = seq(from = (sz+1), to = (sz+bb), by = 1)
-    
-    #genotypes
-    #prep parent genotypes
-    f = babies[,2]
-    m = babies[,3]
-    
-    fem = pop[-which(pop[,1]%NOTin%f), ,drop=FALSE]
-    mal = pop[-which(pop[,1]%NOTin%m), ,drop=FALSE]
-    
-    ###NEED to add the number of offpsring generated for parents fitness
-    ##REMEMBER this will have to be done here and for when nbabies>numboff
-    #issue is with parents who sire more than one offspring
-    #is this better here or better after the whole simulation
-      #then I can find all adults and for all mothers and fathers, add to offpsring?
-    #for(l in 1:length(f)){
-    #  fem[l]
-    #}
-    
-    if(nrow(mal) == 0){
-      print(paste("can't generate father genotypes"))
-      break
-    }
-    if(nrow(fem)==0){
-      print(paste("can't generate mother genotypes"))
-      break
-    }
-    
-    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2) 
-    fg = fem[, -c(ncol(fem)-SNPS:ncol(fem))]
-    mg = mal[, -c(ncol(mal)-SNPS:ncol(mal))]
-    
-    #check 
-    #if(nrow(fg)==nrow(mg)){
-    #  next
-    #}else{
-    #  print(paste("error in parent genotypes"))
-    #}
-    
-    babygeno = matrix(nrow=bb, ncol=SNPS)
-    
-    #allele 1 positions
-    pos = seq(1, SNPS, 2)
-    
-    #THERE IS AN ERROR HERE IN GENERATING BABY GENOTYPES -- NEED TO FIX (5/5/2022)
-    
-    #randomly sample either position 1 or 2 (add 0 or 1) to starting pos
-    fallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)          #divide SNPS by 2 because half SNPs come from mom
-    fallele2 <- fg[fallele]
-    fallele3 <- matrix(fallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
-    
-    mallele  <- pos + sample(0:1, (SNPS/2)*bb, replace = TRUE, prob = NULL)          #divide SNPS by 2 because half SNPs come from dad
-    mallele2 <- mg[mallele]
-    mallele3 <- matrix(mallele2, nrow=bb, ncol = (SNPS/2), byrow = TRUE)
-    
-    babygeno[, pos]       <- fallele3
-    babygeno[, pos + 1]   <- mallele3
-    
-    #2/18 for some reason, these tend to fixate ?? check with Janna to figure out why??
-    
-    if(mutate == 1){  #if mutate is turned "on"
-      for(x in 1:nrow(babygeno)){    #iterate over indv
-        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))
-        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
-        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
-        ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
-        ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
-        mut[which(mut=='Y' & init==1)] <- 'N'
-        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
-      }
-    }else{
-      print(paste("no mutation"))
-    }
-    
-    babies = cbind(babies, babygeno)
-    
-    pop = rbind(pop, babies)
-  }else{
-    print(paste("need more offspring generated"))
-    next
+  return(list(pop,bb))
   }
-  
+}
   #CHANGES TO MUTATION THAT NEED TO BE MADE - 1.13.22
-    #set a mutation rate so that each SNP has XX chance of mutating
-    #this should be within Breed.R, not through the lifetime
-    #make it a reasonable rate for each SNP
-
-      
-    
-          #x[mut[mut=="Y"]&x[x==1]] = 0                          #if it should be mutated, if it is a 1, go to zero
-          #x[mut[mut=="Y"]&x[x==0]] = 1                          #same as above but vise versa
-      
-    
-    
-    
-    
-    #REMOVED#x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
-    #REMOVED#u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
-    
-    #REMOVED#if(babies[x, (ncol(babies)-u)] == 1){
-      #REMOVED#babies[x, (ncol(babies)-u)] = 0
-      #REMOVED#print(paste("mutated 1 -> 0"))
-    #REMOVED#}else if(babies[x, (ncol(babies)-u)] == 0){
-      #REMOVED#babies[x, (ncol(babies)-u)] = 1
-      #REMOVED#print(paste("mutated 0 -> 1"))
-    #}
-    
+  #set a mutation rate so that each SNP has XX chance of mutating
+  #this should be within Breed.R, not through the lifetime
+  #make it a reasonable rate for each SNP
+  
+  
+  
+  #x[mut[mut=="Y"]&x[x==1]] = 0                          #if it should be mutated, if it is a 1, go to zero
+  #x[mut[mut=="Y"]&x[x==0]] = 1                          #same as above but vise versa
+  
+  
+  
+  
+  
+  #REMOVED#x = sample(1:nrow(babies), 1, replace = TRUE,)   #find row to mutate
+  #REMOVED#u = sample(1:nSNP*2, 1, replace = TRUE,)         #find column to mutate 
+  
+  #REMOVED#if(babies[x, (ncol(babies)-u)] == 1){
+  #REMOVED#babies[x, (ncol(babies)-u)] = 0
+  #REMOVED#print(paste("mutated 1 -> 0"))
+  #REMOVED#}else if(babies[x, (ncol(babies)-u)] == 0){
+  #REMOVED#babies[x, (ncol(babies)-u)] = 1
+  #REMOVED#print(paste("mutated 0 -> 1"))
+  #}
+  
   
   
   #notes on mutation 2/14: 
@@ -338,10 +190,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   
   #think about adding in a "generation born" and "generation died" columns in pop
   #consider adding a column for calculating parents' lifetime reproductive success -- ORRR print this as a separate table!
-  return(list(pop,bb))
-}
 
-
+  
 #notes 12/29/2021
 #ADDING MUTATION
 #within the Breed.R function, add in a probability of mutation. (randomly assigned or related to something..?)
