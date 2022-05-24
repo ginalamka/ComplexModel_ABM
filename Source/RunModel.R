@@ -184,7 +184,7 @@ RunModel = function(parameters, r, directory, replicates){
           print(paste("Population low, less than 10 indv"))
           break
         }
-        tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, k.V)
+        tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r)
         pop = tttt[[1]]
         k = tttt[[2]]
         if(nrow(pop) <= 10){
@@ -230,7 +230,7 @@ RunModel = function(parameters, r, directory, replicates){
       }
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])

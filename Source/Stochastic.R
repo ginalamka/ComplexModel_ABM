@@ -27,7 +27,7 @@ dur           = 50  #duration of small pop size before pop growth "
   #this allows me to kill those still alive but not kill the new babies. 
   #I *think* that means I should make sure not to kill parents from MateChoice
     #to make it easier -- just put this after Breed, at the very end. 
-Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, k.V){   #may not need stoch (if will always have stoch change) or numboff (if kill fresh babies too)
+Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r){   #may not need stoch (if will always have stoch change) or numboff (if kill fresh babies too)
   ##check out Analyze.R -- I think I can just do multiple returns for each if statement?
   stkilled = NULL
   
@@ -56,11 +56,11 @@ Stochastic = function(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r
     
     #REMOVED#k <- Nt1
     
-    incrate = round((k.V - nrow(pop))/(years-y))   #another way to do this would be to use teh intrinsic growth rate from PopSizeNext.
+    incrate = round((parameters$k[r] - nrow(pop))/(years-y))   #another way to do this would be to use teh intrinsic growth rate from PopSizeNext.
     k <- k + incrate
     
-    if(k > k.V){
-      k <- k.V
+    if(k > parameters$k[r]){
+      k <- parameters$k[r]
     }
     
   }else if(styr <= y & y < edyr){
