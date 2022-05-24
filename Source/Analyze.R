@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -39,7 +39,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){
   
   #calculate summary stats for final pop
   FIN = matrix(nrow=years+1, ncol=12)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset")
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -94,9 +94,6 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){
     FIN[f,5] <- mean(HO)
     
     
-    #figure out how to find RRS, I think we need fecundity/indv LRS first
-    FIN[f,6] = NA #mean(data[REPRODUCTIVE SUCCESS COLUMN])
-    
     #find number of adults per year
     adults = data[data[,4]>= maturity, , drop = FALSE]
     FIN[f,7] = nrow(adults)
@@ -121,24 +118,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){
     #?
     
     #table function https://www.datasciencemadesimple.com/table-function-in-r/#:~:text=Table%20function%20in%20R%20-table%20%28%29%2C%20performs%20categorical,creating%20Frequency%20tables%20with%20condition%20and%20cross%20tabulations.
-    
-    #calc Fst
-    #Fst for this population compared to the initialized pop (aka focalpop)
-    #https://bios1140.github.io/understanding-fst-the-fixation-index.html
-    #mark: https://www.molecularecologist.com/2012/05/14/calculating-pair-wise-unbiased-fst-with-r/   AND     https://www.molecularecologist.com/wp-content/uploads/2012/05/Pairwise-WeirCockerhams-FST.r1.txt
-    
-    #Fst for this pop compared to the source pop (aka source1)
-    
-    #DOUBLE CHECK THESE EQUATIONS
-    #https://www.uwyo.edu/dbmcd/popecol/maylects/fst.html
-    #I *think* I should be averaging between subpops for Hs but I'm not 100% sure
-    
-    #Fst = (expected heterozy of total pop - expected heterozygosity of subpop) / expected heterozy of total pop
-    #if heterozy of focal pop is hetero in year 0 
-    #and subpop is the hetero for year y
-    #can't I use the previous calculations for Fst?
-    
-    #Fis = (expected heterozygosity of subpop - observed heterozygosity of indv) / expected hetero of subpop
+
     
     #LINKS FOR CALC FST USING HIERFSTAT
     #https://rdrr.io/cran/hierfstat/
@@ -151,56 +131,64 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr){
     #https://rdrr.io/cran/hierfstat/man/pairwise.WCfst.html
     #https://rdrr.io/cran/hierfstat/man/ppfst.html
     
-    library(hierfstat)
+
+    
+    #prepare the genotypes for hierfstat
+    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)                    #find number of SNPs
+    fstdata <- data[, -c(ncol(data)-(SNPS):ncol(data))]               #grab SNPs
+    
+    #change 0s to 2s for hierfstat to read
+    fstdata[fstdata[,]==0] <-2
+    
+    head(fstdata)
     
     
-    if(y == 0){
+    #allele 1 positions, aka odd values
+    pos1 = seq(1, SNPS, 2)
+    pos2 = pos1+1
+    
+    #merge pos1 and pos2 into pos1, then remove pos2
+    fstdata[,pos1] <- as.numeric(paste(fstdata[,pos1], fstdata[,pos2], sep=""))
+    fstdata <- fstdata[,-c(pos2)]
+    
+    #add pop identifier for calculations
+    popident <- matrix(nrow=nrow(fstdata), ncol=1)
+    popident[,1] = y
+    fstdata <- cbind(popident,fstdata)
+    
+    if(y != 0){
+      #do the same to the initialized focal pop -- for comparison
+      fstinit <- focalpop[, -c(ncol(focalpop)-(SNPS):ncol(focalpop))]               #grab SNPs
+      fstinit[fstinit[,]==0] <-2                                                    #change 0s to 2s
+      fstinit[,pos1] <- as.numeric(paste(fstinit[,pos1], fstinit[,pos2], sep=""))                     #merge SNPs
+      fstinit <- fstinit[,-c(pos2)]                                                 #remove single pos2 SNPs
+      initident <- matrix(nrow=nrow(fstinit), ncol=1)                               #add pop identifier
+      initident[,1] = 0
+      fstinit <- cbind(initident,fstinit)                                           #merge identifier and genotypes
       
-      #first, get hetero values for the **source pop** to compare to the **initialized focal pop**
-      sSNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
-      sgenotype = source1[, -c(ncol(source1)-sSNPS:ncol(source1))]
-      ssnps = rep(c(1,2),ncol(sgenotype)/2)
-      
-      sHE = NULL
-      sHO = NULL
-      
-      sloc.pos = seq(1, sSNPS, 2)
-      for(slp in sloc.pos){
-        #per locus heterozygostiy
-        slocus <- sgenotype[, c(slp, slp+1), drop=FALSE]
-        sgeno  <- length(slocus[,1])
-        shet   <- length(which(slocus[,1] != slocus[,2]))
-        shet.observed <- shet/sgeno
-        sHO = c(sHO, shet.observed)
-        
-        sfreqs <- table(slocus)
-        shomozygous = NULL
-        for(sv in 1:length(sfreqs)){
-          shomozygous = c(shomozygous, (sfreqs[sv]/sum(sfreqs)*sfreqs[sv]/sum(sfreqs)))
-        }
-        shet.expected <- 1 - sum(shomozygous)
-        sHE = c(sHE, shet.expected)
-      }
-      
-      obs.source <- mean(sHO)
-      obs.foc <- mean(HO)
-      mean.OH <- (obs.source + obs.foc)/2
-      
-      fst <- (mean.OH - obs.foc) / mean.OH
-      
-      FIN[f,10] = fst  
-    }else{
-      
-      #calculate the Fst between **pop in year y** and the **initialized focal pop**
-      obs.init <- init.het #from year 0
-      obs.pop <- FIN[f,5]  #from year y
-      
-      mean.obs <- (obs.init + obs.pop)/2
-      FST <- (mean.obs - obs.pop) / mean.obs
-      
-      FIN[f,10] = FST
-      
+      fstdata <- rbind(fstdata, fstinit)                                            #merge current year and initialized year to one matrix for calculations
     }
+    if(y == 0){
+      #do the same to the initialized source pop -- for comparison
+      fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
+      fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
+      fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
+      fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
+      sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
+      sourceident[,1] = -1
+      fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
+      
+      fstdata <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
+    }
+    
+    fstdata <- as.data.frame(fstdata)                                               #turn into a dataframe
+    calc <-wc(fstdata, diploid=TRUE, pol=0)                                         #calc FST and FIS
+    #calc <- pairwise.WCfst(fstdata,diploid=TRUE)                                   #calculate FST
+    
+    FIN[f,10] <- calc$FST
+    FIN[f, 6] <- calc$FIS
+    
+
     FIN[f,11] = rr   #add replicate number
     FIN[f,12] = r    #add parameter set number
     
