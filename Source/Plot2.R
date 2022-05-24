@@ -1,6 +1,9 @@
 #Plot2.R for complex migration model 2022
 
 Plot2 = function(repEND){
+  #set any NAs to zeros
+  repEND[is.na(repEND)] = 0
+  
   #set up to subset by replicate and by year born (-1 = migrants, 0 = init focal pop)
   rep = repEND[,9]                 #grabs replicate 
   par = repEND[,10]                #grabs parameter set

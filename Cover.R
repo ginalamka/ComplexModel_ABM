@@ -12,7 +12,7 @@ nSNP.V        = 10  #scaleup                #number of SNPs simulated, used to t
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
-years.V       = 10#250  #scaleup               #total run time; 200 year run following 50 year stabilization period
+years.V       = 250  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #1 is stable, <1 is decreasing, >1 is increasing
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 nSNP.mig.V    = 10                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
@@ -35,7 +35,7 @@ colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years"
 remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
-replicates    = 3 #20 #5 #10
+replicates    = 5 #20 #5 #10
 plotit        = 1    #1=yes, 0=no
 plotit2       = 1    #1=yes, 0=no
 r             = 1

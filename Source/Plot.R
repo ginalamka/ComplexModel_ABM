@@ -38,8 +38,8 @@ Plot = function(theEND){
       temp <- theEND[para == p,]
       for(i in unique(rep)){  
         sub <- temp[rep == i,] #unique replicate
-        lines(yr, sub[,2], lwd=2)
-        lines(yr, sub[,7], col="blue", lwd=2)
+        lines(sub[,1], sub[,2], lwd=2)
+        lines(sub[,1], sub[,7], col="blue", lwd=2)
       }
     }
     legend("bottomleft", legend=c("total population size", "total number of adults"),
@@ -53,7 +53,7 @@ Plot = function(theEND){
     for(p in unique(para)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,]  #unique replicate
-        lines(yr, sub[,3], lwd=2)
+        lines(sub[,1], sub[,3], lwd=2)
       }
     }
     dev.copy(png, "../Output/proportion_of_migrants_in_the_population_over_time.png")
@@ -81,7 +81,7 @@ Plot = function(theEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,] #unique replicate
         HO <- sub[,5]
-        lines(yr, HO, lwd=2) #points(sub[,1], Ho, lwd=2)
+        lines(sub[,1], HO, lwd=2) #points(sub[,1], Ho, lwd=2)
       }
     }
     dev.copy(png, "../Output/observed_heterozygosity_over_time.png")
@@ -107,13 +107,13 @@ Plot = function(theEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,]  #unique replicate
         HO <- sub[,5]
-        lines(yr, HO, lwd=2)
+        lines(sub[,1], HO, lwd=2)
       }
       par(new = TRUE)
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,] #unique replicate
         mig <- sub[,3]  #prop migrants
-        lines(yr, mig, lwd=2, col = "blue")
+        lines(sub[,1], mig, lwd=2, col = "blue")
       }
     }
     axis(side = 4, at = NULL, labels = TRUE, col = "blue")
@@ -128,8 +128,9 @@ Plot = function(theEND){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,] #unique replicate
         FST <- sub[,10]
-        lines(yr, FST, lwd=2) #points(sub[,1], Ho, lwd=2)
+        lines(sub[,1], FST, lwd=2) #points(sub[,1], Ho, lwd=2)
       }
+      abline(h = 0, col = "steelblue", lty = 2)
       dev.copy(png, "../Output/FST_over_time.png")
       dev.off()
     }  
