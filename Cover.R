@@ -7,7 +7,7 @@ outdir = paste(directory, "/Output/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
-k.V           = c(500, 1000) #c(1000, 5000, 10000)                #carrying capacity
+k.V           = c(1000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
 nSNP.V        = 10  #scaleup                #number of SNPs simulated, used to track drift
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
@@ -30,7 +30,7 @@ colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years"
 remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
-replicates    = 2 #20 #5 #10
+replicates    = 5 #20 #5 #10
 plotit        = 1    #1=yes, 0=no
 plotit2       = 1    #1=yes, 0=no
 mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
