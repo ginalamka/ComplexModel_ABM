@@ -1,6 +1,11 @@
 #Migrate
 #used for complex migration model for ABM class
 
+#do this for one migrant per year
+#also try to find the max migrants (i.e, 5, or 10)
+#also do a probability of getting 0 or 1 migrants per year
+#the worry is that if the migranion is too high, the pops might not even be considered seperate
+
 Migrate = function(pop, source){
   #select number of migrants, from 1-5
 #  N = sum(pop[,8])  #gets census size
@@ -10,7 +15,8 @@ Migrate = function(pop, source){
   #NOTE-- TO IMPLEMENT THIS, will need to change the number of indv in the source pop, probs around 10k. this will take time tho so I will do this later
   #remember that H DROPS significantly when there is only 1-5 migrants per year when K stays around 1000. this is an argument AGAINST the 1 mig per generation rule
   
-  mig = sample(c(1:15), 1, replace=T) #OLD
+  mig = sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
+  #note that the 1:mig might affect the number. pay attention to this.
   
   print(paste("there are", mig, "migrants this year"))
   
