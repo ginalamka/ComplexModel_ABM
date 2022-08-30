@@ -50,7 +50,7 @@ Plot = function(theEND){
     
     ##########################################################    
     #Plot the proportion of migrants in the population over time
-    plot(-100, -100 , xlab="Time (generation)", ylab="Proprtion of migrants in population", xlim=c(0, max(yr)), ylim=c(0, 1)) 
+    plot(-10, -10 , xlab="Time (generation)", ylab="Proprtion of migrants in population", xlim=c(0, max(yr)), ylim=c(0, 1)) 
     for(p in unique(para)){
       for(i in unique(rep)){  #this allows each rep to be a dif line rather than the lines through it. DO THIS FOR ALL PLOTS
         sub <- theEND[rep == i,]  #unique replicate
@@ -193,3 +193,8 @@ Plot = function(theEND){
 #thoughts after class>>   
   #consider comparing N and Ne (effective breeders)
   #should migrants always be the breeders? (that would be effective migrants, not just n migrants)
+
+
+
+#setwd("C:/Users/HP/Box/New Computer/Auburn/Data/ComplexModel_ABM/CSVs")
+#theEND = read.table("theEND_param1.csv", header=T, sep=",")
