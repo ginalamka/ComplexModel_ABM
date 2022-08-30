@@ -225,7 +225,7 @@ RunModel = function(parameters, r, directory, replicates){
         
         print(paste("DONE!", y, "rep", rr))
         
-        ###REMOVED###pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22
+        #REMOVED###pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22
         
         ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
         ###REMOVED### return (pop)
