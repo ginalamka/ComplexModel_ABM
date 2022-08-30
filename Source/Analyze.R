@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -38,8 +38,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=12)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset")
+  FIN = matrix(nrow=years+1, ncol=15)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -167,6 +167,22 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
       fstinit <- cbind(initident,fstinit)                                           #merge identifier and genotypes
       
       fstdata <- rbind(fstdata, fstinit)                                            #merge current year and initialized year to one matrix for calculations
+      
+      #do the same to the initialized source pop -- for comparison
+      fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
+      fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
+      fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
+      fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
+      sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
+      sourceident[,1] = -1
+      fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
+      
+      fstdatavsource <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
+      
+      fstdatavsource <- as.data.frame(fstdatavsource)
+      calcvsource <-wc(fstdatavsource, diploid=TRUE, pol=0) 
+      FIN[f,14] <- calcvsource$FST
+      FIN[f,15] <- calcvsource$FIS
     }
     if(y == 0){
       #do the same to the initialized source pop -- for comparison
@@ -192,6 +208,14 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     FIN[f,11] = rr   #add replicate number
     FIN[f,12] = r    #add parameter set number
     
+    if(y == 0){
+      numboff = 0
+    }
+    FIN[f,13] = numboff
+    
+    
+
+    
     
     #Fis for this pop
     
@@ -209,7 +233,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "meanRRS", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource",
                     "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
   
   return(out)
