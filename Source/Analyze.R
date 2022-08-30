@@ -67,7 +67,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     
     #He and Ho - neutral (?)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
-    genotype = data[, -c(ncol(data)-SNPS:ncol(data))]
+    genotype = data[, -c(ncol(data)-SNPS:ncol(data))] #THERE IS AN ERROR HERE THAT IS CHANGING THE ORDER OF COLUMNS?? ALSO NOTE THAT THE NUMBER OF SNPS IS WRONG--PROBS CUZ OF NOT RUNNING THE DIFFERENT TYPES IN RUNMODEL. FIX THIS~!
     snps = rep(c(1,2),ncol(genotype)/2)
     
     HE = NULL
