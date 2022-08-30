@@ -40,7 +40,7 @@ RunModel = function(parameters, r, directory, replicates){
     popgen = matrix(nrow=k, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = 0.5 #sample(seq(from=0, to=1, by=0.01), 1)
+      p = sample(seq(from=0.4, to=0.6, by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
                rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
@@ -66,28 +66,29 @@ RunModel = function(parameters, r, directory, replicates){
       #add genotypes to pop matrix
     }
     
-    #create migrant and nonmigrant unique SNPs 
-    popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
-    columnsb = seq(1,(nSNP.mig*2),2)
-    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-      popSNPs[b,] = 0
-    }
+    #REMOVE4EVOLUTION###create migrant and nonmigrant unique SNPs 
+    #REMOVE4EVOLUTION##popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
+    #REMOVE4EVOLUTION##columnsb = seq(1,(nSNP.mig*2),2)
+    #REMOVE4EVOLUTION##for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE4EVOLUTION##  popSNPs[b,] = 0
+    #REMOVE4EVOLUTION##}
     
-    #create conserved SNPs    
-    conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
-    columnsc = seq(1,(nSNP.cons*2),2)
-    for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-      conSNPs[c,] = 0
-    }
+    #REMOVE4EVOLUTION###create conserved SNPs    
+    #REMOVE4EVOLUTION##conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
+    #REMOVE4EVOLUTION##columnsc = seq(1,(nSNP.cons*2),2)
+    #REMOVE4EVOLUTION##for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE4EVOLUTION##  conSNPs[c,] = 0
+    #REMOVE4EVOLUTION##}
     
-    focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##??not sure why, but not binding correctly???
+    #REMOVE4EVOLUTION##focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##??not sure why, but not binding correctly???
+    focalpop <- cbind(pop, popgen)
     pop <- focalpop
     
     #write starting pop to table
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, popSNPs, conSNPs) 
+    #REMOVE4EVOLUTION##remove(popgen, popSNPs, conSNPs) 
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -123,7 +124,7 @@ RunModel = function(parameters, r, directory, replicates){
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = 0.5 #sample(seq(from=0, to=1, by=0.01), 1)
+      p = sample(seq(from=0.4, to=0.6, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(s*p*p, 0)),                                      #homozygous p*p
                rep(1, round(s*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
@@ -150,29 +151,30 @@ RunModel = function(parameters, r, directory, replicates){
       
     }
     
-    #create migrant and nonmigrant unique SNPs
-    migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
-    columnsd= seq(1,(nSNP.mig*2),2)
-    for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
-      migSNPs[d,] = 1
-    }
+    #REMOVE4EVOLUTION###create migrant and nonmigrant unique SNPs
+    #REMOVE4EVOLUTION##migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
+    #REMOVE4EVOLUTION##columnsd= seq(1,(nSNP.mig*2),2)
+    #REMOVE4EVOLUTION##for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE4EVOLUTION##  migSNPs[d,] = 1
+    #REMOVE4EVOLUTION##}
     
-    #create conserved SNPs    
-    conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
-    columnse = seq(1,(nSNP.cons*2),2)
-    for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-      conSNPs[e,] = 0
-    }
+    #REMOVE4EVOLUTION###create conserved SNPs    
+    #REMOVE4EVOLUTION##conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
+    #REMOVE4EVOLUTION##columnse = seq(1,(nSNP.cons*2),2)
+    #REMOVE4EVOLUTION##for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE4EVOLUTION##  conSNPs[e,] = 0
+    #REMOVE4EVOLUTION##}
     
-    source1 <- cbind(source, sourcegen, migSNPs, conSNPs)        #also doesnt work????
+    #REMOVE4EVOLUTION##source1 <- cbind(source, sourcegen, migSNPs, conSNPs)        #also doesnt work????
+    source1 <- cbind(source, sourcegen)
     source <- source1
     
     #write starting source to table
     #### REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
-    #clean up
-    remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
-    remove(gtype, columns, columnsb, columnsc, columnsd, columnse)
+    #REMOVE4EVOLUTION###clean up
+    #REMOVE4EVOLUTION##remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
+    #REMOVE4EVOLUTION##remove(gtype, columns, columnsb, columnsc, columnsd, columnse)
     
     #create for loop for each time step
     for(y in 0:years){
@@ -194,7 +196,7 @@ RunModel = function(parameters, r, directory, replicates){
         #pop = RandomDeath(pop)                  #random mortality
         tt = Migrate(pop, source)             #subpop migration
         pop = tt[[1]]
-        mig = tt[[2]]
+        mig = tt[[2]]  #0
         sz = sz + mig #may need to edit since dead are not being removed from pop
         source = tt[[3]]
         if(nrow(pop) <= 4){
@@ -206,10 +208,10 @@ RunModel = function(parameters, r, directory, replicates){
           print(paste("skipping pop size next, breed due to no parents"))
           break  #consider whether this should be next or break
         }
-        if(sum(pairs[,1]) < 0 | sum(pairs[,2]) < 0){
-          print(paste("Only migrants available as parents"))
-          break
-        }
+        #REMOVED## if(sum(pairs[,1]) < 0 | sum(pairs[,2]) < 0){
+        #REMOVED##   print(paste("Only migrants available as parents"))
+        #REMOVED##   break
+        #REMOVED## }
         numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
         if(numboff <= 1){
           print(paste("No new babies, skip breed"))
@@ -221,7 +223,9 @@ RunModel = function(parameters, r, directory, replicates){
         sz = sz + bb
         
         
-        print(paste("DONE!", y))
+        print(paste("DONE!", y, "rep", rr))
+        
+        ###REMOVED###pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22
         
         ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
         ###REMOVED### return (pop)
@@ -230,7 +234,7 @@ RunModel = function(parameters, r, directory, replicates){
       }
       
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
