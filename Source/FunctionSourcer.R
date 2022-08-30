@@ -2,7 +2,7 @@
 #this is for the complex migration ABM for class Fall 2021
 
 #set working directory, import packages, source functions,
-setwd(paste(directory,"/source/", sep = '')) #set temp working directory
+setwd(paste(directory,"/Source/", sep = '')) #set temp working directory
 
 #import packages
 #library()
