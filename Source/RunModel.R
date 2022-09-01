@@ -66,6 +66,38 @@ RunModel = function(parameters, r, directory, replicates){
       #add genotypes to pop matrix
     }
     
+    for(g in 1:nrow(popgen)){
+      het <- 0
+      gg <- popgen[g,,drop=FALSE]
+      z <- 1
+      while(z < 21){   ## here, instead of 21, you could use whatever variable you use to set # of loci + 1
+        locus <- gg[,c(z, z+1)]
+        geno <- length(locus[,1])
+        if(locus[,1] != locus[,2]){
+          het <- het+1    ## idk how your calculating heterozygosity, i.e., if it should be +1 or +1 here
+        } else{
+          next
+        }
+        z <- z+2
+      }
+      het.observed <- het/geno
+      HO <- c(HO, het.observed)
+    }
+    
+    HO = NULL
+    for(g in 1:nrow(popgen)){
+      gg  = popgen[g,]
+      for(z in columns){
+        #heterozygostiy for each indv
+        locus <- gg[, c(z, z+1), drop=FALSE]
+        geno  <- length(locus[,1])
+        het   <- length(which(locus[,1] != locus[,2]))
+        het.observed <- het/geno
+        HO = c(HO, het.observed)
+      }
+    }
+    
+    
     #REMOVE4EVOLUTION###create migrant and nonmigrant unique SNPs 
     #REMOVE4EVOLUTION##popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
     #REMOVE4EVOLUTION##columnsb = seq(1,(nSNP.mig*2),2)
@@ -83,6 +115,9 @@ RunModel = function(parameters, r, directory, replicates){
     #REMOVE4EVOLUTION##focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##??not sure why, but not binding correctly???
     focalpop <- cbind(pop, popgen)
     pop <- focalpop
+    
+    #calculate heterozygosity for each indv, put it in pop table
+    
     
     #write starting pop to table
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
