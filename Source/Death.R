@@ -27,7 +27,11 @@ Death = function(pop, maxage, ratemort, y){
     #kill some more individuals
     nkill = round((nrow(pop) * ratemort), 0) - nrow(oldies)
     if((nkill>0)){
-      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE)
+      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE) #this is for RANDOM death
+      
+      tpop  = sort(pop[,11], decreasing = TRUE)
+      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, prob=pop[,11]) #this is for fitness-influenced death
+      
       pop[kill,8]  = 0
       pop[kill,10] = y   #this is if I have a generation died column
       
