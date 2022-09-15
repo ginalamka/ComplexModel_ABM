@@ -49,7 +49,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,8] = 1      #make every baby alive
   babies[,9] = y  #MUST feed y to function   #generation born
   babies[,10] = 0      #generation died
-  babies[,11] = 0      #relative fitness
+  babies[,11] = NA      #relative fitness
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) < numboff){
@@ -142,6 +142,15 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     }else{
       print(paste("no mutation"))
     }
+    
+    #calculate relative fitness (heterozygosity)
+    het <- matrix(nrow=nrow(babygeno), ncol=1)
+    for(g in 1:nrow(babygeno)){
+      w <- sum(babygeno[g ,seq(1,ncol(babygeno),2)]!=babygeno[g,seq(2,ncol(babygeno),2)])/(ncol(babygeno)/2)
+      het[g,1] <- w
+    } #note to add the other SNPs in here if wanted
+    babies[,11] <- het
+    
     babies = cbind(babies, babygeno)
     pop = rbind(pop, babies)
 
