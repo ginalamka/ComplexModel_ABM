@@ -77,10 +77,11 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     for(lp in loc.pos){
       #per locus heterozygostiy
       locus <- genotype[, c(lp, lp+1), drop=FALSE]
-      geno  <- length(locus[,1])
-      het   <- length(which(locus[,1] != locus[,2]))
-      het.observed <- het/geno
-      HO = c(HO, het.observed)
+      #REMOVED because calculated already
+      #geno  <- length(locus[,1])
+      #het   <- length(which(locus[,1] != locus[,2]))
+      #het.observed <- het/geno
+      #HO = c(HO, het.observed)
       
       freqs <- table(locus)
       homozygous = NULL
@@ -91,7 +92,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
       HE = c(HE, het.expected)
     }
     FIN[f,4] <- mean(HE)
-    FIN[f,5] <- mean(HO)
+    FIN[f,5] <- mean(data[,11]) 
     
     
     #find number of adults per year
