@@ -3,6 +3,7 @@
 RunModel = function(parameters, r, directory, replicates){
   FINAL = NULL
   REP   = NULL 
+  rr=1  #remove this when not skipping through the below line
   for(rr in 1:replicates){
     k             = parameters$k[r]
     #REMOVED###allele        = parameters$allele[r]
@@ -33,7 +34,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
     pop[,9] = 0                             #generation born
     pop[,10] = 0                            #generation died
-    pop[,11] = 0                            #relative fitness #at this point, we are putting all equal to zero because this is the initial generation
+    pop[,11] = NA                            #relative fitness #at this point, we are putting all equal to zero because this is the initial generation
     sz = k #to keep track of the number of indv for ID'ing later
     
     #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
@@ -66,37 +67,12 @@ RunModel = function(parameters, r, directory, replicates){
       #add genotypes to pop matrix
     }
     
+    het <- matrix(nrow=nrow(popgen), ncol=1)
     for(g in 1:nrow(popgen)){
-      het <- 0
-      gg <- popgen[g,,drop=FALSE]
-      z <- 1
-      while(z < 21){   ## here, instead of 21, you could use whatever variable you use to set # of loci + 1
-        locus <- gg[,c(z, z+1)]
-        geno <- length(locus[,1])
-        if(locus[,1] != locus[,2]){
-          het <- het+1    ## idk how your calculating heterozygosity, i.e., if it should be +1 or +1 here
-        } else{
-          next
-        }
-        z <- z+2
-      }
-      het.observed <- het/geno
-      HO <- c(HO, het.observed)
-    }
-    
-    HO = NULL
-    for(g in 1:nrow(popgen)){
-      gg  = popgen[g,]
-      for(z in columns){
-        #heterozygostiy for each indv
-        locus <- gg[, c(z, z+1), drop=FALSE]
-        geno  <- length(locus[,1])
-        het   <- length(which(locus[,1] != locus[,2]))
-        het.observed <- het/geno
-        HO = c(HO, het.observed)
-      }
-    }
-    
+      w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)
+      het[g,1] <- w
+    } #note to add the other SNPs in here if wanted
+    pop[,11] <- het
     
     #REMOVE4EVOLUTION###create migrant and nonmigrant unique SNPs 
     #REMOVE4EVOLUTION##popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
@@ -153,7 +129,7 @@ RunModel = function(parameters, r, directory, replicates){
     source[,8] = 1                             #alive or dead? alive = 1, dead = 0
     source[,9] = -1                            #generation born
     source[,10] = 0                            #generation died
-    source[,11] = 0                            #relative fitness
+    source[,11] = NA                            #relative fitness
     
     #generate source gentoypes
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
@@ -185,6 +161,13 @@ RunModel = function(parameters, r, directory, replicates){
       #add genotypes to source matrix
       
     }
+    
+    sourcehet <- matrix(nrow=nrow(sourcegen), ncol=1)
+    for(j in 1:nrow(sourcegen)){
+      z <- sum(sourcegen[j ,seq(1,ncol(sourcegen),2)]!=sourcegen[j,seq(2,ncol(sourcegen),2)])/(ncol(sourcegen)/2)
+      sourcehet[j,1] <- z
+    } #note to add the other SNPs in here if wanted
+    source[,11] <- sourcehet
     
     #REMOVE4EVOLUTION###create migrant and nonmigrant unique SNPs
     #REMOVE4EVOLUTION##migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
