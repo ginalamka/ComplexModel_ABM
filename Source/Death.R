@@ -27,15 +27,19 @@ Death = function(pop, maxage, ratemort, y){
     #kill some more individuals
     nkill = round((nrow(pop) * ratemort), 0) - nrow(oldies)
     if((nkill>0)){
-      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE) #this is for RANDOM death
+      #kill  = sample(1:length(pop[,1]), nkill, replace=FALSE) #this is for RANDOM death
       
-      tpop  = sort(pop[,11], decreasing = TRUE)
-      kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, prob=pop[,11]) #this is for fitness-influenced death
+      #USE_OLD##kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, prob=(1-pop[,11])) #this is for fitness-influenced death
+      #pop[kill,8]  = 0
+      #pop[kill,10] = y   #this is if I have a generation died column
       
-      pop[kill,8]  = 0
-      pop[kill,10] = y   #this is if I have a generation died column
-      
-      totalkilled = nkill + nrow(oldies)
+      for(ee in 1:nrow(pop)){
+        maxhet = max(pop[,8])
+        het = pop[ee,11]
+        pop[ee,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(maxhet-het,het))
+      }
+      nkilled = pop[pop[,8]==0,,drop=FALSE]
+      totalkilled = nrow(nkilled) + nrow(oldies)
       print(paste("killed", totalkilled, "individuals"))
       
     }else{
