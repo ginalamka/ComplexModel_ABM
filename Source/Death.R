@@ -34,9 +34,14 @@ Death = function(pop, maxage, ratemort, y){
       #pop[kill,10] = y   #this is if I have a generation died column
       
       for(ee in 1:nrow(pop)){
-        maxhet = max(pop[,8])
-        het = pop[ee,11]
-        pop[ee,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(maxhet-het,het))
+        het = pop[ee,11] +0.000001 #this controls for if het =0
+        pop[ee,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(1/het/100,(1-(1/het/100))))
+        
+        #notes 9/16/22 - do this only at the year of maturity-- ONCE because the fitness effect that happens every year would be stronger if it compounded
+        #if you have the maxhet change over time, the probability of dying would change each year so it would be hard to measure.
+        # look for the realtionship of heterozyogisty to probability of death to see if there is stuff on there (might not be)
+        #do oldies > fitness at maturity age > age-based death (age/lifespan) === DO NOT PUT A LIMIT ON THE NUMBER TO KILL
+        #
       }
       nkilled = pop[pop[,8]==0,,drop=FALSE]
       totalkilled = nrow(nkilled) + nrow(oldies)

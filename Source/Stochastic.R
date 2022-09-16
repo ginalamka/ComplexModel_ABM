@@ -1,3 +1,8 @@
+#notes 9/16/2022
+#this might need to be removed and put into popsizenext. i dont need to be removing indv and killing again, because it should do that by changing k. I know it does it for the pop growing, idk about dropping
+
+
+
 #to give stochastic change in K in my pop extinction model going into spring 2022
 
 #idea will be to have an on/off switch (in Cover.R) for stochastic events to occur every "z" year
