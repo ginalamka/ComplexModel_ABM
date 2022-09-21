@@ -198,15 +198,18 @@ RunModel = function(parameters, r, directory, replicates){
     for(y in 0:years){
       if(y != 0){
         pop = AgeUp(pop)                        #age pop + 1 year
-        pop = Death(pop, maxage, ratemort, y)                #kill indv
+        pop = FitnessDeath(pop, maturity, ratemort, y)                #kill indv
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(nrow(pop) <= 10){
           print(paste("Population low, less than 10 indv"))
           break
         }
-        tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r)
-        pop = tttt[[1]]
-        k = tttt[[2]]
+        #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r)
+        #REMOVE##pop = tttt[[1]]
+        #REMOVE##k = tttt[[2]]
+        
+        #REMEMBER THE NEED TO TRACK NEW K !!!
+        
         if(nrow(pop) <= 10){
           print(paste("Population low, less than 10 indv"))
           break
@@ -230,7 +233,7 @@ RunModel = function(parameters, r, directory, replicates){
         #REMOVED##   print(paste("Only migrants available as parents"))
         #REMOVED##   break
         #REMOVED## }
-        numboff = PopSizeNext(pop, k, r0, maturity) #IT NOW WORKS CUZ ALLY IS A GENIUS
+        numboff = PopSizeNext(pop, k, r0, maturity) #ADD NEW K MODIFIER
         if(numboff <= 1){
           print(paste("No new babies, skip breed"))
           next
@@ -239,6 +242,8 @@ RunModel = function(parameters, r, directory, replicates){
         pop = ttt[[1]]
         bb = ttt[[2]]
         sz = sz + bb
+        
+        pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
         
         
         print(paste("DONE!", y, "rep", rr))
@@ -257,6 +262,8 @@ RunModel = function(parameters, r, directory, replicates){
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
       init.het <- FINAL[1,5]
+      
+      #consider if something needs to be changed in Analyze for the different death types or if that needs tracked at all.
       
     }
     

@@ -17,7 +17,8 @@ library(tidyr)       #need this for FST analysis in Analyze.R
 #source functions
 source(paste(getwd(), "/RunModel.R", sep = ''))
 source(paste(getwd(), "/AgeUp.R", sep = ''))
-source(paste(getwd(), "/Death.R", sep = ''))
+source(paste(getwd(), "/AgeDeath.R", sep = ''))
+source(paste(getwd(), "/FitnessDeath.R", sep = ''))
 source(paste(getwd(), "/SourcePop.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
@@ -35,3 +36,4 @@ source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
 #source(paste(getwd(), "/RandomDeath.R", sep = ''))
 #source(paste(getwd(), "/ReproSuc.R", sep = ''))   #new function is RepSucc.R
+#source(paste(getwd(), "/Death.R", sep = ''))      #two new functions: AgeDeath.R and FitnessDeath.R
