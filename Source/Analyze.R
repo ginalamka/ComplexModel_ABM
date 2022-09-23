@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -38,8 +38,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=15)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource")
+  FIN = matrix(nrow=years+1, ncol=16)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -49,6 +49,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   #for(f in 1:nrow(FIN)){
     #year = FIN[f,1] #-1 #doing this cuz also taking year 0 -- note that on 5/2/22 there were still errors with numbering on column 1
     FIN[f,1] <- y
+    
+    FIN[f,16] <- K
   
     #separate out alive in current year -- Janna did these from year born and year died column
     data = alive[alive[,8]>0, , drop = FALSE]
@@ -234,7 +236,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK",
                     "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
   
   return(out)
