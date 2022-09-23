@@ -2,7 +2,16 @@
 #this will examine the population size and trend for the future generation. 
 #this will also help in giving the number of offspring to generate from mating pairs
 
-PopSizeNext = function(pop, k, r0, maturity){
+#as of 9/23/22, this will be combined with Stochastic.R
+#this means that there could potentially be a lag, especially when k is large
+
+"new parameters:
+styr          = 100 #year to start pop decline
+edyr          = 150 #year to end pop decline, first year at low pop size
+nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+dur           = 50  #duration of small pop size before pop growth "
+
+PopSizeNext = function(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
   alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
   #since only returning numboff, dont need to rbind dead and alive into pop
@@ -13,8 +22,27 @@ PopSizeNext = function(pop, k, r0, maturity){
   ###REMOVED# Nt = nrow(pop) #use this if removing dead from pop
   Nt = nrow(alive)
   
+  if(y < styr){               #maintain k for the burn in period
+    K = k
+  }else if(y > edyr + dur){   
+    deltaK = abs(round((k - nwk)/(styr - edyr)))
+    K = K + deltaK
+    
+    if(K > parameters$k[r]){  #check to make sure K is not greater than the original k in Cover.R
+      K <- parameters$k[r]
+    }
+  }else if(styr <= y & y < edyr){ #change K to push pop into bottleneck
+    deltaK = round(abs(k - nwk)/(styr - edyr)) #this is the change in K per year for the decline period
+    #note, deltaK will be negative when pop is decreasing
+    
+    K = K + deltaK
+    
+  }else{                       #if during the duration period of bottleneck, maintain small pop size
+    K = nwk
+  }
+  
   #calculate the new pop size with the logistic growth equation
-  Ntt = Nt*(1+r0*(1-(Nt/k))) #logistic
+  Ntt = Nt*(1+r0*(1-(Nt/K))) #logistic
   #r0 is the per capita growth rate, set as a parameter in Cover.R
   
   #add Density Independent variance in growth
@@ -30,6 +58,6 @@ PopSizeNext = function(pop, k, r0, maturity){
   numboff = as.integer(numboff)
   print(paste("the number of offspring needed is", numboff))
   
-  return(numboff)
+  return(list(numboff,K))
 }
 

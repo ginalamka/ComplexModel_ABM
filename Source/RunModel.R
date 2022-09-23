@@ -233,7 +233,9 @@ RunModel = function(parameters, r, directory, replicates){
         #REMOVED##   print(paste("Only migrants available as parents"))
         #REMOVED##   break
         #REMOVED## }
-        numboff = PopSizeNext(pop, k, r0, maturity) #ADD NEW K MODIFIER
+        pp = PopSizeNext(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K) #ADD NEW K MODIFIER
+        numboff = pp[[1]]
+        K = pp[[2]]
         if(numboff <= 1){
           print(paste("No new babies, skip breed"))
           next
@@ -255,14 +257,17 @@ RunModel = function(parameters, r, directory, replicates){
         
         #y <- y+1
       }
-      
+      if(y == 0){
+        K = k
+      }
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff)
+      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
       init.het <- FINAL[1,5]
       
+      #will need to track K in Analyze for years during the pop drop
       #consider if something needs to be changed in Analyze for the different death types or if that needs tracked at all.
       
     }
