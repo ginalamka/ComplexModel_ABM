@@ -28,7 +28,7 @@ FitnessDeath = function(pop, maturity, ratemort, y){
      print(paste("killed", nrow(nkilled), "individuals"))
       
     }else{
-      next #skips to next function if there arent any indv that reach maturity this year
+      print(paste("not enough mature for fit death"))
     }
 
 
