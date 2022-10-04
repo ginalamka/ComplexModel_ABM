@@ -3,7 +3,7 @@
 
 MateChoice = function(pop, sex, maturity){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
-  pop = pop[-which(pop[,1]%in%dead), , drop=FALSE]
+  pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
   immature  = pop[pop[,4] < maturity, ,drop=FALSE]          #remove immature indvs
   pop =       pop[pop[,4] >= maturity, ,drop=FALSE]         #pop without immature
