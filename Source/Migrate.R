@@ -15,7 +15,7 @@ Migrate = function(pop, source){
   #NOTE-- TO IMPLEMENT THIS, will need to change the number of indv in the source pop, probs around 10k. this will take time tho so I will do this later
   #remember that H DROPS significantly when there is only 1-5 migrants per year when K stays around 1000. this is an argument AGAINST the 1 mig per generation rule
   
-  mig = sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
+  mig = 1 #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
   #note that the 1:mig might affect the number. pay attention to this.
   
   print(paste("there are", mig, "migrants this year"))
