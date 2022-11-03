@@ -13,7 +13,7 @@ dur           = 50  #duration of small pop size before pop growth "
 
 PopSizeNext = function(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
-  alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+  alive = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   #since only returning numboff, dont need to rbind dead and alive into pop
   #pop = pop[pop[,4] >= maturity, , drop=FALSE]          #isolate adults -- if only want effective pop size to count here
   #if only using adults, remove immature
@@ -48,7 +48,7 @@ PopSizeNext = function(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameter
   #add Density Independent variance in growth
   Nt1 = round(rnorm(1, Ntt, 1), 0)
   Nt1 = as.integer(Nt1)
-  print(paste("The next generation's population size will be", Nt1))
+  print(paste("The next generation's population size will be", Nt1, "K is", K, "k is", k))
   
   #determine the number of additional offspring to produce
   numboff = Nt1 - Nt
