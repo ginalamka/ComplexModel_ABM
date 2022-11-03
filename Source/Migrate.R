@@ -6,7 +6,7 @@
 #also do a probability of getting 0 or 1 migrants per year
 #the worry is that if the migranion is too high, the pops might not even be considered seperate
 
-Migrate = function(pop, source){
+Migrate = function(pop, source, y){
   #select number of migrants, from 1-5
 #  N = sum(pop[,8])  #gets census size
 #  Nmig = round(N*.05)  #5% of N will be new migrants == vary this later == perhaps as a parameter???
@@ -14,21 +14,23 @@ Migrate = function(pop, source){
 #  mig = sample(c((Nmig-Vmig):(Nmig+Vmig)), 1, replace=T) #randomly sample within the variance of Nmig the number of migrants that year
   #NOTE-- TO IMPLEMENT THIS, will need to change the number of indv in the source pop, probs around 10k. this will take time tho so I will do this later
   #remember that H DROPS significantly when there is only 1-5 migrants per year when K stays around 1000. this is an argument AGAINST the 1 mig per generation rule
-  
-  mig = 1 #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
-  #note that the 1:mig might affect the number. pay attention to this.
-  
-  print(paste("there are", mig, "migrants this year"))
-  
-  for(m in 1:mig){
-    #select migrant without replacement
-    migrant = sample(1:nrow(source), 1, replace = F)
+  if(y == 175|y == 201|y==225){
+    mig = 50 #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
+    #note that the 1:mig might affect the number. pay attention to this.
     
-    #take migrant from source and put into pop
-    pop = rbind(pop, source[migrant,])
-    #remove migrant from source
-    source = source[-migrant,]
+    print(paste("there are", mig, "migrants this year"))
+    
+    for(m in 1:mig){
+      #select migrant without replacement
+      migrant = sample(1:nrow(source), 1, replace = F)
+      
+      #take migrant from source and put into pop
+      pop = rbind(pop, source[migrant,])
+      #remove migrant from source
+      source = source[-migrant,]
     } 
+  }else{mig=0}
+  
   return(list(pop, mig, source))
 }
 
