@@ -8,7 +8,7 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 #parameters
 k.V           = 500 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
-nSNP.V        = 10  #scaleup                #number of SNPs simulated, used to track drift
+nSNP.V        = 100  #scaleup                #number of SNPs simulated, used to track drift
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
