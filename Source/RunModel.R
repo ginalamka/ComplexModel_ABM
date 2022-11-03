@@ -215,7 +215,7 @@ RunModel = function(parameters, r, directory, replicates){
           break
         }
         #pop = RandomDeath(pop)                  #random mortality
-        tt = Migrate(pop, source)             #subpop migration
+        tt = Migrate(pop, source, y)             #subpop migration
         pop = tt[[1]]
         mig = tt[[2]]  #0
         sz = sz + mig #may need to edit since dead are not being removed from pop
@@ -250,7 +250,7 @@ RunModel = function(parameters, r, directory, replicates){
         
         print(paste("DONE!", y, "rep", rr))
         
-        #REMOVED###pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22
+        pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22
         
         ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
         ###REMOVED### return (pop)
