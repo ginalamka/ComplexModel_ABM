@@ -4,18 +4,32 @@ setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output/holdi
 directory = getwd()
 outdir = paste(directory, "/figs/", sep = "")
 
-tab1 = read.table("ABM_run.11.8.22_1a_all_summary.csv", header=T, sep=",")
+tab1 = read.table("ABM_run.11.8.22_1a_all_summary.csv", header=T, sep=",")  
 tab2 = read.table("summary_ABM_run.10.12.22_d_all.csv", header=T, sep=",")
 tab3 = read.table("ABM_run.11.7.22_3a_all_summary.csv", header=T, sep=",")
 tab4 = read.table("ABM_run.11.7.22_2a_all_summary.csv", header=T, sep=",")
+tab5 = read.table("ABM_run.11.8.22_4a_all_summary.csv", header=T, sep=",")
+tab6 = read.table("ABM_run.11.8.22_5a_all_summary.csv", header=T, sep=",")
+
+#Data
+{
+#summary_ABM_run.10.12.22_d_all.csv >> zero migration
+#ABM_run.11.8.22_1a_all_summary.csv >> 1 mig per generation, starting heterozy in source pop = .4-.6
+#ABM_run.11.7.22_2a_all_summary.csv >> one migration of 50 indv at year 175, starting heterozy in source pop = .4-.6
+#ABM_run.11.7.22_3a_all_summary.csv >> three migrations of 25 indv at years 175, 201, 225, starting heterozy in source pop = .4-.6
+#ABM_run.11.8.22_4a_all_summary.csv >> 1 mig per generation, starting heterozy in source pop = .8-.9
+#ABM_run.11.8.22_5a_all_summary.csv >> 1 mig per generation, starting heterozy in source pop = .1-.2
+}
 
 #give each parameter set a unique identifier
 tab1[,12] <- "a"
 tab2[,12] <- "b"
 tab3[,12] <- "c"
 tab4[,12] <- "d"
+tab5[,12] <- "e"
+tab6[,12] <- "f"
 smry = rbind(tab1,tab2,tab3, tab4)
-smry = rbind(tab2,tab3,tab4)
+smry = rbind(tab1,tab2,tab5, tab6)
 
 #~~~Avril's Code
 ### set colors
@@ -32,7 +46,7 @@ diff <- 0.15
 xmin <- 0
 xmax <- 250
 offsets <- c(-0.5, 0, 0.5) #c(-0.2, -0.1, 0, 0.1, 0.2)
-orig.xs <- c(1, 100, 150, 200, 250) #c(1:250)
+orig.xs <- c(1:250) #c(1, 100, 150, 200, 250)
 text.size <- 1.75
 pt.cex <- 1.25
 lwd <- 2
@@ -81,13 +95,14 @@ for(c in unique(smry[,12])){
   col <- col+1
 }
 
-legend('top', legend = c('5X','10X','15X','30X','50X'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = TRUE, x.intersp = 0.7)
+legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = TRUE, x.intersp = 0.7)
 
 
 ##### Generic plotting code
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho, 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource
 var = 5
-smry = rbind(tab2,tab3,tab4)
+smry = rbind(tab1,tab2,tab3,tab4)
+smry = rbind(tab1,tab2,tab5,tab6)
 range(smry[,var])
 if(anyNA(smry[,var]==TRUE)){
   hold<- na.omit(smry)
@@ -95,22 +110,22 @@ if(anyNA(smry[,var]==TRUE)){
 }
 
 
-ymin <- round(min(smry[,var]), digits = 2)-0.1
-ymax <- round(max(smry[,var]), digits = 2)+0.1
+ymin <- round(min(smry[,var]), digits = 2)#-.1
+ymax <- round(max(smry[,var]), digits = 2)#+.1
 ln.alph <- 0.5
-pt.alph <- 1
+pt.alph <- 1.25
 diff <- 0.15
 xmin <- 0
 xmax <- 250
-offsets <- c(-0.5, 0, 0.5) #c(-0.2, -0.1, 0, 0.1, 0.2)
-orig.xs <- c(1, 100, 150, 200, 250) #years of interest
+offsets <- c(-0.5, 0, 0.5, 0.1) #c(-0.2, -0.1, 0, 0.1, 0.2)
+orig.xs <- c(1, 100, 150, 201, 250) #years of interest 
 text.size <- 1.75
 pt.cex <- 1.25
 lwd <- 2
 
 ## make plot
 plot(0,0, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
-     xaxt = 'n', main = 'Main Title', xlab = 'Generation Time', ylab = 'Variable of Interest',
+     xaxt = 'n', main = 'Ho with different migration intensities', xlab = 'Generation Time', ylab = 'Variable of Interest',
      cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
 #axis(2, at = c(-0.1, 0, 0.1, 0.2), cex.axis = text.size)
 axis(1, at = c(0, 100, 150, 200, 250), labels = c('0','100','150','200', '250'), cex.axis = text.size)
@@ -150,9 +165,9 @@ for(c in unique(smry[,12])){
   col <- col+1
 }
 
-legend('top', legend = c('tab2','tab3','tab4'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = TRUE, x.intersp = 0.7)
+legend('topleft', legend = c('mig=1', 'mig=0','mig=3x','mig=1x'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.2)
 
-
+##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
 
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #create names for data so taht it is easier to call and change when the data change
@@ -181,12 +196,15 @@ points(yr, n, col="firebrick")
 dev.off()
 
 png("Ho_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)-.1), (max(Ho)+.1)))
+plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1)))
 points(yr,Ho,col="orchid")
 points(tab1[,1],tab1[,5],col="dodgerblue")
 points(tab2[,1],tab2[,5],col="firebrick")
-points(tab3[,1],tab3[,5],col="gold")
-points(tab4[,1],tab4[,5],col="springgreen")
+points(tab5[,1],tab5[,5],col="gold")
+points(tab6[,1],tab6[,5],col="springgreen")
+legend('top', legend = c('mig=1', 'mig=0','mig=3x','mig=1x'), col = c("dodgerblue", "firebrick", "gold", "springgreen"), pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = TRUE, x.intersp = 0.5)
+legend('bottom', legend = c('mig=1', 'mig=0','high source het','low source het'), col = c("dodgerblue", "firebrick", "gold", "springgreen"), pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.5)
+
 dev.off()
 
 png("fis_overtime.png")
@@ -194,8 +212,8 @@ plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)-
 points(yr,fis,col="dodgerblue")
 points(tab1[,1],tab1[,6],col="dodgerblue")
 points(tab2[,1],tab2[,6],col="firebrick")
-points(tab3[,1],tab3[,6],col="gold")
-points(tab4[,1],tab4[,6],col="springgreen")
+points(tab5[,1],tab5[,6],col="gold")
+points(tab6[,1],tab6[,6],col="springgreen")
 dev.off()
 
 png("sexratio_overtime.png")
@@ -203,8 +221,8 @@ plot(-100, -100 , xlab="year", ylab="sex ratio", xlim=c(0, max(yr)), ylim=c((min
 points(yr,sx,col="black")
 points(tab1[,1],tab1[,8],col="dodgerblue")
 points(tab2[,1],tab2[,8],col="firebrick")
-points(tab3[,1],tab3[,8],col="gold")
-points(tab4[,1],tab4[,8],col="springgreen")
+points(tab5[,1],tab5[,8],col="gold")
+points(tab6[,1],tab6[,8],col="springgreen")
 dev.off()
 
 png("fst_overtime.png")
@@ -212,8 +230,8 @@ plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-
 points(yr,fst,col="pink")
 points(tab1[,1],tab1[,10],col="dodgerblue")
 points(tab2[,1],tab2[,10],col="firebrick")
-points(tab3[,1],tab3[,10],col="gold")
-points(tab4[,1],tab4[,10],col="springgreen")
+points(tab5[,1],tab5[,10],col="gold")
+points(tab6[,1],tab6[,10],col="springgreen")
 dev.off()
 
 png("noffspring_overtime.png")
@@ -221,24 +239,24 @@ plot(-100, -100 , xlab="year", ylab="number of offpsring produced", xlim=c(0, ma
 points(yr,noff,col="yellow")
 points(tab1[,1],tab1[,13],col="dodgerblue")
 points(tab2[,1],tab2[,13],col="firebrick")
-points(tab3[,1],tab3[,13],col="gold")
-points(tab4[,1],tab4[,13],col="springgreen")
+points(tab5[,1],tab5[,13],col="gold")
+points(tab6[,1],tab6[,13],col="springgreen")
 dev.off()
 
 png("fstVSource_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, 0.2))
+plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, 0.25))
 points(yr,fstvs,col="goldenrod")
 points(tab1[,1],tab1[,14],col="dodgerblue")
 points(tab2[,1],tab2[,14],col="firebrick")
-points(tab3[,1],tab3[,14],col="gold")
-points(tab4[,1],tab4[,14],col="springgreen")
+points(tab5[,1],tab5[,14],col="gold")
+points(tab6[,1],tab6[,14],col="springgreen")
 dev.off()
 
 png("fisVSource_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fis vs source", xlim=c(0, max(yr)), ylim=c(0, 0.5))
+plot(-100, -100 , xlab="year", ylab="Fis vs source", xlim=c(0, max(yr)), ylim=c(-.5, 1))
 points(yr,fisvs,col="green")
 points(tab1[,1],tab1[,15],col="dodgerblue")
 points(tab2[,1],tab2[,15],col="firebrick")
-points(tab3[,1],tab3[,15],col="gold")
-points(tab4[,1],tab4[,15],col="springgreen")
+points(tab5[,1],tab5[,15],col="gold")
+points(tab6[,1],tab6[,15],col="springgreen")
 dev.off()

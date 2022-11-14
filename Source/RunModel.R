@@ -3,6 +3,7 @@
 RunModel = function(parameters, r, directory, replicates){
   FINAL = NULL
   REP   = NULL 
+  POP   = NULL
   rr=1  #remove this when not skipping through the below line
   for(rr in 1:replicates){
     k             = parameters$k[r]
@@ -274,9 +275,10 @@ RunModel = function(parameters, r, directory, replicates){
     
     #THIS IS WHERE I CALC RRS using pop data
     aa = RepSucc(pop, maturity, years, rr, r)
-    POP = aa[[1]]  #this is the final pop with all indv and all indv data
+    pop = aa[[1]]  #this is the final pop with all indv and all indv data
     rep = aa[[2]]
     REP = rbind(REP, rep)
+    POP = rbind(POP, pop)
     
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
