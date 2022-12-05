@@ -280,3 +280,37 @@ points(tab0[,1],tab0[,15],col="firebrick")
 points(tab6[,1],tab6[,15],col="gold")
 points(tab9[,1],tab9[,15],col="springgreen")
 dev.off()
+
+
+
+
+########################################################################
+########################################################################
+#REPRODUCTIVE SUCCESS
+########################################################################
+
+rep7 = read.table("ABM_run.11.14.22_7a_all_repsuc.csv", header=T, sep=",")
+rep8 = read.table("ABM_run.11.14.22_8a_all_repsuc.csv", header=T, sep=",")
+rep9 = read.table("ABM_run.11.14.22_9a_all_repsuc.csv", header=T, sep=",")
+
+
+#give each parameter set a unique identifier
+rep7[,10] <- "g"
+rep8[,10] <- "h"
+rep9[,10] <- "i"
+
+> plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(0, 250), ylim=c(0, 2.3))
+> points(rep7[,1],rep7[,3])
+> points(rep8[,1],rep8[,3], col="dodgerblue")
+> points(rep9[,1],rep9[,3], col="firebrick")
+> all<- rbind(rep7,rep8,rep9)
+
+> plot(-100, -100 , xlab="year", ylab="nborn", xlim=c(0, 250), ylim=c(0, 475))
+> points(rep7[,1],rep7[,2])
+> points(rep8[,1],rep8[,2], col="dodgerblue")
+> points(rep9[,1],rep9[,2], col="firebrick")
+
+> plot(-100, -100 , xlab="year", ylab="RRS", xlim=c(0, 250), ylim=c(0, .25))
+> points(rep7[,1],rep7[,7])
+> points(rep8[,1],rep8[,7], col="dodgerblue")
+> points(rep9[,1],rep9[,7], col="firebrick")
