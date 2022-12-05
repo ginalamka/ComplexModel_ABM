@@ -1,0 +1,72 @@
+# Makefile
+#Keep this up a level from what you name "HOMEDIR"
+# Date: 4/2/2015 - Created by Mark Christie
+# set paths, directories, and filenames
+
+# JW update:14 Oct 2015; AH update for Easley: 24 May 2022
+
+## Script
+FILE1 = run_R_model.sh   #this is defining the variable (aka the model script)
+FILE2 = model.R          #this is the main R script (AKA cover.R)
+
+## Set project name
+USER = avrilh            #this is how to keep projects seperate on scratch
+PROJ = kratroh_03_gatk
+
+## Set dir names
+HOMEDIR = /home/amh0254/krat_roh_analyses/scripts   #where it lives permanately #Cover.R and run_model.sh in same level
+SCRATCHDIR = /scratch/${USER}/${PROJ}               #where the directories will be placed
+
+## Each directory will only contain the scripts used to process that particular
+## set of model replicates
+DIRECTORY1 = 01
+DIRECTORY2 = 02
+DIRECTORY3 = 03
+DIRECTORY4 = 04
+DIRECTORY5 = 05
+
+all:
+	@echo "Please type....."
+	@echo "    make directories"
+	@echo "    make scripts"
+	@echo "    make setgroup"
+	@echo "    make submit"
+	
+directories:
+	@echo "Here we go directories"
+	mkdir $(SCRATCHDIR)
+	mkdir $(SCRATCHDIR)/$(DIRECTORY1)
+	mkdir $(SCRATCHDIR)/$(DIRECTORY2)
+	mkdir $(SCRATCHDIR)/$(DIRECTORY3)
+	mkdir $(SCRATCHDIR)/$(DIRECTORY4)
+	mkdir $(SCRATCHDIR)/$(DIRECTORY5)
+	
+scripts:
+	@echo "Here we go write scripts"	
+	cp -r $(HOMEDIR)/* $(SCRATCHDIR)/$(DIRECTORY1)/
+	cp -r $(HOMEDIR)/* $(SCRATCHDIR)/$(DIRECTORY2)/
+	cp -r $(HOMEDIR)/* $(SCRATCHDIR)/$(DIRECTORY3)/
+	cp -r $(HOMEDIR)/* $(SCRATCHDIR)/$(DIRECTORY4)/
+	cp -r $(HOMEDIR)/* $(SCRATCHDIR)/$(DIRECTORY5)/
+
+setgroup: #sed is basically "find and replace" aka edit where it is
+	@echo "Here we go set groups"
+	sed -i 's/_group_/$(DIRECTORY1)/g' $(SCRATCHDIR)/$(DIRECTORY1)/$(FILE2)
+	sed -i 's/_group_/$(DIRECTORY2)/g' $(SCRATCHDIR)/$(DIRECTORY2)/$(FILE2)
+	sed -i 's/_group_/$(DIRECTORY3)/g' $(SCRATCHDIR)/$(DIRECTORY3)/$(FILE2)
+	sed -i 's/_group_/$(DIRECTORY4)/g' $(SCRATCHDIR)/$(DIRECTORY4)/$(FILE2)
+	sed -i 's/_group_/$(DIRECTORY5)/g' $(SCRATCHDIR)/$(DIRECTORY5)/$(FILE2)
+	
+submit:
+	@echo "Here we go prep submit"
+	chmod +x $(SCRATCHDIR)/$(DIRECTORY1)/$(FILE1)
+	chmod +x $(SCRATCHDIR)/$(DIRECTORY2)/$(FILE1)
+	chmod +x $(SCRATCHDIR)/$(DIRECTORY3)/$(FILE1)
+	chmod +x $(SCRATCHDIR)/$(DIRECTORY4)/$(FILE1)
+	chmod +x $(SCRATCHDIR)/$(DIRECTORY5)/$(FILE1)
+	sbatch $(SCRATCHDIR)/$(DIRECTORY1)/$(FILE1)
+	sbatch $(SCRATCHDIR)/$(DIRECTORY2)/$(FILE1)
+	sbatch $(SCRATCHDIR)/$(DIRECTORY3)/$(FILE1)
+	sbatch $(SCRATCHDIR)/$(DIRECTORY4)/$(FILE1)
+	sbatch $(SCRATCHDIR)/$(DIRECTORY5)/$(FILE1)
+	
