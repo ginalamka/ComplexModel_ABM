@@ -30,7 +30,6 @@ source(paste(getwd(), "/RunModel.R", sep = ''))
 source(paste(getwd(), "/AgeUp.R", sep = ''))
 source(paste(getwd(), "/AgeDeath.R", sep = ''))
 source(paste(getwd(), "/FitnessDeath.R", sep = ''))
-source(paste(getwd(), "/SourcePop.R", sep = ''))
 source(paste(getwd(), "/Migrate.R", sep = ''))
 source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
@@ -39,12 +38,12 @@ source(paste(getwd(), "/Analyze.R", sep = ''))
 source(paste(getwd(), "/Plot.R", sep = ''))       #on/off switch
 source(paste(getwd(), "/Plot2.R", sep = ''))       #on/off switch
 source(paste(getwd(), "/RepSucc.R", sep = ''))
-source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch
-
-#source(paste(getwd(), "/Sensitivity.R", sep = '')) #turn on as needed
 
 ####old, removed functions
 #source(paste(getwd(), "/DeathByAge.R", sep = ''))
 #source(paste(getwd(), "/RandomDeath.R", sep = ''))
 #source(paste(getwd(), "/ReproSuc.R", sep = ''))   #new function is RepSucc.R
 #source(paste(getwd(), "/Death.R", sep = ''))      #two new functions: AgeDeath.R and FitnessDeath.R
+#source(paste(getwd(), "/Stochastic.R", sep = '')) #on/off switch
+#source(paste(getwd(), "/SourcePop.R", sep = ''))
+#source(paste(getwd(), "/Sensitivity.R", sep = '')) #turn on as needed

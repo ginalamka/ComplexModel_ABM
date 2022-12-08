@@ -1,7 +1,7 @@
 #Cover.R
 #used for the complex migration model
 
-setwd("/scratch/glamka/_proj_/_group_") #("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM")  
+setwd("/scratch/glamka/_proj_/_group_") # setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/ABM_sep2022") 
 directory = getwd()
 outdir = paste(directory, "/Output/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
@@ -77,7 +77,7 @@ write.table(finalPOP, paste(directory, "/Output/POP__proj___group_.csv", sep="")
 Plot(theEND)
 Plot2(repEND)
 
-print(paste("SUCCESSSS BITCHESSSS")
+print(paste("SUCCESSSS BITCHESSSS"))
 
 #things that need changed from local > Easley
 #makefile and run_model.sh needs to be changed each run
