@@ -9,6 +9,8 @@ RunModel = function(parameters, r, directory, replicates){
     k             = parameters$k[r]
     #REMOVED###allele        = parameters$allele[r]
     nSNP          = parameters$nSNP[r]
+    miggy         = parameters$miggy[r]
+    LBhet         = parameters$LBhet[r]
     nMicro        = parameters$nMicro[r]
     #REMOVED###sex           = parameters$sex[r]
     maxage        = parameters$maxage[r]
@@ -202,7 +204,7 @@ RunModel = function(parameters, r, directory, replicates){
         pop = FitnessDeath(pop, maturity, ratemort, y)                #kill indv
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(nrow(pop) <= 10){
-          print(paste("Population low, less than 10 indv"))
+          print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
           break
         }
         #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r)
@@ -233,18 +235,18 @@ RunModel = function(parameters, r, directory, replicates){
         pp = PopSizeNext(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K) #ADD NEW K MODIFIER
         numboff = pp[[1]]
         K = pp[[2]]
-        if(numboff <= 1){
+        if(numboff >= 1){
+          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons) #still needs work 
+          pop = ttt[[1]]
+          bb = ttt[[2]]
+          sz = sz + bb
+        }else if(numboff <= 0){
           print(paste("No new babies, skip breed"))
-          next
+          #next
         }
-        ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons) #still needs work 
-        pop = ttt[[1]]
-        bb = ttt[[2]]
-        sz = sz + bb
-        
         pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
         if(nrow(pop) <= 10){
-          print(paste("Population low, less than 10 indv"))
+          print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
           break
         }
         
@@ -293,3 +295,8 @@ RunModel = function(parameters, r, directory, replicates){
 
 #add in checks with breaks -- this is especially important going through replicates
 #for example, check that we have 1 male and 1 female before pairing
+
+#NOTES 12/8/22
+#need to figure out how to Analyze after break/next
+#make sure p=LBhet is correct and ok -- pivot when talking about it (minor allele freq)
+#FunctionSourcer is being a lil bitch
