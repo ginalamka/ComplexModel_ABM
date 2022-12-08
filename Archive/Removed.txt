@@ -1,0 +1,233 @@
+Removed ideas and code
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From Cover.R
+#consider adding in rbinom() ?? not sure why it would be relevant yet >>> binomials are for success/failures. would that be helpful?
+
+
+#Use Janna's papers to look at inbreeding - check other models to see how to put an **inbreeding cost on indvs
+#things that her paper has: 
+#survival to maturity             .981 and .988
+#lifespan (years)                1.971 and 1.986
+#juvenile offspring              3.149 and 3.171
+#lifetime reproductive success   4.662 nd 4.707
+
+#apply = give data, apply this function over all rows or all columns. can use apply then sample from 0-149
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From MateChoice.R
+
+#NOTES FROM JANNA 10/19/2021
+#try this flow: get all females that are mature, randomize them, then match them with males
+#that will rearrange this whole function, but can be done -- SIMPLIFY
+#the main thing is to randomize the pairs so that offspring generated are from a random pair
+# https://stackoverflow.com/questions/9081498/randomly-re-order-shuffle-rows-of-a-matrix
+
+#*note, because krats have a promiscuous system, allow replacement so multiple indv can mate more than once (monogamous would be set up different)
+#as set up currently, only the sex with the most indv will be used more than once (i.e. not both sexes with multiple mating events)
+#consider requiring that migrants mate, or dont and then can compare N and Ne(?)
+
+
+##MAKE SURE TO KNOW IF MALE/FEMALE IS MATE 1or2**
+
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+From Cover.R
+
+#REMOVED###allele.V      = c(0,1)              #alleles assigned to individuals, equal probability of each at all loci, A = 1, a = 0
+#REMOVED###nMicro.V      = 100 #tbd                 #number of microsats simulated
+#REMOVED###sex.V         = c(0,1)              #males and females in population, 0 = Female, 1 = Male
+#REMOVED###sexratio.V    = 0.5                 #equal ratio of females:males; consider a more real life value here, taken from pedigree data with Poisson dist
+#REMOVED###reps.V        = 5 #scaleup                 #number of replications of the simulation
+
+
+
+
+
+
+#############################################################################################################
+#############################################################################################################
+REMOVED CODE
+############
+
+#OLD ATTEMPT AT STOCHASTIC.R
+#  dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
+#  alive = pop[-which(pop[,1]%in%dead), , drop = FALSE]
+#  #since only returning numboff, dont need to rbind dead and alive into pop
+  
+  #pop = pop[pop[,4] >= maturity, , drop=FALSE]          #isolate adults -- if only want effective pop size to count here
+  
+  #calculate the current population size
+#  Nt = nrow(alive)
+  
+  #find new K
+  #will k need to be changed for every year or can it get back to the original K? think about these implications
+#  if(stoch == 2){
+#    new_k = Nt * .95    #drop in K by 5% of pop size
+#  }else if(stoch == 1){
+#    new_k = Nt * .7    #drop in K by 30%
+#  }
+  #randomly select indv to die
+  #syntax: sample(group, X, replace) with group being the column in the matrix, X being the number to kill per run
+#  kill = sample(alive[,1], (Nt - new_k), replace = FALSE)
+#  alive = alive[-which(alive[,1]%in%kill),]
+  
+#  k <- new_k
+  
+#  print(paste("K is now", k, ". ", nrow(kill), "have been killed"))
+  
+#  return(alive)
+
+#ADDITONAL ATTEMPT FROM STOCHASTIC.R
+#stkill = sample(pop[,1], v, replace = FALSE)     #randomly select
+      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]
+      
+      #if(!is.null(nrow(killed))){                      #kill them
+      #  killed[,8] = 0
+      #}else if(v<=0){
+      #  next
+      #}
+      #pop <- rbind(pop, killed)
+      
+#ADDITONAL ATTEMPT FROM STOCHASTIC.R      
+      #killed = pop[-which(pop[,1]%NOTin%stkill), , drop = FALSE]   #kill them
+      #pop = pop[-which(pop[,1]%in%stkill), , drop = FALSE] 
+
+#    if(!is.null(nrow(killed))){
+ #     killed[,8] = 0
+  #    pop <- rbind(pop, killed)
+   # }
+    
+    
+##################################################################################################################
+#REMOVED FROM REPSUCC.R
+
+#calc the longevity of indv
+#alive = pop[pop[,8] == 1, , drop=FALSE]          #remove dead indvs
+
+#long = pop[-which(pop[,1]%in%alive), , drop=FALSE]
+#table(long[,4])
+#hist(long[,4])
+
+##################################################################################################################
+
+#REMOVED FROM DEATH.R
+
+#fake = matrix(nrow=5, ncol = 5)
+#fake[,1] = c(1:5)
+#fake[,2] = c(-2:2)
+#m = fake[fake[,2] <=0, , drop=FALSE]
+#m
+#if(fake[,1]%in%m){
+#  fake[,3] = 1
+#}else{
+#  fake[,3] = 0
+#}
+
+##################################################################################################################
+
+#REMOVED FROM PLOT.R
+
+#loop through each replicate
+#for(rep in 1:replicates){
+  #for each parameter combo
+  #for(pp in 1:nrow(parameters)){
+        
+
+#plot(theEND[,1],theEND[,2])
+        
+N       = theEND[,2]               #c(Na, nrow(population[population[,9]==1, ,drop=FALSE]))
+adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
+#Nadults = c(Nadults, nrow(alive[alive[,2] >= runvars$maturity[r],,drop=FALSE]))
+
+#lines(c(0:theEND[,1]), N , xlab="time (years)", ylab="population size", cex = 2, lty = 1, col="black", lwd=5)  #easier to set up the figure first, then put on the lines
+
+#points(theEND[,1], N , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="black", lwd=2)
+#points(theEND[,1], adults , xlab="time (years)", ylab="population size", cex = 1, lty = 1, col="blue", lwd=2)
+
+#observed hetero over time with number of migrants
+#plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+#lines(theEND[,1], Ho , xlab="time (years)", ylab="observed heterozygosity", cex = 2, lty = 1, col="black", lwd=5)
+#lines(theEND[,1], mig , xlab="time (years)", ylab="proprtion of migrants in population", cex = 2, lty = 1, col="blue", lwd=5)
+
+#observed heteroz and proportion of migrants in pop
+#par(mar = c(5,4,4,4)+0.3)
+#plot(-100, -100 , xlab="time (years)", ylab="observed heterozygosity", xlim=c(0, max(theEND[,1])), ylim=c(0, 1)) 
+#lines(theEND[,1], Ho , cex = 2, lty = 1, col="black", lwd=2) #NOTICE points, not plot  #xlab="time (years)", ylab="observed heterozygosity",
+#par(new = TRUE)
+#lines(theEND[,1], mig , xlab="", ylab="", xlim=c(0, max(theEND[,1])), ylim=c(0,1), cex = 2, lty = 1, col="blue", lwd=2)
+#plot(theEND[,1], mig , xlab="", ylab="", cex = 2, lty = 1, col="blue", lwd=5)
+#axis(side = 4, at = NULL, labels = TRUE)
+#mtext("proportion of migrants in population", side=4, line =3)
+
+############################################################################################################################
+
+#Removed from Analyze.R
+#this is calculating Fst from heterozygosity values. this is the OLD way of doing it, so I am using heirfstat instead
+
+    #calc Fst
+    #Fst for this population compared to the initialized pop (aka focalpop)
+    #https://bios1140.github.io/understanding-fst-the-fixation-index.html
+    #mark: https://www.molecularecologist.com/2012/05/14/calculating-pair-wise-unbiased-fst-with-r/   AND     https://www.molecularecologist.com/wp-content/uploads/2012/05/Pairwise-WeirCockerhams-FST.r1.txt
+    
+    #Fst for this pop compared to the source pop (aka source1)
+    
+    #DOUBLE CHECK THESE EQUATIONS
+    #https://www.uwyo.edu/dbmcd/popecol/maylects/fst.html
+    #I *think* I should be averaging between subpops for Hs but I'm not 100% sure
+    
+    #Fst = (expected heterozy of total pop - expected heterozygosity of subpop) / expected heterozy of total pop
+    #if heterozy of focal pop is hetero in year 0 
+    #and subpop is the hetero for year y
+    #can't I use the previous calculations for Fst?
+    
+    #Fis = (expected heterozygosity of subpop - observed heterozygosity of indv) / expected hetero of subpop
+
+    if(y == 0){
+      
+      #first, get hetero values for the **source pop** to compare to the **initialized focal pop**
+      sSNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
+      sgenotype = source1[, -c(ncol(source1)-sSNPS:ncol(source1))]
+      ssnps = rep(c(1,2),ncol(sgenotype)/2)
+      
+      sHE = NULL
+      sHO = NULL
+      
+      sloc.pos = seq(1, sSNPS, 2)
+      for(slp in sloc.pos){
+        #per locus heterozygostiy
+        slocus <- sgenotype[, c(slp, slp+1), drop=FALSE]
+        sgeno  <- length(slocus[,1])
+        shet   <- length(which(slocus[,1] != slocus[,2]))
+        shet.observed <- shet/sgeno
+        sHO = c(sHO, shet.observed)
+        
+        sfreqs <- table(slocus)
+        shomozygous = NULL
+        for(sv in 1:length(sfreqs)){
+          shomozygous = c(shomozygous, (sfreqs[sv]/sum(sfreqs)*sfreqs[sv]/sum(sfreqs)))
+        }
+        shet.expected <- 1 - sum(shomozygous)
+        sHE = c(sHE, shet.expected)
+      }
+      
+      obs.source <- mean(sHO)
+      obs.foc <- mean(HO)
+      mean.OH <- (obs.source + obs.foc)/2
+      
+      fst <- (mean.OH - obs.foc) / mean.OH
+      
+      FIN[f,10] = fst  
+    }else{
+      
+      #calculate the Fst between **pop in year y** and the **initialized focal pop**
+      obs.init <- init.het #from year 0
+      obs.pop <- FIN[f,5]  #from year y
+      
+      mean.obs <- (obs.init + obs.pop)/2
+      FST <- (mean.obs - obs.pop) / mean.obs
+      
+      FIN[f,10] = FST
+      
+    }
