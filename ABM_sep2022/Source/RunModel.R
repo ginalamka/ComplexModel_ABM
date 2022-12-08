@@ -136,7 +136,7 @@ RunModel = function(parameters, r, directory, replicates){
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = sample(seq(from=0.1, to=0.2, by=0.01), 1)
+      p = sample(seq(from=LBhet, to=(LBhet+0.1), by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(s*p*p, 0)),                                      #homozygous p*p
                rep(1, round(s*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
@@ -211,12 +211,8 @@ RunModel = function(parameters, r, directory, replicates){
         
         #REMEMBER THE NEED TO TRACK NEW K !!!
         
-        if(nrow(pop) <= 10){
-          print(paste("Population low, less than 10 indv"))
-          break
-        }
         #pop = RandomDeath(pop)                  #random mortality
-        tt = Migrate(pop, source, y)             #subpop migration
+        tt = Migrate(pop, source, y, miggy)             #subpop migration
         pop = tt[[1]]
         mig = tt[[2]]  #0
         sz = sz + mig #may need to edit since dead are not being removed from pop
@@ -247,7 +243,10 @@ RunModel = function(parameters, r, directory, replicates){
         sz = sz + bb
         
         pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
-        
+        if(nrow(pop) <= 10){
+          print(paste("Population low, less than 10 indv"))
+          break
+        }
         
         print(paste("DONE!", y, "rep", rr))
         

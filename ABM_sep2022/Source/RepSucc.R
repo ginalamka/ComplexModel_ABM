@@ -127,3 +127,8 @@ RepSucc = function(pop, maturity, years, rr, r){
 #look at reproductive success as a function of number of migrants
 
 #this might be hard because the number of migrants are set currently between 1-5 indv, so there is always migration happening
+
+
+##NOTES 12/5/22
+#THINK ABOUT IF MIGRANTS SHOULD BE IN EACH YEAR -- probs yes
+#want to make sure that the rel fit is transfered to pop, which will be in the output--if needed for later

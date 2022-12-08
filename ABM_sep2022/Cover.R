@@ -10,10 +10,12 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 #parameters
 k.V           = 500 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
 nSNP.V        = 1000  #scaleup                #number of SNPs simulated, used to track drift
+miggy.V       = 0 #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
+LBhet.V       = 0.1 #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
-years.V       = 250  #scaleup               #total run time; 200 year run following 50 year stabilization period
+years.V       = 350  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #c(1, .8, 1.2) #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #1 is stable, <1 is decreasing, >1 is increasing
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 nSNP.mig.V    = 0                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
@@ -24,15 +26,16 @@ nSNP.cons.V   = 0        #number of conserved alleles within species -- used to 
 #potential migration rates: 1-5 indv, 5-10 indv, no migration
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V)
-colnames(parameters) = c("k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
+parameters = expand.grid(k.V, nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V)
+colnames(parameters) = c("k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
+write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 
 #clean up, remember that these are still available in parameters
-remove(nSNP.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
+remove(nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 1 #20 #5 #10
-plotit        = 1    #1=yes, 0=no
+plotit        = 0    #1=yes, 0=no
 plotit2       = 0    #1=yes, 0=no
 mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
@@ -40,8 +43,8 @@ mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2
 mu            = 0.001  #mutation rate
 
 styr          = 100 #year to start pop decline
-nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
-dur           = 50  #duration of small pop size before pop growth 
+nwk           = 25 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+dur           = 100  #duration of small pop size before pop growth 
 edyr          = styr+dur #150 #year to end pop decline, first year at low pop size
 
 s             = 5000 #(k.V*5) #size of source pop
@@ -74,15 +77,23 @@ write.table(finalPOP, paste(directory, "/Output/POP__proj___group_.csv", sep="")
 Plot(theEND)
 Plot2(repEND)
 
+print(paste("SUCCESSSS BITCHESSSS")
 
 #things that need changed from local > Easley
 #makefile and run_model.sh needs to be changed each run
 #Cover.R needed to change the working directory and FunctionSourcer.R path
 #reload and call required R packages (and make sure it uses the correct R version)
 #remove dead indv to make it faster to run (in RunModel.R)
-#add write.table for the final datasets
+#add write.table for the final datasets and parameters
 #check all functions so that when checking/removing dead, that if nrow(dead)==0, pop is unchanged (fix this by using %NOTin% dead rather than -which%in%dead
 #add an empty Output folder to put tables and figs in
 #REMOVED reproductive success function since I wasnt holding pop object to speed up computational time before finalizing values for analysis
 
 ##>>Figure out plotting and how to make a makefile for downloading all of the output data.
+
+#major things edited Dec 2022 [in progress]
+#added miggy and LBhet as parameters
+#add back in the different SNP types
+#hold more data in Analyze -- n killed, n oldies, n heterozy killed
+#increase reps and SNPs and years
+#CRASH THE POP
