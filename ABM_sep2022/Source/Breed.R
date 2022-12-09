@@ -37,8 +37,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   ##REMOVED### newid = seq(from = (max(pop[,1])*10) +1, to = (max(pop[,1])*10) + nrow(parents), by = 1)
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
-  babies = matrix(nrow=nrow(parents), ncol=11) #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness")
+  babies = matrix(nrow=nrow(parents), ncol=12) #make new matrix for offspring     
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs")
   babies[,1] = SZ                   #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]
   babies[,3] = parents[,2]
@@ -50,6 +50,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,9] = y  #MUST feed y to function   #generation born
   babies[,10] = 0      #generation died
   babies[,11] = NA      #relative fitness
+  babies[,12] = NA                            #proportion of migrant SNPs - initial pop will all be 1
   
   #create a check to make sure the correct number of babies are being added to pop
   if(nrow(babies) < numboff){
@@ -142,15 +143,28 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     }else{
       print(paste("no mutation"))
     }
+    #NOTE -- this allows mutation in conserved and mig snps!!!!
     
     #calculate relative fitness (heterozygosity)
     het <- matrix(nrow=nrow(babygeno), ncol=1)
     for(g in 1:nrow(babygeno)){
       w <- sum(babygeno[g ,seq(1,ncol(babygeno),2)]!=babygeno[g,seq(2,ncol(babygeno),2)])/(ncol(babygeno)/2)
       het[g,1] <- w
-    } #note to add the other SNPs in here if wanted
+    } 
     babies[,11] <- het
+    #note that all SNPs are being considered here -- might want to separate out mig/drift SNPs
     
+    #calculate proportion of migrant SNPs
+    migrantgen <- babygeno[, -c(ncol(babygeno)-(nSNP.mig*2):ncol(babygeno))]
+    migrantgen <- matrix(unlist(migrantgen), nrow = bb, ncol = nSNP.mig*2)
+    mSNP <- matrix(nrow = bb, ncol = 1)
+    for(q in 1:nrow(migrantgen)){
+      ww <- sum(migrantgen[q,])/ncol(migrantgen)
+      mSNP[q,1] <- ww
+    }
+    babies[,12] <- mSNP
+    #note this might break when bb=1; need to figure that out
+      
     babies = cbind(babies, babygeno)
     pop = rbind(pop, babies)
 
