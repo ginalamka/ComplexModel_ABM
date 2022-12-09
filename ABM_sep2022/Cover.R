@@ -3,7 +3,7 @@
 
 setwd("/scratch/glamka/_proj_/_group_") # setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/ABM_sep2022") 
 directory = getwd()
-outdir = paste(directory, "/Output/", sep = "")
+outdir = paste(directory, "/Output/", sep = "")   #  outdir = paste("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM", "/Output_local/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 
@@ -18,7 +18,7 @@ maturity.V    = 1                   #age indv becomes reproductively mature
 years.V       = 350  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #c(1, .8, 1.2) #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #1 is stable, <1 is decreasing, >1 is increasing
 ratemort.V    = 1/(maxage.V*2) ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
-nSNP.mig.V    = 0                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+nSNP.mig.V    = 100                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 nSNP.cons.V   = 0        #number of conserved alleles within species -- used to track mutation
 ### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
 
