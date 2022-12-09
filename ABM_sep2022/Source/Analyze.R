@@ -8,6 +8,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
   nSNP          = parameters$nSNP[r]
+  miggy         = parameters$miggy[r]
+  LBhet         = parameters$LBhet[r]
   #REMOVED###nMicro        = parameters$nMicro[r]
   #REMOVED###sex           = parameters$sex[r]
   maxage        = parameters$maxage[r]
@@ -38,8 +40,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   ###could also use: pop = pop[pop[,8]!=0, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=16)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK")
+  FIN = matrix(nrow=years+1, ncol=18)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs")
   #note that because this is for all years of the simulation, the initialized pop is not included in this (e.g., year 0)
   
   #add year to summary matrix
@@ -67,6 +69,9 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     #proportion migrants in population
     FIN[f,3] =  sum(data[,2]==-1)/length(data[,1])   #1 - sum(data[,2]==-1)/length(data[,1])
     
+    #proportion of migrant genotypes in population
+    FIN[f,17] <- mean(data[,12])
+    
     #He and Ho - neutral (?)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     genotype = data[, -c(ncol(data)-SNPS:ncol(data))] #THERE IS AN ERROR HERE THAT IS CHANGING THE ORDER OF COLUMNS?? ALSO NOTE THAT THE NUMBER OF SNPS IS WRONG--PROBS CUZ OF NOT RUNNING THE DIFFERENT TYPES IN RUNMODEL. FIX THIS~!
@@ -79,11 +84,11 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     for(lp in loc.pos){
       #per locus heterozygostiy
       locus <- genotype[, c(lp, lp+1), drop=FALSE]
-      #REMOVED because calculated already
-      #geno  <- length(locus[,1])
-      #het   <- length(which(locus[,1] != locus[,2]))
-      #het.observed <- het/geno
-      #HO = c(HO, het.observed)
+      #NOTE this includes MigSNPS while the other het value does not
+      geno  <- length(locus[,1])
+      het   <- length(which(locus[,1] != locus[,2]))
+      het.observed <- het/geno
+      HO = c(HO, het.observed)
       
       freqs <- table(locus)
       homozygous = NULL
@@ -95,7 +100,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     }
     FIN[f,4] <- mean(HE)
     FIN[f,5] <- mean(data[,11]) 
-    
+    FIN[f,18] <- mean(HO)
     
     #find number of adults per year
     adults = data[data[,4]>= maturity, , drop = FALSE]
@@ -205,7 +210,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     #calc <- pairwise.WCfst(fstdata,diploid=TRUE)                                   #calculate FST
     
     FIN[f,10] <- calc$FST
-    FIN[f, 6] <- calc$FIS
+    FIN[f,6] <- calc$FIS
     
 
     FIN[f,11] = rr   #add replicate number
@@ -236,8 +241,8 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
   
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK",
-                    "k", "nSNP", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs",
+                    "k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
   
   return(out)
 }
