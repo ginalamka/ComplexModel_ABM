@@ -260,7 +260,7 @@ RunModel = function(parameters, r, directory, replicates){
           break
         }
         
-        print(paste("DONE!", y, "rep", rr))
+        print(paste("DONE!", y, "param", r, "rep", rr))
         
      #   pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22 -- this will speed it up!!
         
@@ -294,7 +294,7 @@ RunModel = function(parameters, r, directory, replicates){
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
-    print(paste("REPLICATE", rr, "DONE!"))
+    print(paste("REPLICATE", rr, "OF PARAM", r, "DONE!"))
     
   } 
   return(list(FINAL, POP, REP))

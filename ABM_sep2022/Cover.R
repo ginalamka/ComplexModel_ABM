@@ -44,8 +44,9 @@ mu            = 0.001  #mutation rate
 
 styr          = 100 #year to start pop decline
 nwk           = 25 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+drp           = 10  #number of years for drop from k to nwk
 dur           = 100  #duration of small pop size before pop growth 
-edyr          = styr+dur #150 #year to end pop decline, first year at low pop size
+edyr          = styr+drp #150 #year to end pop decline, first year at low pop size (nwk)
 
 s             = 5000 #(k.V*5) #size of source pop
 

@@ -1,6 +1,6 @@
 #MakeFigs
 
-setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output/holding") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
+setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local/holding") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
 directory = getwd()
 outdir = paste(directory, "/figs/", sep = "")
 
@@ -14,6 +14,7 @@ tab6 = read.table("ABM_run.11.14.22_6a_all_summary.csv", header=T, sep=",")
 tab7 = read.table("ABM_run.11.14.22_7a_all_summary.csv", header=T, sep=",")
 tab8 = read.table("ABM_run.11.14.22_8a_all_summary.csv", header=T, sep=",")
 tab9 = read.table("ABM_run.11.14.22_9a_all_summary.csv", header=T, sep=",")
+tab = read.table("ABM_run.12.9.22_0c_all_summary.csv", header=T, sep=",")
 
 #Data
 {
@@ -120,7 +121,7 @@ legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19,
 
 ##### Generic plotting code
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho, 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource
-var = 10
+var = 2
 smry = rbind(tab1,tab2,tab3,tab4)
 smry = rbind(tab1,tab2,tab5,tab6)
 range(smry[,var])
@@ -281,7 +282,12 @@ points(tab6[,1],tab6[,15],col="gold")
 points(tab9[,1],tab9[,15],col="springgreen")
 dev.off()
 
+plot(-100, -100 , xlab="year", ylab="prop migrant SNPs", xlim=c(0, max(yr)), ylim=c(0, 1))
+points(yr,smry[,17],col="green")
 
+plot(-100, -100 , xlab="Ho drift SNPs", ylab="Ho all SNPS", xlim=c(0, 1), ylim=c(0, 1))
+points(Ho,smry[,18],col="green")
+abline(a=0,b=1)
 
 
 ########################################################################
