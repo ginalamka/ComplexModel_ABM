@@ -7,13 +7,13 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-RepSucc = function(pop, maturity, years, rr, r){
+RepSucc = function(pop_indv, maturity, years, rr, r){
   #calc the total number of offspring
-  for(i in unique(pop[,1])){                          #iterate over id
-    if(!is.null(nrow(pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]))){
-      temp = pop[which(pop[,2] == i | pop[,3] == i),, drop = FALSE]           #find if id is in mom OR dad column
+  for(i in unique(pop_indv[,1])){                          #iterate over id
+    if(!is.null(nrow(pop_indv[which(pop_indv[,2] == i | pop_indv[,3] == i),, drop = FALSE]))){
+      temp = pop_indv[which(pop_indv[,2] == i | pop_indv[,3] == i),, drop = FALSE]           #find if id is in mom OR dad column
       n = nrow(temp)
-      pop[pop[,1] == i, 6] <- n                      #put the value in the noffspring column
+      pop_indv[pop_indv[,1] == i, 6] <- n                      #put the value in the noffspring column
     }else{
       next
     }
@@ -21,23 +21,24 @@ RepSucc = function(pop, maturity, years, rr, r){
   }
   
   #calc the total number of adult offspring
-  for(j in unique(pop[,1])){                          #iterate over id
-    if(!is.null(nrow(pop[which((pop[,2] == j | pop[,3] == j) & pop[,4] >= maturity),, drop=FALSE]))){
-      tem = pop[which((pop[,2] == j | pop[,3] == j) & pop[,4] >= maturity),, drop = FALSE]           #find if id is in mom OR dad column
+  for(j in unique(pop_indv[,1])){                          #iterate over id
+    if(!is.null(nrow(pop_indv[which((pop_indv[,2] == j | pop_indv[,3] == j) & pop_indv[,4] >= maturity),, drop=FALSE]))){
+      tem = pop_indv[which((pop_indv[,2] == j | pop_indv[,3] == j) & pop_indv[,4] >= maturity),, drop = FALSE]           #find if id is in mom OR dad column
       m = nrow(tem)
-      pop[pop[,1] == j, 7] <- m                     #put the value in the noffspring column
+      pop_indv[pop_indv[,1] == j, 7] <- m                     #put the value in the noffspring column
     }else{
       next
     }
   }
   
   #calc the relative fitness - defined as repro succ of the indv/max repro succ
-  max <- max(pop[,7])
-  for(m in unique(pop[,1])){
-    rel <- pop[pop[,1] == m, 7]
+  pop_indv[,7] <- as.numeric(pop_indv[,7])
+  max <- max(pop_indv[,7])
+  for(m in unique(pop_indv[,1])){
+    rel <- pop_indv[pop_indv[,1] == m, 7]
     rel.fit <- rel/max
     
-    pop[pop[,1] == m, 11] <- rel.fit
+    pop_indv[pop_indv[,1] == m, 11] <- rel.fit
   }
   
   ########################################################################################################
@@ -60,15 +61,15 @@ RepSucc = function(pop, maturity, years, rr, r){
   #}
   
   #calc number of indv born in this generation
-  for(q in unique(pop[,9])){       #unique generation born
-    temp <- pop[pop[,9] ==q,,drop=FALSE]
+  for(q in unique(pop_indv[,9])){       #unique generation born
+    temp <- pop_indv[pop_indv[,9] ==q,,drop=FALSE]
     
     REP[(q+2),2] = nrow(temp)   #nrow(temp[,9]==q)
   }
   
   #calc the mean LRS for this generation
-  for(e in unique(pop[,9])){       #unique generation born
-    te <- pop[pop[,9] ==e,,drop=FALSE]
+  for(e in unique(pop_indv[,9])){       #unique generation born
+    te <- pop_indv[pop_indv[,9] ==e,,drop=FALSE]
     
     REP[(e+2),3] = mean(te[,7])   #find mean number of adult offspring
     #e+1 because year 0 is included
@@ -100,7 +101,7 @@ RepSucc = function(pop, maturity, years, rr, r){
   
   #note that it is possible that some of the columns will be NA if there were no offspring produced that year
   
-  return(list(pop, REP)) #need to return pop cuz calc repro success. need to return REP cuz want those for Plot.R
+  return(list(pop_indv, REP)) #need to return pop cuz calc repro success. need to return REP cuz want those for Plot.R
 
 }
 
