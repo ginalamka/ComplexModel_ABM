@@ -40,6 +40,7 @@ RunModel = function(parameters, r, directory, replicates){
     pop[,11] = NA                            #relative fitness #at this point, we are putting all equal to zero because this is the initial generation
     pop[,12] = 0                            #proportion of migrant SNPs - initial pop will all be 0
     sz = k #to keep track of the number of indv for ID'ing later
+    sz_col = ncol(pop)
     
     #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
     popgen = matrix(nrow=k, ncol=nSNP*2)
@@ -65,7 +66,8 @@ RunModel = function(parameters, r, directory, replicates){
           popgen[kk,columns[l]+1] = 1
         }
       }
-      #colnames(popgen) <- c('SNP', l)
+      #for(qq in 1:ncol(popgen)){colnames(popgen[qq])<-c("SNP",qq)} #couldnt get this to work - 12/14/22 - issue was when merging dead and pop but wont even hold genotypes anymore
+      #colnames(popgen) <- c('SNP', name)
       pool = NULL
       
       #add genotypes to pop matrix
@@ -103,7 +105,7 @@ RunModel = function(parameters, r, directory, replicates){
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    #REMOVE4EVOLUTION##remove(popgen, popSNPs, conSNPs) 
+    remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool) #focalpop, conSNPs
     
     #notes from talking with Janna 10/21 -- doesnt quite work yet
     #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
@@ -192,12 +194,36 @@ RunModel = function(parameters, r, directory, replicates){
     source1 <- cbind(source, sourcegen, migSNPs)
     source <- source1
     
+    #prepare focal and source pop for Fst analysis in hierfstat (enacted in Analyze.R)
+    SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)                    #find number of SNPs
+    pos1 = seq(1, SNPS, 2) #allele 1 positions, aka odd values
+    pos2 = pos1+1
+    
+    fstinit <- focalpop[, -c(ncol(focalpop)-(SNPS):ncol(focalpop))]               #grab SNPs
+    fstinit[fstinit[,]==0] <-2                                                    #change 0s to 2s
+    fstinit[,pos1] <- as.numeric(paste(fstinit[,pos1], fstinit[,pos2], sep=""))                     #merge SNPs
+    fstinit <- fstinit[,-c(pos2)]                                                 #remove single pos2 SNPs
+    initident <- matrix(nrow=nrow(fstinit), ncol=1)                               #add pop identifier
+    initident[,1] = 0
+    fstinit <- cbind(initident,fstinit)                                           #merge identifier and genotypes
+    
+    fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
+    fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
+    fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
+    fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
+    sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
+    sourceident[,1] = -1
+    fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
+    
+    remove(source1, focalpop, initident, sourceident)
+    
+    
     #write starting source to table
     #### REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
-    #REMOVE4EVOLUTION###clean up
-    #REMOVE4EVOLUTION##remove(sourcegen, pool, migSNPs, l, c, d, kk, ss)
-    #REMOVE4EVOLUTION##remove(gtype, columns, columnsb, columnsc, columnsd, columnse)
+    #clean up
+    remove(sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j)
+    #REMOVE4EVOLUTION##remove( columnsb, columnsc,  columnse, c)
     
     #create for loop for each time step
     for(y in 0:years){
@@ -207,7 +233,7 @@ RunModel = function(parameters, r, directory, replicates){
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(sum(pop[,8]) <= 10){
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
           FINAL = rbind(FINAL, out[1,])
           break
         }
@@ -225,14 +251,14 @@ RunModel = function(parameters, r, directory, replicates){
         source = tt[[3]]
         if(sum(pop[,8]) <= 4){
           print(paste("Population crash @ MateChoice, less than 4 indv"))
-          out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
           FINAL = rbind(FINAL, out[1,])
           break
         }
         pairs = MateChoice(pop, sex, maturity)  
         if(is.null(pairs)==TRUE){
           print(paste("skipping pop size next, breed due to no parents"))
-          out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
           FINAL = rbind(FINAL, out[1,])
           break  #consider whether this should be next or break
         }
@@ -255,17 +281,27 @@ RunModel = function(parameters, r, directory, replicates){
         pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
         if(sum(pop[,8]) <= 10){
           print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K) #remember to feed to all Analyze functions!
           FINAL = rbind(FINAL, out[1,])
           break
         }
         
         print(paste("DONE!", y, "param", r, "rep", rr))
         
+        #clean up by removing dead indv every 25 years
+        if(is.wholenumber(y/25)==TRUE){
+          print(paste("Cleaning up dead!"))
+          dead <- pop[pop[,8]==0,,drop=FALSE]
+          deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes
+          write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+          #write.matrix(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",") #, col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE
+          pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
+          
+          remove(dead, deadindv)
+        }
+        
      #   pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- put in place for Evolution on 6/7/22 -- this will speed it up!!
         
-        ###REMOVED### write.table(pop, paste(directory, "/Output/testRunModel" , y, ".csv", sep=""), sep=",", col.names=T, row.names=F)
-        ###REMOVED### return (pop)
         
         #y <- y+1
       }
@@ -273,7 +309,7 @@ RunModel = function(parameters, r, directory, replicates){
         K = k
       }
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+      out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
@@ -283,13 +319,20 @@ RunModel = function(parameters, r, directory, replicates){
       #consider if something needs to be changed in Analyze for the different death types or if that needs tracked at all.
       
     }
+    #read in dead indv
+    died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
+    indv = pop[, c(1:sz_col)]  #remove indv genotypes
+    colnames(died) = colnames(indv)
+    pop_indv = rbind(indv,died) #add dead to pop for repsucc calculations
+    
+    remove(pop, indv, died)
     
     #THIS IS WHERE I CALC RRS using pop data
-    aa = RepSucc(pop, maturity, years, rr, r)
-    pop = aa[[1]]  #this is the final pop with all indv and all indv data
+    aa = RepSucc(pop_indv, maturity, years, rr, r)
+    pop_indv = aa[[1]]  #this is the final pop with all indv and all indv data
     rep = aa[[2]]
     REP = rbind(REP, rep)
-    POP = rbind(POP, pop)
+    #POP = rbind(POP, pop)
 
     #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
     #otherwise may need to move this up to calc per year, but that would greatly increase computational time
@@ -297,7 +340,7 @@ RunModel = function(parameters, r, directory, replicates){
     print(paste("REPLICATE", rr, "OF PARAM", r, "DONE!"))
     
   } 
-  return(list(FINAL, POP, REP))
+  return(list(FINAL, REP)) #POP, 
 }
 
 #next will go to the next loop AKA the next year
