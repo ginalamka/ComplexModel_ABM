@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -148,7 +148,7 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     #change 0s to 2s for hierfstat to read
     fstdata[fstdata[,]==0] <-2
     
-    head(fstdata)
+    #head(fstdata)
     
     
     #allele 1 positions, aka odd values
@@ -166,51 +166,59 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     
     if(y != 0){
       #do the same to the initialized focal pop -- for comparison
-      fstinit <- focalpop[, -c(ncol(focalpop)-(SNPS):ncol(focalpop))]               #grab SNPs
-      fstinit[fstinit[,]==0] <-2                                                    #change 0s to 2s
-      fstinit[,pos1] <- as.numeric(paste(fstinit[,pos1], fstinit[,pos2], sep=""))                     #merge SNPs
-      fstinit <- fstinit[,-c(pos2)]                                                 #remove single pos2 SNPs
-      initident <- matrix(nrow=nrow(fstinit), ncol=1)                               #add pop identifier
-      initident[,1] = 0
-      fstinit <- cbind(initident,fstinit)                                           #merge identifier and genotypes
+      #MOVEDTORUNMODEL##fstinit <- focalpop[, -c(ncol(focalpop)-(SNPS):ncol(focalpop))]               #grab SNPs
+      #MOVEDTORUNMODEL##fstinit[fstinit[,]==0] <-2                                                    #change 0s to 2s
+      #MOVEDTORUNMODEL##fstinit[,pos1] <- as.numeric(paste(fstinit[,pos1], fstinit[,pos2], sep=""))                     #merge SNPs
+      #MOVEDTORUNMODEL##fstinit <- fstinit[,-c(pos2)]                                                 #remove single pos2 SNPs
+      #MOVEDTORUNMODEL##initident <- matrix(nrow=nrow(fstinit), ncol=1)                               #add pop identifier
+      #MOVEDTORUNMODEL##initident[,1] = 0
+      #MOVEDTORUNMODEL##fstinit <- cbind(initident,fstinit)                                           #merge identifier and genotypes
       
-      fstdata <- rbind(fstdata, fstinit)                                            #merge current year and initialized year to one matrix for calculations
+      fstnow <- rbind(fstdata, fstinit)                                            #merge current year and initialized year to one matrix for calculations
+      
+      fstnow <- as.data.frame(fstnow)                                               #turn into a dataframe
+      calc <-wc(fstnow, diploid=TRUE, pol=0)                                         #calc FST and FIS
+      #calc <- pairwise.WCfst(fstdata,diploid=TRUE)                                   #calculate FST
+      
+      FIN[f,10] <- calc$FST
+      FIN[f,6] <- calc$FIS
       
       #do the same to the initialized source pop -- for comparison
-      fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
-      fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
-      fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
-      fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
-      sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
-      sourceident[,1] = -1
-      fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
+      #MOVEDTORUNMODEL##fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
+      #MOVEDTORUNMODEL##fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
+      #MOVEDTORUNMODEL##fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
+      #MOVEDTORUNMODEL##fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
+      #MOVEDTORUNMODEL##sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
+      #MOVEDTORUNMODEL##sourceident[,1] = -1
+      #MOVEDTORUNMODEL##fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
       
-      fstdatavsource <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
+      #REMOVEDTOSPEEDUP##fstdatavsource <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
       
-      fstdatavsource <- as.data.frame(fstdatavsource)
-      calcvsource <-wc(fstdatavsource, diploid=TRUE, pol=0) 
-      FIN[f,14] <- calcvsource$FST
-      FIN[f,15] <- calcvsource$FIS
+      #REMOVEDTOSPEEDUP##fstdatavsource <- as.data.frame(fstdatavsource)
+      #REMOVEDTOSPEEDUP##calcvsource <-wc(fstdatavsource, diploid=TRUE, pol=0) 
+      #REMOVEDTOSPEEDUP##FIN[f,14] <- calcvsource$FST
+      #REMOVEDTOSPEEDUP##FIN[f,15] <- calcvsource$FIS
     }
     if(y == 0){
       #do the same to the initialized source pop -- for comparison
-      fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
-      fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
-      fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
-      fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
-      sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
-      sourceident[,1] = -1
-      fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
+      #MOVEDTORUNMODEL##fstsource <- source1[, -c(ncol(source1)-(SNPS):ncol(source1))]                    #grab SNPs
+      #MOVEDTORUNMODEL##fstsource[fstsource[,]==0] <-2                                                    #change 0s to 2s
+      #MOVEDTORUNMODEL##fstsource[,pos1] <- as.numeric(paste(fstsource[,pos1], fstsource[,pos2], sep=""))                     #merge SNPs
+      #MOVEDTORUNMODEL##fstsource <- fstsource[,-c(pos2)]                                                 #remove single pos2 SNPs
+      #MOVEDTORUNMODEL##sourceident <- matrix(nrow=nrow(fstsource), ncol=1)                               #add pop identifier
+      #MOVEDTORUNMODEL##sourceident[,1] = -1
+      #MOVEDTORUNMODEL##fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
       
-      fstdata <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
+      fstyo <- rbind(fstinit, fstsource) #merge current year and initialized year to one matrix for calculations
+      
+      fstyo <- as.data.frame(fstyo)                                               #turn into a dataframe
+      calcyo <-wc(fstyo, diploid=TRUE, pol=0)                                         #calc FST and FIS
+      
+      FIN[f,10] <- 0 #no divergence at y=0
+      FIN[f,6] <- 0  #no inbreeding at y=0
+      FIN[f,14] <- calcyo$FST
+      FIN[f,15] <- calcyo$FIS
     }
-    
-    fstdata <- as.data.frame(fstdata)                                               #turn into a dataframe
-    calc <-wc(fstdata, diploid=TRUE, pol=0)                                         #calc FST and FIS
-    #calc <- pairwise.WCfst(fstdata,diploid=TRUE)                                   #calculate FST
-    
-    FIN[f,10] <- calc$FST
-    FIN[f,6] <- calc$FIS
     
 
     FIN[f,11] = rr   #add replicate number
@@ -221,8 +229,6 @@ Analyze = function(parameters, r, pop, mig, focalpop, source1, y, init.het, rr, 
     }
     FIN[f,13] = numboff
     
-    
-
     
     
     #Fis for this pop
