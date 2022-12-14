@@ -31,7 +31,7 @@ colnames(parameters) = c("k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "
 write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 
 #clean up, remember that these are still available in parameters
-remove(nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) #k.V
+remove(k.V, nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, ratemort.V, nSNP.mig.V, nSNP.cons.V) 
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 1 #20 #5 #10
@@ -58,8 +58,8 @@ finalPOP = NULL
 for(r in 1:nrow(parameters)){
   ALL = RunModel(parameters, r, directory, replicates)
   FINAL = ALL[[1]]
-  POP = ALL[[2]]
-  REP = ALL[[3]]
+  REP = ALL[[2]]
+  #POP = ALL[[2]]
   
   ####REMOVED## POP = RunModel(parameters, r, directory, replicates)
   ####REMOVED## write.table(POP, paste(directory, "/Output/CoverPop", r, ".csv", sep=""), sep=",", col.names=TRUE, row.names=F) 
@@ -67,11 +67,11 @@ for(r in 1:nrow(parameters)){
  
   theEND = rbind(theEND, FINAL)
   repEND = rbind(repEND, REP)
-  finalPOP = rbind(finalPOP, POP)
+  #finalPOP = rbind(finalPOP, POP)
 }
 write.table(theEND, paste(directory, "/Output/summary__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 write.table(repEND, paste(directory, "/Output/rep_summary__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
-write.table(finalPOP, paste(directory, "/Output/POP__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+#write.table(finalPOP, paste(directory, "/Output/POP__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 #summary table should have nrows = nparameters * nyears * nreplicates
   #^^ may have some fewer than above because some simulations may break before all years are able to be run
 
