@@ -40,6 +40,9 @@ MateChoice = function(pop, sex, maturity){
       #pairs <- rand
       colnames(pairs) <- c('mom','dad')
     }
+    
+    remove(dead, immature, mates, rand)
+    
     return(pairs)
   }
 }

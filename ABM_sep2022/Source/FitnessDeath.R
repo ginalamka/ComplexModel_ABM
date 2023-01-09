@@ -39,6 +39,8 @@ FitnessDeath = function(pop, maturity, ratemort, y){
     #pop = rbind(pop,alreadydead)
   #}
   
+  remove(dead, mature, nkilled)
+  
   return(pop)
 }
 

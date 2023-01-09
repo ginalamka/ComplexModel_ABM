@@ -57,6 +57,8 @@ AgeDeath = function(pop, maxage, ratemort, y){
     #pop = rbind(pop,alreadydead)
   #}
   
+  remove(babes, dead, nkilled, oldies, totalkilled, age)
+  
   return(pop)
 }
 

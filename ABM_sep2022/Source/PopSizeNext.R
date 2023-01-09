@@ -58,6 +58,8 @@ PopSizeNext = function(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameter
   numboff = as.integer(numboff)
   print(paste("the number of offspring needed is", numboff))
   
+  remove(alive, dead)
+  
   return(list(numboff,K))
 }
 
