@@ -3,7 +3,7 @@
 
 #taken from Janna's captive breeding IBM, function WriteOut
 
-Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K){  #should this be parameters or replicates?
+Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2){  #should this be parameters or replicates?
   #get variables for run -- I think this can be copied from RunModel.R
   k             = parameters$k[r]
   #REMOVED###allele        = parameters$allele[r]
@@ -75,7 +75,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr,
     #He and Ho - neutral (?)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)
     genotype = data[, -c(ncol(data)-SNPS:ncol(data))] #THERE IS AN ERROR HERE THAT IS CHANGING THE ORDER OF COLUMNS?? ALSO NOTE THAT THE NUMBER OF SNPS IS WRONG--PROBS CUZ OF NOT RUNNING THE DIFFERENT TYPES IN RUNMODEL. FIX THIS~!
-    snps = rep(c(1,2),ncol(genotype)/2)
+    #snps = rep(c(1,2),ncol(genotype)/2)
     
     HE = NULL
     HO = NULL
@@ -148,13 +148,6 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr,
     #change 0s to 2s for hierfstat to read
     fstdata[fstdata[,]==0] <-2
     
-    #head(fstdata)
-    
-    
-    #allele 1 positions, aka odd values
-    pos1 = seq(1, SNPS, 2)
-    pos2 = pos1+1
-    
     #merge pos1 and pos2 into pos1, then remove pos2
     fstdata[,pos1] <- as.numeric(paste(fstdata[,pos1], fstdata[,pos2], sep=""))
     fstdata <- fstdata[,-c(pos2)]
@@ -218,6 +211,8 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr,
       FIN[f,6] <- 0  #no inbreeding at y=0
       FIN[f,14] <- calcyo$FST
       FIN[f,15] <- calcyo$FIS
+      
+      remove(fstyo)
     }
     
 
@@ -249,6 +244,9 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr,
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs",
                     "k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
+  
+  remove(alive, adults, data, FIN, fstdata, genotype, locus, params, popident,
+         freqs, geno, HE, het, het.expected, het.observed, HO, homozygous, loc.pos)
   
   return(out)
 }
