@@ -222,7 +222,7 @@ RunModel = function(parameters, r, directory, replicates){
     #### REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j)
+    remove(sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j) #currently holding p if needed
     #REMOVE4EVOLUTION##remove( columnsb, columnsc,  columnse, c)
     
     #create for loop for each time step
@@ -233,7 +233,7 @@ RunModel = function(parameters, r, directory, replicates){
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(sum(pop[,8]) <= 10){
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
           FINAL = rbind(FINAL, out[1,])
           break
         }
@@ -251,14 +251,14 @@ RunModel = function(parameters, r, directory, replicates){
         source = tt[[3]]
         if(sum(pop[,8]) <= 4){
           print(paste("Population crash @ MateChoice, less than 4 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
           FINAL = rbind(FINAL, out[1,])
           break
         }
         pairs = MateChoice(pop, sex, maturity)  
         if(is.null(pairs)==TRUE){
           print(paste("skipping pop size next, breed due to no parents"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
           FINAL = rbind(FINAL, out[1,])
           break  #consider whether this should be next or break
         }
@@ -270,7 +270,7 @@ RunModel = function(parameters, r, directory, replicates){
         numboff = pp[[1]]
         K = pp[[2]]
         if(numboff >= 1){
-          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons) #still needs work 
+          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2) #still needs work 
           pop = ttt[[1]]
           bb = ttt[[2]]
           sz = sz + bb
@@ -281,7 +281,7 @@ RunModel = function(parameters, r, directory, replicates){
         pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
         if(sum(pop[,8]) <= 10){
           print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K) #remember to feed to all Analyze functions!
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2) #remember to feed to all Analyze functions!
           FINAL = rbind(FINAL, out[1,])
           break
         }
@@ -309,11 +309,10 @@ RunModel = function(parameters, r, directory, replicates){
         K = k
       }
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, init.het, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K)
+      out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
-      init.het <- FINAL[1,5]
       
       #will need to track K in Analyze for years during the pop drop
       #consider if something needs to be changed in Analyze for the different death types or if that needs tracked at all.
@@ -333,9 +332,6 @@ RunModel = function(parameters, r, directory, replicates){
     rep = aa[[2]]
     REP = rbind(REP, rep)
     #POP = rbind(POP, pop)
-
-    #still need to figure out how to analyze this. probs will want per year in FINAL, but unsure how to do that yet.
-    #otherwise may need to move this up to calc per year, but that would greatly increase computational time
     
     print(paste("REPLICATE", rr, "OF PARAM", r, "DONE!"))
     
