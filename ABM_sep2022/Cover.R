@@ -8,10 +8,10 @@ source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
 
 #parameters
-k.V           = 500 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
+k.V           = 1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
 nSNP.V        = 1000  #scaleup                #number of SNPs simulated, used to track drift
-miggy.V       = 0 #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
-LBhet.V       = 0.1 #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
+miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
+LBhet.V       = 0.45 #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
 maxage.V      = 9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
@@ -43,9 +43,9 @@ mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2
 mu            = 0.001  #mutation rate
 
 styr          = 100 #year to start pop decline
-nwk           = 25 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
+nwk           = 100 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
 drp           = 10  #number of years for drop from k to nwk
-dur           = 100  #duration of small pop size before pop growth 
+dur           = 40  #duration of small pop size before pop growth 
 edyr          = styr+drp #150 #year to end pop decline, first year at low pop size (nwk)
 
 s             = 5000 #(k.V*5) #size of source pop
