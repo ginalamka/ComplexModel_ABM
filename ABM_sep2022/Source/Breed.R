@@ -1,4 +1,4 @@
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2){
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   if(is.null(nrow(pairs))==TRUE){
@@ -113,10 +113,6 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
       momgeno = mm[, -c(ncol(mm)-(SNPS):ncol(mm))] 
       dadgeno = dd[, -c(ncol(dd)-(SNPS):ncol(dd))]
       
-      #allele 1 positions, aka odd values
-      pos1 = seq(1, SNPS, 2)
-      pos2 = pos1+1
-      
       #from each snp (2 columns), grab 1 of mom's alleles
       momgeno.s = pos1 + (sample(0:1, length(pos1), replace=T)) #list of values to pull, exactly 1 allele (here it is index number) from each set of two columns
       momgeno.s = momgeno[momgeno.s] #these are now the actual alleles
@@ -168,7 +164,10 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     babies = cbind(babies, babygeno)
     pop = rbind(pop, babies)
 
-  return(list(pop,bb))
+    remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents, pairings, 
+           t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, mut, nbabes, SZ, rm)
+    
+    return(list(pop,bb))
   }
 }
   #CHANGES TO MUTATION THAT NEED TO BE MADE - 1.13.22
