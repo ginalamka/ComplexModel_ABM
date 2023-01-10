@@ -15,6 +15,11 @@ tab7 = read.table("ABM_run.11.14.22_7a_all_summary.csv", header=T, sep=",")
 tab8 = read.table("ABM_run.11.14.22_8a_all_summary.csv", header=T, sep=",")
 tab9 = read.table("ABM_run.11.14.22_9a_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.12.9.22_0c_all_summary.csv", header=T, sep=",")
+tab = read.table("ABM_run.1.5.23_A_all_summary.csv", header=T, sep=",")
+tab = read.table("ABM_run.12.14.22_1a_all_summary.csv", header=T, sep=",")
+tab = read.table("ABM_run.12.10.22_1A_all_summary.csv", header=T, sep=",") #this one has crashes
+
+
 
 #Data
 {
@@ -50,7 +55,7 @@ comp4 = rbind(tab0,tab3,tab8,tab9) #change fitness of source pop @ 3x pulse mig
 comp5 = rbind(tab0,tab4,tab7,tab8) #change migration intensities @ .8-.9 het in source pop
 comp6 = rbind(tab0,tab5,tab6,tab9) #change migration intensities @ .1-.2 het in source pop
 
-smry <- comp6   #compX
+smry <- tab   #compX
   
 #~~~Avril's Code
 ### set colors
@@ -121,7 +126,7 @@ legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19,
 
 ##### Generic plotting code
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho, 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource
-var = 2
+var = 5
 smry = rbind(tab1,tab2,tab3,tab4)
 smry = rbind(tab1,tab2,tab5,tab6)
 range(smry[,var])
@@ -218,7 +223,7 @@ dev.off()
 
 png("Ho_overtime.png")
 plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1)))
-points(yr,Ho,col="orchid")
+points(yr,Ho,col=gt.cols)
 points(tab5[,1],tab5[,5],col="dodgerblue")
 points(tab0[,1],tab0[,5],col="firebrick")
 points(tab6[,1],tab6[,5],col="gold")
