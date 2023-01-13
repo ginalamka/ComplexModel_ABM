@@ -308,6 +308,8 @@ rep7 = read.table("ABM_run.11.14.22_7a_all_repsuc.csv", header=T, sep=",")
 rep8 = read.table("ABM_run.11.14.22_8a_all_repsuc.csv", header=T, sep=",")
 rep9 = read.table("ABM_run.11.14.22_9a_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.5.23_A_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.9.23_D_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.11.23_C_all_repsuc.csv", header=T, sep=",")
 
 rep=na.omit(rep)
 
@@ -326,11 +328,16 @@ LRSm= rep[,6]   #male LRS
 RRS = rep[,7]   #mean RRS
 SDR = rep[,8]   #SD of RRS
 rep = rep[,9]   #replicate
+LRSmig=rep[,11] #LRS of migrants
+LRSnat=rep[,12] #LRS of natives
  
 #give each parameter set a unique identifier
 rep7[,10] <- "g"
 rep8[,10] <- "h"
 rep9[,10] <- "i"
+
+legend('center', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols, pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
+#miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
 
 plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
 points(yr, LRS, col=gt.cols[col])
@@ -359,3 +366,9 @@ points(yr, SD, col=gt.cols[col])
 
 plot(-100, -100 , xlab="year", ylab="SD of RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(SDR)))
 points(yr, SDR, col=gt.cols[col])
+
+plot(-100, -100 , xlab="year", ylab="LRS of migrants", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSmig)))
+points(yr, LRSmig, col=gt.cols[col])
+
+plot(-100, -100 , xlab="year", ylab="LRS of natives", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSnat)))
+points(yr, LRSnat, col=gt.cols[col])
