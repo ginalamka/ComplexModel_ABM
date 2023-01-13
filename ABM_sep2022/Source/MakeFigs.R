@@ -18,8 +18,10 @@ tab = read.table("ABM_run.12.9.22_0c_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.1.5.23_A_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.12.14.22_1a_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.12.10.22_1A_all_summary.csv", header=T, sep=",") #this one has crashes
+tab = read.table("ABM_run.1.11.23_C_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.9.23_D_all_summary.csv", header=T, sep=",") 
 
-
+smry = tab
 
 #Data
 {
@@ -211,7 +213,7 @@ rep      = smry[,11]  #replicate number
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-
+col      = smry[,12]
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
@@ -223,7 +225,7 @@ dev.off()
 
 png("Ho_overtime.png")
 plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1)))
-points(yr,Ho,col=gt.cols)
+points(yr,Ho,col=gt.cols[col])
 points(tab5[,1],tab5[,5],col="dodgerblue")
 points(tab0[,1],tab0[,5],col="firebrick")
 points(tab6[,1],tab6[,5],col="gold")
@@ -234,8 +236,8 @@ legend('bottom', legend = c('mig=1', 'mig=0','mig=1x','mig=3x ALL AT .1-.2'), co
 dev.off()
 
 png("fis_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)-.1), (max(fis)+.1)))
-points(yr,fis,col="dodgerblue")
+plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)-.01), (max(fis)+.1))) 
+points(yr,fis,col=gt.cols[col])
 points(tab5[,1],tab5[,6],col="dodgerblue")
 points(tab0[,1],tab0[,6],col="firebrick")
 points(tab6[,1],tab6[,6],col="gold")
@@ -244,7 +246,7 @@ dev.off()
 
 png("sexratio_overtime.png")
 plot(-100, -100 , xlab="year", ylab="sex ratio", xlim=c(0, max(yr)), ylim=c((min(sx)-.1), (max(sx)+.1)))
-points(yr,sx,col="black")
+points(yr,sx,col=gt.cols[col])
 points(tab5[,1],tab5[,8],col="dodgerblue")
 points(tab0[,1],tab0[,8],col="firebrick")
 points(tab6[,1],tab6[,8],col="gold")
@@ -252,8 +254,8 @@ points(tab9[,1],tab9[,8],col="springgreen")
 dev.off()
 
 png("fst_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-.1), (max(fst)+.1)))
-points(yr,fst,col="pink")
+plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-.01), (max(fst)+.05)))
+points(yr,fst,col=gt.cols[col])
 points(tab5[,1],tab5[,10],col="dodgerblue")
 points(tab0[,1],tab0[,10],col="firebrick")
 points(tab6[,1],tab6[,10],col="gold")
@@ -288,10 +290,10 @@ points(tab9[,1],tab9[,15],col="springgreen")
 dev.off()
 
 plot(-100, -100 , xlab="year", ylab="prop migrant SNPs", xlim=c(0, max(yr)), ylim=c(0, 1))
-points(yr,smry[,17],col="green")
+points(yr,smry[,17],col=gt.cols[col])
 
 plot(-100, -100 , xlab="Ho drift SNPs", ylab="Ho all SNPS", xlim=c(0, 1), ylim=c(0, 1))
-points(Ho,smry[,18],col="green")
+points(Ho,smry[,18],col=gt.cols[col])
 abline(a=0,b=1)
 
 
@@ -300,28 +302,60 @@ abline(a=0,b=1)
 #REPRODUCTIVE SUCCESS
 ########################################################################
 
+#NOTE--- as of 1.13.23, migrants ARE included in LRS values 
+
 rep7 = read.table("ABM_run.11.14.22_7a_all_repsuc.csv", header=T, sep=",")
 rep8 = read.table("ABM_run.11.14.22_8a_all_repsuc.csv", header=T, sep=",")
 rep9 = read.table("ABM_run.11.14.22_9a_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.5.23_A_all_repsuc.csv", header=T, sep=",")
 
+rep=na.omit(rep)
 
+library(ghibli)
+library(scales)
+gt.cols <- ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- ghibli_palette('PonyoLight')[4]
+
+col = rep[,10]  #color by parameter
+yr  = rep[,1]   #year
+n   = rep[,2]   #n born
+LRS = rep[,3]   #mean LRS
+SD  = rep[,4]   #SD of LRS
+LRSf= rep[,5]   #female LRS
+LRSm= rep[,6]   #male LRS
+RRS = rep[,7]   #mean RRS
+SDR = rep[,8]   #SD of RRS
+rep = rep[,9]   #replicate
+ 
 #give each parameter set a unique identifier
 rep7[,10] <- "g"
 rep8[,10] <- "h"
 rep9[,10] <- "i"
 
-plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(0, 250), ylim=c(0, 2.3))
-points(rep7[,1],rep7[,3])
+plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
+points(yr, LRS, col=gt.cols[col])
 points(rep8[,1],rep8[,3], col="dodgerblue")
 points(rep9[,1],rep9[,3], col="firebrick")
 all<- rbind(rep7,rep8,rep9)
 
-plot(-100, -100 , xlab="year", ylab="nborn", xlim=c(0, 250), ylim=c(0, 475))
-points(rep7[,1],rep7[,2])
+plot(-100, -100 , xlab="year", ylab="nborn", xlim=c(min(yr), max(yr)), ylim=c(0, max(n)))
+points(yr, n, col=gt.cols[col])
 points(rep8[,1],rep8[,2], col="dodgerblue")
 points(rep9[,1],rep9[,2], col="firebrick")
 
-plot(-100, -100 , xlab="year", ylab="RRS", xlim=c(0, 250), ylim=c(0, .25))
-points(rep7[,1],rep7[,7])
+plot(-100, -100 , xlab="year", ylab="RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(RRS)))
+points(yr, RRS, col=gt.cols[col])
 points(rep8[,1],rep8[,7], col="dodgerblue")
 points(rep9[,1],rep9[,7], col="firebrick")
+
+plot(-100, -100 , xlab="year", ylab="LRS of females", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSf)))
+points(yr, LRSf, col=gt.cols[col])
+
+plot(-100, -100 , xlab="year", ylab="LRS of males", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSm)))
+points(yr, LRSm, col=gt.cols[col])
+
+plot(-100, -100 , xlab="year", ylab="SD of LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(SD)))
+points(yr, SD, col=gt.cols[col])
+
+plot(-100, -100 , xlab="year", ylab="SD of RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(SDR)))
+points(yr, SDR, col=gt.cols[col])
