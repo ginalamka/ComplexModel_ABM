@@ -20,6 +20,7 @@ tab = read.table("ABM_run.12.14.22_1a_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.12.10.22_1A_all_summary.csv", header=T, sep=",") #this one has crashes
 tab = read.table("ABM_run.1.11.23_C_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.9.23_D_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.11.23_B_all_summary.csv", header=T, sep=",") 
 
 smry = tab
 
@@ -213,7 +214,7 @@ rep      = smry[,11]  #replicate number
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = smry[,12]
+col      = smry[,12]-1
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
@@ -310,8 +311,14 @@ rep9 = read.table("ABM_run.11.14.22_9a_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.5.23_A_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.9.23_D_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.11.23_C_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.11.23_B_all_repsuc.csv", header=T, sep=",")
 
 rep=na.omit(rep)
+
+het1<- rep[rep[,10]<=4,,drop=FALSE]
+het2<- rep[rep[,10]>=5,,drop=FALSE]
+
+rep <- het2
 
 library(ghibli)
 library(scales)
@@ -336,7 +343,7 @@ rep7[,10] <- "g"
 rep8[,10] <- "h"
 rep9[,10] <- "i"
 
-legend('center', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols, pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
+legend('center', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols[5:8], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
 #miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
 
 plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
