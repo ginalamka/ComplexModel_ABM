@@ -21,8 +21,13 @@ tab = read.table("ABM_run.12.10.22_1A_all_summary.csv", header=T, sep=",") #this
 tab = read.table("ABM_run.1.11.23_C_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.9.23_D_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.11.23_B_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.11.23_E_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.18.23_c_all_summary.csv", header=T, sep=",") 
 
-smry = tab
+smry = grp2
+grp1 <- tab[tab[,12]<=8,,drop=FALSE]
+grp2 <- tab[tab[,12]>8&tab[,12]<17,,drop=FALSE]
+grp3 <- tab[tab[,12]>=17,,drop=FALSE]
 
 #Data
 {
@@ -64,8 +69,11 @@ smry <- tab   #compX
 ### set colors
 library(ghibli)
 library(scales)
-gt.cols <- ghibli_palette('PonyoMedium')#[4]
-lt.gt.col <- ghibli_palette('PonyoLight')[4]
+library(colorspace)
+gt.cols <- qualitative_hcl(24, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(24, "Pastel1") #ghibli_palette('PonyoLight')[4]
+demoplot(gt.cols, "bar")
+demoplot(lt.gt.col, "bar")
 
 ymin <- 0.2
 ymax <- round(max(smry[,5]), digits = 2)+0.1
@@ -214,9 +222,11 @@ rep      = smry[,11]  #replicate number
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = smry[,12]-1
+col      = smry[,12]
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
+
+
 
 
 png("popsize_overtime.png")
@@ -312,6 +322,8 @@ rep = read.table("ABM_run.1.5.23_A_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.9.23_D_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.11.23_C_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.11.23_B_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.11.23_E_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.18.23_c_all_repsuc.csv", header=T, sep=",")
 
 rep=na.omit(rep)
 

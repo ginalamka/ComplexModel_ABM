@@ -1,2 +1,2 @@
-k,nSNP,miggy,LBhet,maxage,broodsize,maturity,years,r0,ratemort,nSNP.mig,nSNP.cons
-100,10,a,0.45,9,2,1,35,1,0.0555555555555556,10,0
+k,nSNP,miggy,LBhet,maxage,broodsize,maturity,years,r0,nSNP.mig,nSNP.cons
+100,10,0,0,9,2,1,35,1,10,0
