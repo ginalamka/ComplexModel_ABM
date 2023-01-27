@@ -19,7 +19,7 @@ RunModel = function(parameters, r, directory, replicates){
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
-    ratemort      = parameters$ratemort[r]
+    #REMOVED###ratemort      = parameters$ratemort[r]
     nSNP.mig      = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
     nSNP.cons     = parameters$nSNP.cons[r]                  #number of conserved alleles
     
@@ -229,7 +229,7 @@ RunModel = function(parameters, r, directory, replicates){
     for(y in 0:years){
       if(y != 0){
         pop = AgeUp(pop)                        #age pop + 1 year
-        pop = FitnessDeath(pop, maturity, ratemort, y)                #kill indv
+        pop = FitnessDeath(pop, maturity, y)                #kill indv
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(sum(pop[,8]) <= 10){
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
@@ -278,7 +278,7 @@ RunModel = function(parameters, r, directory, replicates){
           print(paste("No new babies, skip breed"))
           #next
         }
-        pop = AgeDeath(pop, maxage, ratemort, y)                #kill indv based on age
+        pop = AgeDeath(pop, maxage, y)                #kill indv based on age
         if(sum(pop[,8]) <= 10){
           print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2) #remember to feed to all Analyze functions!

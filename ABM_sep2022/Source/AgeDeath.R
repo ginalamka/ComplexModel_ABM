@@ -3,7 +3,7 @@
 #used for complex model for ABM class 2021
 
 #this will impose an increased in probability of death with increasing age AND kill indv over the maxage
-AgeDeath = function(pop, maxage, ratemort, y){
+AgeDeath = function(pop, maxage, y){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   
   pop = pop[pop[,8] == 1, , drop=FALSE]                  #isolate alive
@@ -42,6 +42,7 @@ AgeDeath = function(pop, maxage, ratemort, y){
         #do oldies > fitness at maturity age > age-based death (age/lifespan) === DO NOT PUT A LIMIT ON THE NUMBER TO KILL
         #
       }
+      nkilled = NULL
       nkilled = pop[pop[,8]==0,,drop=FALSE]
       totalkilled = nrow(nkilled) + nrow(oldies)  #consider if you want to track this for Analyze.R
       print(paste("killed", totalkilled, "individuals"))

@@ -18,7 +18,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   maturity      = parameters$maturity[r]
   years         = parameters$years[r]
   r0            = parameters$r0[r]
-  ratemort      = parameters$ratemort[r]
+  #REMOVED###ratemort      = parameters$ratemort[r]
   nSNP.mig      = parameters$nSNP.mig[r] 
   nSNP.cons     = parameters$nSNP.cons[r]                  #number of conserved alleles
   
@@ -243,7 +243,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs",
-                    "k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "ratemort", "nSNP.mig", "nSNP.cons")
+                    "k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
   
   remove(alive, adults, data, FIN, fstdata, genotype, locus, params, popident,
          freqs, geno, HE, het, het.expected, het.observed, HO, homozygous, loc.pos)

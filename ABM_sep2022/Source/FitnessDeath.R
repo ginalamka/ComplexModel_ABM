@@ -3,7 +3,7 @@
 #used for complex model for ABM class 2021
 
 #this will impose an increase in probability of death wiht decreasing heterozygosity
-FitnessDeath = function(pop, maturity, ratemort, y){
+FitnessDeath = function(pop, maturity, y){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   
   pop = pop[pop[,8] == 1, , drop=FALSE]           #isolate alive
@@ -23,7 +23,8 @@ FitnessDeath = function(pop, maturity, ratemort, y){
         # look for the realtionship of heterozyogisty to probability of death to see if there is stuff on there (might not be)
         #do oldies > fitness at maturity age > age-based death (age/lifespan) === DO NOT PUT A LIMIT ON THE NUMBER TO KILL
         #
-     }
+    }
+     nkilled = NULL
      nkilled = mature[mature[,8]==0,,drop=FALSE]
      print(paste("killed", nrow(nkilled), "individuals"))
       
