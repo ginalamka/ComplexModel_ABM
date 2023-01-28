@@ -7,7 +7,7 @@
 #designated location for this will be in RunModel.R, after runing a replicate
 #data object to use will be pop, which is the focal population after y years. contains indv-level data for all
 
-RepSucc = function(pop_indv, maturity, years, rr, r){
+RepSucc = function(pop_indv, maturity, years, rr, r, prj, grp){
   #calc the total number of offspring
   for(i in unique(pop_indv[,1])){                          #iterate over id
     if(!is.null(nrow(pop_indv[which(pop_indv[,2] == i | pop_indv[,3] == i),, drop = FALSE]))){
@@ -49,8 +49,8 @@ RepSucc = function(pop_indv, maturity, years, rr, r){
   #first, calc the lifetime reproductive success, then subset by year (probs birth year or year reached maturity?) for yearly comparison
   #then will probably select years within each of the stages (+,-,stable pop size)
   
-  REP = matrix(nrow=years+1, ncol=12) #to add init (0) pops - source/migrants included in years
-  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS", "replicate", "parameterset", "LRSmigs", "LRSnative")
+  REP = matrix(nrow=years+1, ncol=14) #to add init (0) pops - source/migrants included in years
+  colnames(REP) = c("YearBorn", "nBornThisYear", "meanLRS", "SD", "LRSfemale", "LRSmale", "meanRRS", "SDRRS", "replicate", "parameterset", "LRSmigs", "LRSnative", "project", "group")
   
   #add year to summary matrix
   REP[,1] = c(0:(nrow(REP)-1))  #-1 to years cuz the initial pop has a generation born of 0 and migrants have a gen born of y[entered pop]
@@ -102,6 +102,10 @@ RepSucc = function(pop_indv, maturity, years, rr, r){
   REP[,9] = rr #note replicate number
   
   REP[,10] = r #note the parameter set number
+  
+  REP[,13] = prj
+  
+  REP[,14] = grp
   
   #note, will probably want to add parameters here, but might not need to. consider this later. 
   

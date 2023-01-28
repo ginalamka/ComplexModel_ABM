@@ -1,6 +1,6 @@
 #RunModel.R for complex migration model for ABM class fall 2021
 
-RunModel = function(parameters, r, directory, replicates){
+RunModel = function(parameters, r, directory, replicates, prj, grp){
   FINAL = NULL
   REP   = NULL
   POP   = NULL 
@@ -233,7 +233,7 @@ RunModel = function(parameters, r, directory, replicates){
         #pop = DeathByAge(pop, maxage)           #age-dependent mortality
         if(sum(pop[,8]) <= 10){
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
         }
@@ -251,14 +251,14 @@ RunModel = function(parameters, r, directory, replicates){
         source = tt[[3]]
         if(sum(pop[,8]) <= 4){
           print(paste("Population crash @ MateChoice, less than 4 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
         }
         pairs = MateChoice(pop, sex, maturity)  
         if(is.null(pairs)==TRUE){
           print(paste("skipping pop size next, breed due to no parents"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break  #consider whether this should be next or break
         }
@@ -281,7 +281,7 @@ RunModel = function(parameters, r, directory, replicates){
         pop = AgeDeath(pop, maxage, y)                #kill indv based on age
         if(sum(pop[,8]) <= 10){
           print(paste("CRASH @ AgeDeath - Population low, less than 10 indv"))
-          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2) #remember to feed to all Analyze functions!
+          out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp) #remember to feed to all Analyze functions!
           FINAL = rbind(FINAL, out[1,])
           break
         }
@@ -293,8 +293,13 @@ RunModel = function(parameters, r, directory, replicates){
           print(paste("Cleaning up dead!"))
           dead <- pop[pop[,8]==0,,drop=FALSE]
           deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes
-          write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+          if(y==25){
+            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
+          }else{
+            write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+          }
           #write.matrix(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",") #, col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE
+          #note if pop crashes before 25 years, dead will be from prev run -- but does it matter since they cant be analyzed anyways?
           pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
           
           remove(dead, deadindv)
@@ -309,7 +314,7 @@ RunModel = function(parameters, r, directory, replicates){
         K = k
       }
       #analyze each replicate
-      out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2)
+      out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
       #out[1,1] = y
       #out[1,ncol(out)+1] = rr
       FINAL = rbind(FINAL, out[1,])
@@ -327,7 +332,7 @@ RunModel = function(parameters, r, directory, replicates){
     remove(pop, indv, died)
     
     #THIS IS WHERE I CALC RRS using pop data
-    aa = RepSucc(pop_indv, maturity, years, rr, r)
+    aa = RepSucc(pop_indv, maturity, years, rr, r, prj, grp)
     pop_indv = aa[[1]]  #this is the final pop with all indv and all indv data
     rep = aa[[2]]
     REP = rbind(REP, rep)

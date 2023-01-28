@@ -24,10 +24,14 @@ tab = read.table("ABM_run.1.11.23_B_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.1.11.23_E_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.18.23_c_all_summary.csv", header=T, sep=",") 
 
-smry = grp2
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
-grp2 <- tab[tab[,12]>8&tab[,12]<17,,drop=FALSE]
+grp2 <- tab[(tab[,12]>8)&(tab[,12]<17),,drop=FALSE]
 grp3 <- tab[tab[,12]>=17,,drop=FALSE]
+
+grp1a <- grp1[grp1[,12]<=4,,drop=FALSE]
+grp1b <- grp1[grp1[,12]%NOTin%grp1a[,12],,drop=FALSE]
+
+smry = grp1b
 
 #Data
 {
@@ -70,8 +74,8 @@ smry <- tab   #compX
 library(ghibli)
 library(scales)
 library(colorspace)
-gt.cols <- qualitative_hcl(24, "Dark2") #ghibli_palette('PonyoMedium')#[4]
-lt.gt.col <- qualitative_hcl(24, "Pastel1") #ghibli_palette('PonyoLight')[4]
+gt.cols <- qualitative_hcl(8, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(8, "Pastel1") #ghibli_palette('PonyoLight')[4]
 demoplot(gt.cols, "bar")
 demoplot(lt.gt.col, "bar")
 
@@ -328,6 +332,7 @@ rep = read.table("ABM_run.1.18.23_c_all_repsuc.csv", header=T, sep=",")
 rep=na.omit(rep)
 
 het1<- rep[rep[,10]<=4,,drop=FALSE]
+het2<- rep[(rep[,10]>4)&(rep[,10]<9),,drop=FALSE]
 het2<- rep[rep[,10]>=5,,drop=FALSE]
 
 rep <- het2
