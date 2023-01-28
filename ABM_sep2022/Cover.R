@@ -6,6 +6,8 @@ directory = getwd()
 outdir = paste(directory, "/Output/", sep = "")   #  outdir = paste("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM", "/Output_local/", sep = "")
 source(paste(directory, "/Source/FunctionSourcer.R", sep = ''))
 
+prj = "_proj_"
+grp = "_group_"
 
 #parameters
 k.V           = 1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
@@ -56,7 +58,7 @@ theEND = NULL
 repEND = NULL
 finalPOP = NULL
 for(r in 1:nrow(parameters)){
-  ALL = RunModel(parameters, r, directory, replicates)
+  ALL = RunModel(parameters, r, directory, replicates, prj, grp)
   FINAL = ALL[[1]]
   REP = ALL[[2]]
   #POP = ALL[[2]]
