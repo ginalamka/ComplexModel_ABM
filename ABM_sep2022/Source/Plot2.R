@@ -1,21 +1,21 @@
 #Plot2.R for complex migration model 2022
 
 Plot2 = function(repEND){
-  #set any NAs to zeros
-  repEND[is.na(repEND)] = 0
   
-  #set up to subset by replicate and by year born (-1 = migrants, 0 = init focal pop)
-  rep = repEND[,9]                 #grabs replicate 
-  par = repEND[,10]                #grabs parameter set
-  yr = unique(repEND[,1])          #grabs unique year values
-  mxLRS = ceiling(max(repEND[,3])) #rounds up the maximum LRS
-  mxRRS = ceiling(max(repEND[,7])) #rounds up the maximum RRS
-  mxindv= ceiling(max(repEND[,2])) #rounds up the maximum number of indv born
-  mxSDL = ceiling(max(repEND[,4])) #rounds up the maximum SD in LRS
-  mxSDR = ceiling(max(repEND[,8])) #rounds up the maximum SD in RRS
-  
-  
-  if(plotit==1){
+  if(plotit2==1){
+    
+    #set any NAs to zeros
+    repEND[is.na(repEND)] = 0
+    
+    #set up to subset by replicate and by year born (-1 = migrants, 0 = init focal pop)
+    rep = repEND[,9]                 #grabs replicate 
+    par = repEND[,10]                #grabs parameter set
+    yr = unique(repEND[,1])          #grabs unique year values
+    mxLRS = ceiling(max(repEND[,3])) #rounds up the maximum LRS
+    mxRRS = ceiling(max(repEND[,7])) #rounds up the maximum RRS
+    mxindv= ceiling(max(repEND[,2])) #rounds up the maximum number of indv born
+    mxSDL = ceiling(max(repEND[,4])) #rounds up the maximum SD in LRS
+    mxSDR = ceiling(max(repEND[,8])) #rounds up the maximum SD in RRS
     
     ########################################################### 
     #LRS over time
@@ -114,7 +114,7 @@ Plot2 = function(repEND){
     dev.off()
     #NOTE: will want to remove years -1 and 0 probs
     
-  }
+  }else{print(paste("no plot2 today!"))}
 }
 
 #Current list of columns for repEND

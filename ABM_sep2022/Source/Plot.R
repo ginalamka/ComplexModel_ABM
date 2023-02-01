@@ -13,25 +13,24 @@ Plot = function(theEND){
   #all parameters and replicates are being plotted at once. will need to clean this up
     #to do that, will probably need to subser theEND -- ex try::   for(parameters$k[r] == r){N = theEND[,2]}
   
-  #set up to subset by replicate and by year
-  #remember that the replicate "r" will be the last column of theEND
-  rep      = theEND[,11]                 #grabs replicate column
-  para      = theEND[,12]                 #grabs parameter set
-  yr       = unique(theEND[, 1])         #grabs unique years
-  mxk      = ceiling(max(theEND[,2]))    #rounds up the maximum pop size. Note should = k
-  N        = theEND[,2]                  #grabs population size
-  adults   = theEND[,7]                  #grabs total number of adults
-  He       = theEND[,4]                  #grabs expected heterozygosity
-  Ho       = theEND[,5]                  #grabs observed heterozygosity
-  sxratio  = theEND[,8]                  #grabs the sex ratio
-  migprop  = theEND[,3]                  #grabs the proportion of migrants in the population
-  nmig     = theEND[,9]                  #grabs the number of migrants in the population
-  fst      = theEND[,10]                 #grabs Fst 
-  fis      = theEND[,6]                  #grabs Fis
-  
-  
   if(plotit==1){
-
+    
+    #set up to subset by replicate and by year
+    #remember that the replicate "r" will be the last column of theEND
+    rep      = theEND[,11]                 #grabs replicate column
+    para      = theEND[,12]                 #grabs parameter set
+    yr       = unique(theEND[, 1])         #grabs unique years
+    mxk      = ceiling(max(theEND[,2]))    #rounds up the maximum pop size. Note should = k
+    N        = theEND[,2]                  #grabs population size
+    adults   = theEND[,7]                  #grabs total number of adults
+    He       = theEND[,4]                  #grabs expected heterozygosity
+    Ho       = theEND[,5]                  #grabs observed heterozygosity
+    sxratio  = theEND[,8]                  #grabs the sex ratio
+    migprop  = theEND[,3]                  #grabs the proportion of migrants in the population
+    nmig     = theEND[,9]                  #grabs the number of migrants in the population
+    fst      = theEND[,10]                 #grabs Fst 
+    fis      = theEND[,6]                  #grabs Fis
+    
     #########################################################    
     #Plot the population size and number of adults over time
     plot(-100, -100 , xlab="Time (generation)", ylab="Population Size", xlim=c(0, max(yr)), ylim=c(0, mxk)) 
