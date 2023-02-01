@@ -95,9 +95,9 @@ ln.alph <- 0.5
 pt.alph <- 1
 diff <- 0.15
 xmin <- 0
-xmax <- 250
+xmax <- 350
 offsets <- c(-0.5, 0, 0.5) #c(-0.2, -0.1, 0, 0.1, 0.2)
-orig.xs <- c(1:250) #c(1, 100, 150, 200, 250)
+orig.xs <- c(1, 100, 150, 200, 250) #c(1:250) #c(1, 100, 150, 200, 250)
 text.size <- 1.75
 pt.cex <- 1.25
 lwd <- 2
@@ -151,7 +151,7 @@ legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19,
 
 ##### Generic plotting code
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho, 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource
-var = 5
+var = 3
 smry = rbind(tab1,tab2,tab3,tab4)
 smry = rbind(tab1,tab2,tab5,tab6)
 range(smry[,var])
@@ -414,3 +414,74 @@ points(yr, LRSmig, col=gt.cols[col])
 
 plot(-100, -100 , xlab="year", ylab="LRS of natives", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSnat)))
 points(yr, LRSnat, col=gt.cols[col])
+
+
+##### Generic plotting code
+#1=yr, 2=nborn, 3=meanLRS, 4=SD, 5=LRSFemale, 6=LRSmale, 7=meanRRS, 8=SDRRS, 9=replicate, 10=parameterset, 11=LRSmigrants, 12=LRSnatives, 13=project, 14=group
+var = 3
+
+range(smry[,var])
+if(anyNA(smry[,var]==TRUE)){
+  hold<- na.omit(smry)
+  smry <- hold
+}
+
+
+ymin <- round(min(smry[,var]), digits = 2)#-.1
+ymax <- round(max(smry[,var]), digits = 2)#+.1
+ln.alph <- 0.5
+pt.alph <- 1.25
+diff <- 0.15
+xmin <- 0
+xmax <- 250
+offsets <- c(-0.5, 0, 0.5, 0.1) #c(-0.2, -0.1, 0, 0.1, 0.2)
+orig.xs <- c(1, 100, 150, 201, 250) #years of interest 
+text.size <- 1.75
+pt.cex <- 1.25
+lwd <- 2
+
+## make plot
+plot(0,0, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+     xaxt = 'n', main = 'fst @comp4', xlab = 'Generation Time', ylab = 'Variable of Interest',
+     cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+#axis(2, at = c(-0.1, 0, 0.1, 0.2), cex.axis = text.size)
+axis(1, at = c(0, 100, 150, 200, 250), labels = c('0','100','150','200', '250'), cex.axis = text.size)
+#abline(h = 0, lty = 2)
+
+col <- 1
+for(c in unique(smry[,10])){
+  print(c)
+  temp <- smry[smry[,10] == c,, drop=FALSE] #separate by parameter set
+  
+  y1<-temp[temp[,1] == orig.xs[1],,]
+  y2<-temp[temp[,1] == orig.xs[2],,]
+  y3<-temp[temp[,1] == orig.xs[3],,]
+  y4<-temp[temp[,1] == orig.xs[4],,]
+  y5<-temp[temp[,1] == orig.xs[5],,]
+  
+  xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+  #columns <- c(18, 19, 20, 21)
+  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var])), 
+         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var])), 
+         lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+  #  for(l in unique(orig.xs)){
+  #    column <- columns[l]
+  #    ## 95% CIs (inappropriate for large sample sizes)
+  #    # arrows(x0 = xs[l], x1 = xs[l], y0 = (mean(temp[,column], na.rm = TRUE) - (sd(temp[,column], na.rm = TRUE)/10*1.96)),
+  #    #        y1 = (mean(temp[,column], na.rm = TRUE) + (sd(temp[,column], na.rm = TRUE)/10*1.96)),
+  #    #        lwd = 2, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+  #  arrows(x0 = OTime[,1], y0 = (OTime[,2])-(sd(OTime[,7])), y1 = (OTime[,2])+(sd(OTime[,7])), lwd = .5, col = "black", code=3, angle=90, length=0.1)
+  
+  #    
+  #    arrows(x0 = xs[l], x1 = xs[l], y0 = quantile(temp[,column], probs = c(0.025,0.975))[1],   #will need to do this for each year of interest
+  #           y1 = quantile(temp[,column], probs = c(0.025,0.975))[2],
+  #           lwd = 2, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+  #  }    
+  col <- col+1
+}
+
+legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','low source het'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.2)
+
+##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
