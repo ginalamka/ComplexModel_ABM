@@ -27,6 +27,10 @@ tab = read.table("ABM_run.1.18.23_d_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.1.18.23_a_all_summary.csv", header=T, sep=",") 
 tab = read.table("run_d_quickie_summary.csv", header=T, sep=",") 
 tab = read.table("run_e_quickie_summary.csv", header=T, sep=",") 
+tab = read.table("run_a_quickie_summary.csv", header=T, sep=",") 
+tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
+tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
+
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
 grp2 <- tab[(tab[,12]>8)&(tab[,12]<17),,drop=FALSE]
@@ -341,6 +345,9 @@ rep = read.table("ABM_run.1.18.23_c_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.18.23_d_all_repsuc_cut.csv", header=T, sep=",")
 rep_ = read.table("run_d_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_e_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 
 
 rep=rep_
@@ -409,10 +416,10 @@ points(yr, SD, col=gt.cols[col])
 plot(-100, -100 , xlab="year", ylab="SD of RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(SDR)))
 points(yr, SDR, col=gt.cols[col])
 
-plot(-100, -100 , xlab="year", ylab="LRS of migrants", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSmig)))
+plot(-100, -100 , xlab="year", ylab="LRS of migrants", xlim=c(min(yr), max(yr)), ylim=c(0, 10)) #max(LRSmig)
 points(yr, LRSmig, col=gt.cols[col])
 
-plot(-100, -100 , xlab="year", ylab="LRS of natives", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSnat)))
+plot(-100, -100 , xlab="year", ylab="LRS of natives", xlim=c(min(yr), max(yr)), ylim=c(0, 5)) #max(LRSnat)
 points(yr, LRSnat, col=gt.cols[col])
 
 
