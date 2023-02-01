@@ -23,15 +23,25 @@ tab = read.table("ABM_run.1.9.23_D_all_summary.csv", header=T, sep=",")
 tab = read.table("ABM_run.1.11.23_B_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.11.23_E_all_summary.csv", header=T, sep=",") 
 tab = read.table("ABM_run.1.18.23_c_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.18.23_d_all_summary.csv", header=T, sep=",") 
+tab = read.table("ABM_run.1.18.23_a_all_summary.csv", header=T, sep=",") 
+tab = read.table("run_d_quickie_summary.csv", header=T, sep=",") 
+tab = read.table("run_e_quickie_summary.csv", header=T, sep=",") 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
 grp2 <- tab[(tab[,12]>8)&(tab[,12]<17),,drop=FALSE]
 grp3 <- tab[tab[,12]>=17,,drop=FALSE]
 
 grp1a <- grp1[grp1[,12]<=4,,drop=FALSE]
-grp1b <- grp1[grp1[,12]%NOTin%grp1a[,12],,drop=FALSE]
+grp1b <- grp1[grp1[,12]>4,,drop=FALSE]
 
-smry = grp1b
+grp1 <- tab[tab$maxage==3,,drop=FALSE]
+grp1a <- grp1[grp1$broodsize==4,,drop=FALSE]
+grp1b <- grp1[grp1$broodsize==6,,drop=FALSE]
+
+grp1 <- tab[tab$r0==0.1,,drop=FALSE]
+
+smry = tab
 
 #Data
 {
@@ -74,8 +84,8 @@ smry <- tab   #compX
 library(ghibli)
 library(scales)
 library(colorspace)
-gt.cols <- qualitative_hcl(8, "Dark2") #ghibli_palette('PonyoMedium')#[4]
-lt.gt.col <- qualitative_hcl(8, "Pastel1") #ghibli_palette('PonyoLight')[4]
+gt.cols <- qualitative_hcl(4, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(4, "Pastel1") #ghibli_palette('PonyoLight')[4]
 demoplot(gt.cols, "bar")
 demoplot(lt.gt.col, "bar")
 
@@ -239,7 +249,7 @@ points(yr, n, col="firebrick")
 dev.off()
 
 png("Ho_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1)))
+plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1))) 
 points(yr,Ho,col=gt.cols[col])
 points(tab5[,1],tab5[,5],col="dodgerblue")
 points(tab0[,1],tab0[,5],col="firebrick")
@@ -328,7 +338,12 @@ rep = read.table("ABM_run.1.11.23_C_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.11.23_B_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.11.23_E_all_repsuc.csv", header=T, sep=",")
 rep = read.table("ABM_run.1.18.23_c_all_repsuc.csv", header=T, sep=",")
+rep = read.table("ABM_run.1.18.23_d_all_repsuc_cut.csv", header=T, sep=",")
+rep_ = read.table("run_d_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_e_quickie_repsuc.csv", header=T, sep=",")
 
+
+rep=rep_
 rep=na.omit(rep)
 
 het1<- rep[rep[,10]<=4,,drop=FALSE]
@@ -341,6 +356,9 @@ library(ghibli)
 library(scales)
 gt.cols <- ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- ghibli_palette('PonyoLight')[4]
+library(colorspace)
+gt.cols <- qualitative_hcl(4, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(4, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 col = rep[,10]  #color by parameter
 yr  = rep[,1]   #year
@@ -360,11 +378,11 @@ rep7[,10] <- "g"
 rep8[,10] <- "h"
 rep9[,10] <- "i"
 
-legend('center', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols[5:8], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
+legend('topright', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols[1:4], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
 #miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
 
 plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
-points(yr, LRS, col=gt.cols[col])
+points(yr, LRS, col=gt.cols[col], pch=19)
 points(rep8[,1],rep8[,3], col="dodgerblue")
 points(rep9[,1],rep9[,3], col="firebrick")
 all<- rbind(rep7,rep8,rep9)
@@ -375,7 +393,7 @@ points(rep8[,1],rep8[,2], col="dodgerblue")
 points(rep9[,1],rep9[,2], col="firebrick")
 
 plot(-100, -100 , xlab="year", ylab="RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(RRS)))
-points(yr, RRS, col=gt.cols[col])
+points(yr, RRS, col=gt.cols[col], pch=19)
 points(rep8[,1],rep8[,7], col="dodgerblue")
 points(rep9[,1],rep9[,7], col="firebrick")
 
