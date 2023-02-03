@@ -270,12 +270,45 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         numboff = pp[[1]]
         K = pp[[2]]
         if(numboff >= 1){
-          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2) #still needs work 
+          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp) #still needs work 
           pop = ttt[[1]]
           bb = ttt[[2]]
           sz = sz + bb
         }else if(numboff <= 0){
           print(paste("No new babies, skip breed"))
+          #still fill out Ne count table
+          {
+          NE = matrix(nrow=1, ncol=12)
+          colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
+          
+          NE[1,1] = y                             #grab year
+          NE[1,2] = 0                             #grab n unique effective moms
+          NE[1,3] = 0                             #grab n unique effective dads
+          NE[1,4] = 0                             #grab n babies
+          
+          alive = pop[pop[,8]==1,,drop=FALSE]
+          adult = alive[alive[,4]!=0,,drop=FALSE]
+          adult_f = adult[adult[,5]==0,,drop=FALSE]
+          adult_m = adult[adult[,5]==1,,drop=FALSE]
+          NE[1,5] = nrow(adult)                   #grab n alive adults
+          NE[1,6] = nrow(adult_f)                 #grab n possible moms
+          NE[1,7] = nrow(adult_m)                 #grab n possible dads
+          
+          NE[1,8] = 0                             #grab number of migrant parents
+          
+          NE[1,9] = r
+          NE[1,10] = rr
+          NE[1,11] = prj
+          NE[1,12] = grp
+          
+          remove(alive, adult, adult_f, adult_m)
+          
+          if(isTRUE(y == 1 && r == 1 && rr == 1)){
+            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE)
+          }else{
+            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+          }
+          }
           #next
         }
         pop = AgeDeath(pop, maxage, y)                #kill indv based on age

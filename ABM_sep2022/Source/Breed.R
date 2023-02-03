@@ -1,4 +1,4 @@
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp){
  
   #randomly select pairings from pairs so that there are double the number of pairs than offspring needed to be generated (since broodsize can be 0)
   if(is.null(nrow(pairs))==TRUE){
@@ -160,12 +160,44 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     }
     babies[,12] <- mSNP
     #note this might break when bb=1; need to figure that out
-      
+    
+    NE = matrix(nrow=1, ncol=12)
+    colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
+    
+    NE[1,1] = y                             #grab year
+    NE[1,2] = length(unique(babies[,2]))    #grab n unique effective moms
+    NE[1,3] = length(unique(babies[,3]))    #grab n unique effective dads
+    NE[1,4] = nrow(babies)                  #grab n babies
+    
+    alive = pop[pop[,8]==1,,drop=FALSE]
+    adult = alive[alive[,4]!=0,,drop=FALSE]
+    adult_f = adult[adult[,5]==0,,drop=FALSE]
+    adult_m = adult[adult[,5]==1,,drop=FALSE]
+    NE[1,5] = nrow(adult)                   #grab n alive adults
+    NE[1,6] = nrow(adult_f)                 #grab n possible moms
+    NE[1,7] = nrow(adult_m)                 #grab n possible dads
+    
+    mig_f = babies[babies[,2]<=-2,,drop=FALSE]
+    mig_m = babies[babies[,3]<=-2,,drop=FALSE]
+    NE[1,8] = length(unique(mig_f[,2])) + length(unique(mig_m[,3]))    #grab number of migrant parents
+    
+    NE[1,9] = r
+    NE[1,10] = rr
+    NE[1,11] = prj
+    NE[1,12] = grp
+    
+    if(isTRUE(y == 1 && r == 1 && rr == 1)){
+      write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE)
+    }else{
+      write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+    }
+    
     babies = cbind(babies, babygeno)
     pop = rbind(pop, babies)
 
     remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents, pairings, 
-           t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, mut, nbabes, SZ, rm)
+           t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, mut, nbabes, SZ, rm, 
+           NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
     
     return(list(pop,bb))
   }

@@ -1,4 +1,4 @@
-FitBreed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2){
+FitBreed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp){
  #this is the same as Breed.R EXCEPT instead of randomly choosing babies, it chooses the babies with highest relative fitness (aka Ho) -- consider if makes sense to rank based on propmig alleles!
  #note that this function will take longer than Breed.R because it is generating more babies than necessary!
   #also remember that the liklihood of parents having max fecundity increases with increasing Ho in this case rather than randomly!
@@ -183,10 +183,43 @@ FitBreed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu
         ##ERROR WILL CONTINUE ON LINE 79 UNTIL RESOLVED
       }
       
+      NE = matrix(nrow=1, ncol=12)
+      colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
+      
+      NE[1,1] = y                             #grab year
+      NE[1,2] = length(unique(babies[,2]))    #grab n unique effective moms
+      NE[1,3] = length(unique(babies[,3]))    #grab n unique effective dads
+      NE[1,4] = nrow(babies)                  #grab n babies
+      
+      alive = pop[pop[,8]==1,,drop=FALSE]
+      adult = alive[alive[,4]!=0,,drop=FALSE]
+      adult_f = adult[adult[,5]==0,,drop=FALSE]
+      adult_m = adult[adult[,5]==1,,drop=FALSE]
+      NE[1,5] = nrow(adult)                   #grab n alive adults
+      NE[1,6] = nrow(adult_f)                 #grab n possible moms
+      NE[1,7] = nrow(adult_m)                 #grab n possible dads
+      
+      mig_f = babies[babies[,2]<=-2,,drop=FALSE]
+      mig_m = babies[babies[,3]<=-2,,drop=FALSE]
+      NE[1,8] = length(unique(mig_f[,2])) + length(unique(mig_m[,3]))    #grab number of migrant parents
+      
+      NE[1,9] = r
+      NE[1,10] = rr
+      NE[1,11] = prj
+      NE[1,12] = grp
+      
+      if(isTRUE(y == 1 && r == 1 && rr == 1)){
+        write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE)
+      }else{
+        write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+      }
+      
+      
     pop = rbind(pop, babies)
 
     remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents, pairings, 
-           t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, mut, nbabes, SZ, tempo)
+           t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, mut, nbabes, SZ, tempo, 
+           NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
     
     return(list(pop,bb))
   }
