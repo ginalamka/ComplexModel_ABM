@@ -30,6 +30,7 @@ FitnessDeath = function(pop, maturity, y){
       
     }else{
       print(paste("not enough mature for fit-induced death"))
+      nkilled = NULL
     }
 
 
