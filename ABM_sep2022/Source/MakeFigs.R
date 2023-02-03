@@ -244,8 +244,14 @@ col      = smry[,12]
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
+pm = smry[smry$propmig!=0,,drop=FALSE]
+plot(pm$propmig~pm$Ho,col=gt.cols[col], pch=16)
+#how does the prop or migrants influence the heterozygosity?
+y<-lmer(Ho~propmig + (1|parameterset), data=smry)
+y<-lmer(Ho~propmig+yr*propmig + (1|parameterset), data=smry)
+summary(y)
 
-
+#think about propmig~LRS also -- will need to merge the datasets
 
 png("popsize_overtime.png")
 plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
