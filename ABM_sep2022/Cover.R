@@ -10,16 +10,16 @@ prj = "_proj_"
 grp = "_group_"
 
 #parameters
-k.V           = 1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
-nSNP.V        = 1000  #scaleup                #number of SNPs simulated, used to track drift
-miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
-LBhet.V       = c(0.45, 0.07) #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
+k.V           = 100 #1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
+nSNP.V        = 100 #1000  #scaleup                #number of SNPs simulated, used to track drift
+miggy.V       = "a" #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
+LBhet.V       = 0.45 #c(0.45, 0.07) #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
 maxage.V      = 9 #c(15, 3) #9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2 #c(4, 6)  #2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
-years.V       = 350  #scaleup               #total run time; 200 year run following 50 year stabilization period
+years.V       = 35 #350  #scaleup               #total run time; 200 year run following 50 year stabilization period
 r0.V          = 1 #c(1, 0.5, 0.1)  #c(1, .8, 1.2) #0.1 #c(0.1, 0.2, 0.5)                 #per capita growth rate #0/1 is stable, <0/1 is decreasing, >0/1 is increasing - currently checking cuz r0+1 in log growth eq
-nSNP.mig.V    = 100                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
+nSNP.mig.V    = 10 #100                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
 nSNP.cons.V   = 0        #number of conserved alleles within species -- used to track mutation
 #REMOVED##ratemort.V    = 1/(maxage.V*2) #note, I dont think this is used for anything anymore! ###0.2225 #??##(1/(maxage.V+2))      #proportion of adults that die each year --CHECK WITH JANNA WHERE THIS NUMBER CAME FROM; current value of .2225 is from Waser and Jones 1991
 ### when adding variables already marked out, don't forget to add 3 times below, on RunModel, and other functions that need the variable fed in
