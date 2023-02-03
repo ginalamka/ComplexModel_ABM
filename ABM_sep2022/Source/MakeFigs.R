@@ -30,6 +30,8 @@ tab = read.table("run_e_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_a_quickie_summary.csv", header=T, sep=",") 
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
+tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
+tab = read.table("run_c_quickie_summary.csv", header=T, sep=",")
 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
@@ -45,7 +47,7 @@ grp1b <- grp1[grp1$broodsize==6,,drop=FALSE]
 
 grp1 <- tab[tab$r0==0.1,,drop=FALSE]
 
-smry = tab
+smry = grp1b
 
 #Data
 {
@@ -240,7 +242,7 @@ rep      = smry[,11]  #replicate number
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = smry[,12]
+col      = smry[,12]-4
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
@@ -354,6 +356,8 @@ rep = read.table("run_e_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_c_quickie_repsuc.csv", header=T, sep=",")
 
 
 rep=rep_
@@ -373,7 +377,7 @@ library(colorspace)
 gt.cols <- qualitative_hcl(4, "Dark2") #ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- qualitative_hcl(4, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
-col = rep[,10]  #color by parameter
+col = rep[,10]-4  #color by parameter
 yr  = rep[,1]   #year
 n   = rep[,2]   #n born
 LRS = rep[,3]   #mean LRS
@@ -431,53 +435,58 @@ points(yr, LRSnat, col=gt.cols[col])
 
 ##### Generic plotting code
 #1=yr, 2=nborn, 3=meanLRS, 4=SD, 5=LRSFemale, 6=LRSmale, 7=meanRRS, 8=SDRRS, 9=replicate, 10=parameterset, 11=LRSmigrants, 12=LRSnatives, 13=project, 14=group
-var = 3
+var = 7
 
-range(smry[,var])
-if(anyNA(smry[,var]==TRUE)){
-  hold<- na.omit(smry)
-  smry <- hold
+range(rep[,var])
+if(anyNA(rep[,var]==TRUE)){
+  hold<- na.omit(rep)
+  rep <- hold
 }
 
+gt.cols <- qualitative_hcl(8, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(8, "Pastel1")
 
-ymin <- round(min(smry[,var]), digits = 2)#-.1
-ymax <- round(max(smry[,var]), digits = 2)#+.1
+
+ymin <- round(min(rep[,var]), digits = 2)#-.1
+ymax <- round(max(rep[,var]), digits = 2)#+.1
 ln.alph <- 0.5
 pt.alph <- 1.25
 diff <- 0.15
 xmin <- 0
-xmax <- 250
+xmax <- 350
 offsets <- c(-0.5, 0, 0.5, 0.1) #c(-0.2, -0.1, 0, 0.1, 0.2)
-orig.xs <- c(1, 100, 150, 201, 250) #years of interest 
+orig.xs <- c(1, 100, 150, 201, 250, 300, 345) #years of interest 
 text.size <- 1.75
 pt.cex <- 1.25
 lwd <- 2
 
 ## make plot
 plot(0,0, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
-     xaxt = 'n', main = 'fst @comp4', xlab = 'Generation Time', ylab = 'Variable of Interest',
+     xaxt = 'n', main = 'RRS with maxage=3', xlab = 'Generation Time', ylab = 'RRS',
      cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
 #axis(2, at = c(-0.1, 0, 0.1, 0.2), cex.axis = text.size)
-axis(1, at = c(0, 100, 150, 200, 250), labels = c('0','100','150','200', '250'), cex.axis = text.size)
+axis(1, at = c(0, 100, 150, 200, 250, 300, 350), labels = c('0','100','150','200', '250', '300', '350'), cex.axis = text.size)
 #abline(h = 0, lty = 2)
 
 col <- 1
-for(c in unique(smry[,10])){
-  print(c)
-  temp <- smry[smry[,10] == c,, drop=FALSE] #separate by parameter set
+for(c in unique(rep[,10])){
+  #print(c)
+  temp <- rep[rep[,10] == c,, drop=FALSE] #separate by parameter set
   
   y1<-temp[temp[,1] == orig.xs[1],,]
   y2<-temp[temp[,1] == orig.xs[2],,]
   y3<-temp[temp[,1] == orig.xs[3],,]
   y4<-temp[temp[,1] == orig.xs[4],,]
   y5<-temp[temp[,1] == orig.xs[5],,]
+  y6<-temp[temp[,1] == orig.xs[6],,]
+  y7<-temp[temp[,1] == orig.xs[7],,]
   
   xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
   #columns <- c(18, 19, 20, 21)
-  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
-  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
-  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var])), 
-         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var])), 
+  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var]), mean(y6[,var])-sd(y6[,var]), mean(y7[,var])-sd(y7[,var])), 
+         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var]), mean(y6[,var])+sd(y6[,var]), mean(y7[,var])+sd(y7[,var])), 
          lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
   #  for(l in unique(orig.xs)){
   #    column <- columns[l]
