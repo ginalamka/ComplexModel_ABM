@@ -185,12 +185,12 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
       #MOVEDTORUNMODEL##sourceident[,1] = -1
       #MOVEDTORUNMODEL##fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
       
-      #REMOVEDTOSPEEDUP##fstdatavsource <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
+      fstdatavsource <- rbind(fstdata, fstsource)                                              #merge current year and initialized year to one matrix for calculations
       
-      #REMOVEDTOSPEEDUP##fstdatavsource <- as.data.frame(fstdatavsource)
-      #REMOVEDTOSPEEDUP##calcvsource <-wc(fstdatavsource, diploid=TRUE, pol=0) 
-      #REMOVEDTOSPEEDUP##FIN[f,14] <- calcvsource$FST
-      #REMOVEDTOSPEEDUP##FIN[f,15] <- calcvsource$FIS
+      fstdatavsource <- as.data.frame(fstdatavsource)
+      calcvsource <-wc(fstdatavsource, diploid=TRUE, pol=0) 
+      FIN[f,14] <- calcvsource$FST
+      #FIN[f,15] <- calcvsource$FIS
     }
     if(y == 0){
       #do the same to the initialized source pop -- for comparison
