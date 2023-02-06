@@ -127,15 +127,18 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     }
     
     if(mutate == 1){  #if mutate is turned "on"
-      for(x in 1:nrow(babygeno)){    #iterate over indv
-        mut <- sample(c("Y","N"), SNPS, replace = TRUE, prob = c(mu,1-mu))   #SNPS if for all SNPs, nSNP for only drift SNPs
-        init <- babygeno[x,] ## keep track of the 'ancestral' state within this individual
-        babygeno[x, which(mut=='Y' & babygeno[x,]==1)] <- 0
+      drift <- babygeno[,1:(nSNP*2)]
+      miggeno <- babygeno[,(nSNP*2+1):SNPS]
+      for(x in 1:nrow(drift)){    #iterate over indv
+        mut <- sample(c("Y","N"), nSNP*2, replace = TRUE, prob = c(mu,1-mu))   #SNPS if for all SNPs, nSNP for only drift SNPs
+        init <- drift[x,] ## keep track of the 'ancestral' state within this individual
+        drift[x, which(mut=='Y' & drift[x,]==1)] <- 0
         ## if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
         ## then set its index in mut to 'N', indicating that no further mutations should happen in this round.
         mut[which(mut=='Y' & init==1)] <- 'N'
-        babygeno[x, which(mut=='Y' & babygeno[x,]==0)] <- 1
+        drift[x, which(mut=='Y' & drift[x,]==0)] <- 1
       }
+      babygeno <- cbind(drift, miggeno)
     }else{
       print(paste("no mutation"))
     }
