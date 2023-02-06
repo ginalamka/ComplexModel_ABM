@@ -11,7 +11,7 @@ edyr          = 150 #year to end pop decline, first year at low pop size
 nwk           = 250 #pop size after decline -- probs makes sense to keep these even in vary decline years and decline rate. should end @ same pt for all pop sizes
 dur           = 50  #duration of small pop size before pop growth "
 
-PopSizeNext = function(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K){
+PopSizeNext = function(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters, r, K){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #remove dead indv
   alive = pop[which(pop[,1]%NOTin%dead), , drop = FALSE]
   #since only returning numboff, dont need to rbind dead and alive into pop

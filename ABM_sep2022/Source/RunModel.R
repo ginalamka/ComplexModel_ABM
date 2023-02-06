@@ -237,14 +237,14 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, endyr, nwk, dur, y, years, r0, parameters, r)
+        #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, edyr, nwk, dur, y, years, r0, parameters, r)
         #REMOVE##pop = tttt[[1]]
         #REMOVE##k = tttt[[2]]
         
         #REMEMBER THE NEED TO TRACK NEW K !!!
         
         #pop = RandomDeath(pop)                  #random mortality
-        tt = Migrate(pop, source, y, miggy, styr, endyr, dur)             #subpop migration
+        tt = Migrate(pop, source, y, miggy, styr, edyr, dur)             #subpop migration
         pop = tt[[1]]
         mig = tt[[2]]  #0
         sz = sz + mig #may need to edit since dead are not being removed from pop
@@ -266,7 +266,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         #REMOVED##   print(paste("Only migrants available as parents"))
         #REMOVED##   break
         #REMOVED## }
-        pp = PopSizeNext(pop, k, r0, maturity, y, styr, endyr, nwk, dur, parameters, r, K) #ADD NEW K MODIFIER
+        pp = PopSizeNext(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters, r, K) #ADD NEW K MODIFIER
         numboff = pp[[1]]
         K = pp[[2]]
         if(numboff >= 1){
