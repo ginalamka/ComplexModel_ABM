@@ -6,7 +6,7 @@
 #also do a probability of getting 0 or 1 migrants per year
 #the worry is that if the migranion is too high, the pops might not even be considered seperate
 
-Migrate = function(pop, source, y, miggy){
+Migrate = function(pop, source, y, miggy, styr, endyr, dur){
   #select number of migrants, from 1-5
 #  N = sum(pop[,8])  #gets census size
 #  Nmig = round(N*.05)  #5% of N will be new migrants == vary this later == perhaps as a parameter???
@@ -33,7 +33,7 @@ Migrate = function(pop, source, y, miggy){
     }
   }else if(miggy == "b"){
     if(y == 175){
-      mig = 50
+      mig = 150
       
       print(paste("there are", mig, "migrants this year"))
       
@@ -52,7 +52,7 @@ Migrate = function(pop, source, y, miggy){
   }else if(miggy == "c"){
     if(y == 175|y == 201|y==225){
       # if(y == 175){
-      mig = 25   #25 #1  #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
+      mig = 75   #25 #1  #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
       #note that the 1:mig might affect the number. pay attention to this.
       
       print(paste("there are", mig, "migrants this year"))
@@ -68,6 +68,42 @@ Migrate = function(pop, source, y, miggy){
         #remove migrant from source
         source = source[-migrant,]
       } 
+    }else{mig=0}
+  }else if(miggy == "d"){
+    if(y <= styr | y >= edyr + dur){
+      mig = 1
+      
+      print(paste("there are", mig, "migrants this year"))
+      
+      for(m in 1:mig){
+        #select migrant without replacement
+        migrant = sample(1:nrow(source), 1, replace = F)
+        
+        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+        
+        #take migrant from source and put into pop
+        pop = rbind(pop, source[migrant,])
+        #remove migrant from source
+        source = source[-migrant,]
+      }
+    }else{mig=0}
+  }else if(miggy == "e"){
+    if(y >= edyr + dur){
+      mig = 1
+      
+      print(paste("there are", mig, "migrants this year"))
+      
+      for(m in 1:mig){
+        #select migrant without replacement
+        migrant = sample(1:nrow(source), 1, replace = F)
+        
+        source[migrant,9] <- y   #change gen born to the generation the migrant entered the pop
+        
+        #take migrant from source and put into pop
+        pop = rbind(pop, source[migrant,])
+        #remove migrant from source
+        source = source[-migrant,]
+      }
     }else{mig=0}
   }else{
     mig = 0
