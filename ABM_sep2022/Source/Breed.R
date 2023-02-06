@@ -127,8 +127,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     }
     
     if(mutate == 1){  #if mutate is turned "on"
-      drift <- babygeno[,1:(nSNP*2)]
-      miggeno <- babygeno[,(nSNP*2+1):SNPS]
+      drift <- babygeno[,1:(nSNP*2),drop=FALSE]
+      miggeno <- babygeno[,(nSNP*2+1):SNPS,drop=FALSE]
       for(x in 1:nrow(drift)){    #iterate over indv
         mut <- sample(c("Y","N"), nSNP*2, replace = TRUE, prob = c(mu,1-mu))   #SNPS if for all SNPs, nSNP for only drift SNPs
         init <- drift[x,] ## keep track of the 'ancestral' state within this individual
