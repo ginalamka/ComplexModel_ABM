@@ -31,7 +31,7 @@ tab = read.table("run_a_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
-tab = read.table("run_c_quickie_summary.csv", header=T, sep=",")
+smry = read.table("run_u_quickie_summary.csv", header=T, sep=",")
 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
@@ -47,7 +47,7 @@ grp1b <- grp1[grp1$broodsize==6,,drop=FALSE]
 
 grp1 <- tab[tab$r0==0.1,,drop=FALSE]
 
-smry = grp1b
+smry = tab
 
 #Data
 {
@@ -242,7 +242,7 @@ rep      = smry[,11]  #replicate number
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = smry[,12]-4
+col      = smry[,12] #-4
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
@@ -357,11 +357,12 @@ rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_c_quickie_repsuc.csv", header=T, sep=",")
-
+rep = read.table("run_u_quickie_repsuc.csv", header=T, sep=",")
+rep[is.na(rep)] <- 0
 
 rep=rep_
 rep=na.omit(rep)
+
 
 het1<- rep[rep[,10]<=4,,drop=FALSE]
 het2<- rep[(rep[,10]>4)&(rep[,10]<9),,drop=FALSE]
@@ -377,7 +378,7 @@ library(colorspace)
 gt.cols <- qualitative_hcl(4, "Dark2") #ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- qualitative_hcl(4, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
-col = rep[,10]-4  #color by parameter
+col = rep[,10] #-4  #color by parameter
 yr  = rep[,1]   #year
 n   = rep[,2]   #n born
 LRS = rep[,3]   #mean LRS
@@ -387,8 +388,8 @@ LRSm= rep[,6]   #male LRS
 RRS = rep[,7]   #mean RRS
 SDR = rep[,8]   #SD of RRS
 rep = rep[,9]   #replicate
-LRSmig=rep[,11] #LRS of migrants
-LRSnat=rep[,12] #LRS of natives
+LRSmig = rep[,11] #LRS of migrants
+LRSnat = rep[,12] #LRS of natives
  
 #give each parameter set a unique identifier
 rep7[,10] <- "g"
@@ -507,3 +508,14 @@ for(c in unique(rep[,10])){
 legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','low source het'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.2)
 
 ##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
+
+
+#############################################################################3
+#############################################################################
+ne = read.table("run_u_quickie_necounts.csv", header=T, sep=",")
+
+
+library(lme4)
+y<-lmer(Ho~propmig + (1|parameterset), data=smry)
+
+
