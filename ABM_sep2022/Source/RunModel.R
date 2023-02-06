@@ -244,7 +244,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         #REMEMBER THE NEED TO TRACK NEW K !!!
         
         #pop = RandomDeath(pop)                  #random mortality
-        tt = Migrate(pop, source, y, miggy)             #subpop migration
+        tt = Migrate(pop, source, y, miggy, styr, endyr, dur)             #subpop migration
         pop = tt[[1]]
         mig = tt[[2]]  #0
         sz = sz + mig #may need to edit since dead are not being removed from pop
