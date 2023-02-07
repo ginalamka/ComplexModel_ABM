@@ -518,4 +518,46 @@ ne = read.table("run_u_quickie_necounts.csv", header=T, sep=",")
 library(lme4)
 y<-lmer(Ho~propmig + (1|parameterset), data=smry)
 
+max(ne[,3])
 
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, 350), ylim=c(0, 600))
+points(ne[,1], ne[,2], col="pink")  #effective moms
+points(ne[,1], ne[,3], col="blue")  #effective dads
+
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, 350), ylim=c(0, 600))
+points(ne[,1], ne[,6], col="pink")  #possible moms
+points(ne[,1], ne[,7], col="blue")  #possible dads
+
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, 350), ylim=c(0, 30))
+points(ne[,1], ne[,8], col="pink")  #effective migrants
+
+for(i in 1:nrow(ne)){
+  NE <- (4*ne[i,2]*ne[i,3])/(ne[i,2]+ne[i,3])           #Ne = 4*number males*number females/number males+number females
+  ne[i,10] <- NE
+}
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, 350), ylim=c(0, 300))
+points(ne[,1], ne[,10], col="pink")
+points(ne[,1], ne[,8], col="purple")
+
+for(j in 1:nrow(ne)){
+  FST <- 1/(1+(4*ne[j,10]*ne[j,8]))                     #1/(1+4*effective pop size*[effective] migrants) 
+  ne[j,11] <- FST
+}
+plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, .1))
+points(ne[,1], ne[,11], col= "purple")
+
+
+
+smry2 <- smry[smry[,12]==2,,drop=FALSE]
+smry2<-smry2[smry2[,1]!=0,,drop=FALSE]
+ne2 <- ne[ne[,9]==2,,drop=FALSE]
+plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, .02))
+points(ne2[,1], ne2[,11], col= "orange")
+
+
+for(e in 1:nrow(ne)){
+  RAT <- ne[e,10]/ne[e,5]                                #ratio Ne/Nc == small Ne relative to Nc (that is, small Ne/Nc ratio) will lose gene diversity more quickly 
+  ne[e,12] <- RAT
+}
+plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, 1))
+points(ne[,1], ne[,11], col= "yellow")
