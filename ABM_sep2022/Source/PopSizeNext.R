@@ -24,9 +24,11 @@ PopSizeNext = function(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters
   
   if(y < styr){               #maintain k for the burn in period
     K = k
+    R0 = r0
   }else if(y > edyr + dur){   
     deltaK = abs(round((k - nwk)/(styr - edyr)))
     K = K + deltaK
+    R0 = r0
     
     if(K > parameters$k[r]){  #check to make sure K is not greater than the original k in Cover.R
       K <- parameters$k[r]
@@ -39,10 +41,11 @@ PopSizeNext = function(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters
     
   }else{                       #if during the duration period of bottleneck, maintain small pop size
     K = nwk
+    R0 = r0/2    #introduce allee effect, but only at lowest pop size
   }
   
   #calculate the new pop size with the logistic growth equation
-  Ntt = Nt*(1+r0*(1-(Nt/K))) #logistic
+  Ntt = Nt*(1+R0*(1-(Nt/K))) #logistic
   #r0 is the per capita growth rate, set as a parameter in Cover.R
   
   #add Density Independent variance in growth
