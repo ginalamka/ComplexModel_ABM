@@ -31,7 +31,7 @@ tab = read.table("run_a_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
-smry = read.table("run_u_quickie_summary.csv", header=T, sep=",")
+smry = read.table("run_6_quickie_summary.csv", header=T, sep=",")
 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
@@ -252,7 +252,7 @@ plot(pm$propmig~pm$Ho,col=gt.cols[col], pch=16)
 y<-lmer(Ho~propmig + (1|parameterset), data=smry)
 y<-lmer(Ho~propmig+yr*propmig + (1|parameterset), data=smry)
 summary(y)
-
+http://127.0.0.1:19921/graphics/plot_zoom_png?width=1147&height=900
 #think about propmig~LRS also -- will need to merge the datasets
 
 png("popsize_overtime.png")
@@ -262,7 +262,7 @@ dev.off()
 
 png("Ho_overtime.png")
 plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1))) 
-points(yr,Ho,col=gt.cols[col])
+points(yr,smry[,18],col=gt.cols[col])
 points(tab5[,1],tab5[,5],col="dodgerblue")
 points(tab0[,1],tab0[,5],col="firebrick")
 points(tab6[,1],tab6[,5],col="gold")
@@ -309,8 +309,8 @@ points(tab9[,1],tab9[,13],col="springgreen")
 dev.off()
 
 png("fstVSource_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, 0.25))
-points(yr,fstvs,col="goldenrod")
+plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, max(fstvs)+0.05))
+points(yr,fstvs,col=gt.cols[col])
 points(tab5[,1],tab5[,14],col="dodgerblue")
 points(tab0[,1],tab0[,14],col="firebrick")
 points(tab6[,1],tab6[,14],col="gold")
@@ -357,7 +357,7 @@ rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_u_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_6_quickie_repsuc.csv", header=T, sep=",")
 rep[is.na(rep)] <- 0
 
 rep=rep_
