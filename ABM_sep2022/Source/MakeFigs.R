@@ -31,7 +31,11 @@ tab = read.table("run_a_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
-smry = read.table("run_6_quickie_summary.csv", header=T, sep=",")
+smry = read.table("run_2_quickie_summary.csv", header=T, sep=",")
+
+library(colorspace)
+gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(6, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
@@ -357,7 +361,7 @@ rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_6_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_2_quickie_repsuc.csv", header=T, sep=",")
 rep[is.na(rep)] <- 0
 
 rep=rep_
@@ -375,8 +379,8 @@ library(scales)
 gt.cols <- ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- ghibli_palette('PonyoLight')[4]
 library(colorspace)
-gt.cols <- qualitative_hcl(4, "Dark2") #ghibli_palette('PonyoMedium')#[4]
-lt.gt.col <- qualitative_hcl(4, "Pastel1") #ghibli_palette('PonyoLight')[4]
+gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(6, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 col = rep[,10] #-4  #color by parameter
 yr  = rep[,1]   #year
@@ -396,7 +400,7 @@ rep7[,10] <- "g"
 rep8[,10] <- "h"
 rep9[,10] <- "i"
 
-legend('topright', legend = c('mig=0', 'mig=1migpergen','mig=1xof50@175','mig=3xpf25@175|201|225'), col = gt.cols[1:4], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
+legend('topright', legend = c('mig=0','mig=1migpergen','mig=300@yr 175', 'mig=100@yr 175,201,225','mig=1migpergen y <100 & >150','mig=2migpergen y>150'), col = gt.cols[1:4], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
 #miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
 
 plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
@@ -419,7 +423,7 @@ plot(-100, -100 , xlab="year", ylab="LRS of females", xlim=c(min(yr), max(yr)), 
 points(yr, LRSf, col=gt.cols[col])
 
 plot(-100, -100 , xlab="year", ylab="LRS of males", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRSm)))
-points(yr, LRSm, col=gt.cols[col])
+points(yr, LRSm, col=gt.cols[col], pch=16)
 
 plot(-100, -100 , xlab="year", ylab="SD of LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(SD)))
 points(yr, SD, col=gt.cols[col])
@@ -512,7 +516,7 @@ legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','l
 
 #############################################################################3
 #############################################################################
-ne = read.table("run_u_quickie_necounts.csv", header=T, sep=",")
+ne = read.table("run_7_quickie_necounts.csv", header=T, sep=",")
 
 
 library(lme4)
@@ -561,3 +565,8 @@ for(e in 1:nrow(ne)){
 }
 plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, 1))
 points(ne[,1], ne[,11], col= "yellow")
+
+
+plot(ne[,10]~ne[,22])
+plot(ne[,11]~ne[,22])
+plot(ne[,12]~ne[,22])     <-- interestinggg
