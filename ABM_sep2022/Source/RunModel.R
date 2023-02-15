@@ -58,7 +58,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           popgen[kk,columns[l]]   = 0
           popgen[kk,columns[l]+1] = 0
           next
-        }else if(gtype[kk]==1){           #hetero (0,1)
+        }else if(gtype[kk]==2){           #hetero (0,1)
           popgen[kk,columns[l]]   = 0
           popgen[kk,columns[l]+1] = 1
         }else{                            #homo (1,1)
@@ -154,7 +154,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           sourcegen[ss,columns[l]]   = 0
           sourcegen[ss,columns[l]+1] = 0
           next
-        }else if(gtype[ss]==1){           #hetero (0,1)
+        }else if(gtype[ss]==2){           #hetero (0,1)
           sourcegen[ss,columns[l]]   = 0
           sourcegen[ss,columns[l]+1] = 1
         }else{                            #homo (1,1)
