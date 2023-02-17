@@ -31,7 +31,7 @@ tab = read.table("run_a_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
-smry = read.table("run_2_quickie_summary.csv", header=T, sep=",")
+smry = read.table("run_cc_quickie_summary.csv", header=T, sep=",")
 
 library(colorspace)
 gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
@@ -361,7 +361,7 @@ rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_2_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_cc_quickie_repsuc.csv", header=T, sep=",")
 rep[is.na(rep)] <- 0
 
 rep=rep_
@@ -516,7 +516,13 @@ legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','l
 
 #############################################################################3
 #############################################################################
-ne = read.table("run_7_quickie_necounts.csv", header=T, sep=",")
+ne = read.table("run_aa_quickie_necounts.csv", header=T, sep=",")
+
+library(colorspace)
+gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(6, "Pastel1") #ghibli_palette('PonyoLight')[4]
+
+col = ne[,9] 
 
 
 library(lme4)
@@ -547,8 +553,8 @@ for(j in 1:nrow(ne)){
   FST <- 1/(1+(4*ne[j,10]*ne[j,8]))                     #1/(1+4*effective pop size*[effective] migrants) 
   ne[j,11] <- FST
 }
-plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, .1))
-points(ne[,1], ne[,11], col= "purple")
+plot(-100, -100 , xlab="year", ylab="1/1+(4*Ne*Nm)", xlim=c(0, 350), ylim=c(0, .065))
+points(ne[,1], ne[,11], col= gt.cols[col])
 
 
 
@@ -563,10 +569,19 @@ for(e in 1:nrow(ne)){
   RAT <- ne[e,10]/ne[e,5]                                #ratio Ne/Nc == small Ne relative to Nc (that is, small Ne/Nc ratio) will lose gene diversity more quickly 
   ne[e,12] <- RAT
 }
-plot(-100, -100 , xlab="year", ylab="FST", xlim=c(0, 350), ylim=c(0, 1))
-points(ne[,1], ne[,11], col= "yellow")
+plot(-100, -100 , xlab="year", ylab="ratio Ne/Nc", xlim=c(0, 350), ylim=c(0, 1))
+points(ne[,1], ne[,12], col= gt.cols[col])
 
 
-plot(ne[,10]~ne[,22])
-plot(ne[,11]~ne[,22])
-plot(ne[,12]~ne[,22])     <-- interestinggg
+
+bb[,12]=2
+cc[,12]=3
+smry = rbind(aa,bb,cc)
+smry = smry[smry[,1]!=0,,drop=FALSE]
+data = cbind(ne, smry)
+head(data)
+
+plot(-100, -100 , xlab="Fst", ylab="Ne = 4*number males*number females/number males+number females", xlim=c(0, 275), ylim=c(0, 1))
+plot(data[,10]~data[,22])  #Ne = 4*number males*number females/number males+number females   ~  Fst (calc in sim)
+plot(data[,11]~data[,22])  #1/(1+4*effective pop size*[effective] migrants) 
+plot(data[,12]~data[,22])    #ratio Ne/Nc    <-- interestinggg
