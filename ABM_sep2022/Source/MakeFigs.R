@@ -31,7 +31,7 @@ tab = read.table("run_a_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
-smry = read.table("run_cc_quickie_summary.csv", header=T, sep=",")
+smry = read.table("run_aa2_quickie_summary.csv", header=T, sep=",")
 
 library(colorspace)
 gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
@@ -265,7 +265,7 @@ points(yr, n, col="firebrick")
 dev.off()
 
 png("Ho_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)+.1))) 
+plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)))) 
 points(yr,smry[,18],col=gt.cols[col])
 points(tab5[,1],tab5[,5],col="dodgerblue")
 points(tab0[,1],tab0[,5],col="firebrick")
@@ -277,7 +277,7 @@ legend('bottom', legend = c('mig=1', 'mig=0','mig=1x','mig=3x ALL AT .1-.2'), co
 dev.off()
 
 png("fis_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)-.01), (max(fis)+.1))) 
+plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)), (max(fis)))) 
 points(yr,fis,col=gt.cols[col])
 points(tab5[,1],tab5[,6],col="dodgerblue")
 points(tab0[,1],tab0[,6],col="firebrick")
@@ -295,7 +295,7 @@ points(tab9[,1],tab9[,8],col="springgreen")
 dev.off()
 
 png("fst_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-.01), (max(fst)+.05)))
+plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-.01), (max(fst))))
 points(yr,fst,col=gt.cols[col])
 points(tab5[,1],tab5[,10],col="dodgerblue")
 points(tab0[,1],tab0[,10],col="firebrick")
@@ -313,7 +313,7 @@ points(tab9[,1],tab9[,13],col="springgreen")
 dev.off()
 
 png("fstVSource_overtime.png")
-plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, max(fstvs)+0.05))
+plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, max(fstvs)))
 points(yr,fstvs,col=gt.cols[col])
 points(tab5[,1],tab5[,14],col="dodgerblue")
 points(tab0[,1],tab0[,14],col="firebrick")
@@ -361,7 +361,7 @@ rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_cc_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("run_14_quickie_repsuc.csv", header=T, sep=",")
 rep[is.na(rep)] <- 0
 
 rep=rep_
