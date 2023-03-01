@@ -30,7 +30,7 @@ tab = read.table("run_e_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_a_quickie_summary.csv", header=T, sep=",") 
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
-tab = read.table("run_b_quickie_summary.csv", header=T, sep=",")
+tab = read.table("run_bb2_quickie_summary.csv", header=T, sep=",")
 smry = read.table("run_aa2_quickie_summary.csv", header=T, sep=",")
 
 library(colorspace)
@@ -243,10 +243,11 @@ sx       = smry[,8]   #sex ratio
 nmig     = smry[,9]   #number of migrants
 fst      = smry[,10]  #fst vs initialized pop
 rep      = smry[,11]  #replicate number
+para     = smry[,12]
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = smry[,12] #-4
+col      = para  #c("#E16A86", "#909800", "#00AD9A", "#9183E6")#smry[,12] #-4
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
@@ -263,6 +264,20 @@ png("popsize_overtime.png")
 plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
 points(yr, n, col="firebrick")
 dev.off()
+
+plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+for(p in unique(para)){
+  dat = smry[smry[,12]==p,,drop=FALSE]
+  avg = aggregate(x = dat[,2], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[p], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)))) 
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,5], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
 
 png("Ho_overtime.png")
 plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)))) 
