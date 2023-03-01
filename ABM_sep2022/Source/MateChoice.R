@@ -1,7 +1,7 @@
 #Mate
 #used for complex model for ABM class
 
-MateChoice = function(pop, sex, maturity){
+MateChoice = function(pop, sex, maturity, allee){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
@@ -25,15 +25,32 @@ MateChoice = function(pop, sex, maturity){
     fem = 0 #this matches males to females by putting the first column always as females
     
     #match those of opposite sex with replacement*
+    #first, grab males so that there are the same number of mates as there are females 
     mates <- sample(pop[pop[,'sex'] != fem, 'id'], tabulate(match(pop[,'sex'], fem)), replace=TRUE) #this means indv can mate more than once
     #for now, replace = true since sometimes more males than females
     #note, != means NOT 
     
-    #pair individuals
+    #pair individuals - females with males so n_pairs = n_females
     pairs <- cbind(pop[pop[,'sex'] == fem, 'id'], mates)
     
+    print(paste("there are", nrow(pairs), "pairs"))
+    
+    #if allee effect switch is turned on (1 = on, 0 = off)
+    if(allee == 1){
+      al = nrow(pairs)
+      matedpairs <- cbind(pairs, rep(1, al))
+      for(lee in 1:nrow(matedpairs)){
+        #find random chance of mates finding each other so that as Nc ^, chance of interacting ^
+        matedpairs[lee,3] = base::sample(x=c(0,1), size = 1, replace = TRUE, prob = c(1/al,(1-(1/al)))) 
+      }
+      keptpairs = matedpairs[matedpairs[,3]==1,,drop=FALSE]
+      pairs = keptpairs[,c(1:2)]
+      
+      remove(lee, matedpairs, keptpairs)
+    }
+    
     if(nrow(pairs) >= 3){
-      #randomize the pairs so all indv have chance of mating
+      #randomize the pairs
       rand = sample(1:nrow(pairs),nrow(pairs))
       pairs <- pairs[rand, ]
       

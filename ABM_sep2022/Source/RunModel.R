@@ -255,7 +255,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        pairs = MateChoice(pop, sex, maturity)  
+        pairs = MateChoice(pop, sex, maturity, allee)  
         if(is.null(pairs)==TRUE){
           print(paste("skipping pop size next, breed due to no parents"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
