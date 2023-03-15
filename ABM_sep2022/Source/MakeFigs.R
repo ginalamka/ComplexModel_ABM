@@ -29,13 +29,26 @@ tab = read.table("run_d_quickie_summary.csv", header=T, sep=",")
 tab = read.table("run_e_quickie_summary.csv", header=T, sep=",") 
 tab = read.table("run_a_quickie_summary.csv", header=T, sep=",") 
 tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
-tab = read.table("run_g_quickie_summary.csv", header=T, sep=",")
-tab = read.table("run_bb2_quickie_summary.csv", header=T, sep=",")
-smry = read.table("run_aa2_quickie_summary.csv", header=T, sep=",")
+tat = read.table("ABMrun_3.3.23_e_quickie_summary.csv", header=T, sep=",")
+tab = read.table("ABMrun_3.3.23_f_quickie_summary.csv", header=T, sep=",")
+smry = read.table("ABMrun_3.3.23_i_quickie_summary.csv", header=T, sep=",")
+
+#ABG, CDH, EFI
+#tat = 1,2,3
+#tab = 4,5,6
+#smry = 7,8
+
+tab[,12] = tab[,12]+3
+table(tab[,12])
+
+smry[,12] = smry[,12]+6
+table(smry[,12])
+
+smry = rbind(tat, tab, smry)
 
 library(colorspace)
-gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
-lt.gt.col <- qualitative_hcl(6, "Pastel1") #ghibli_palette('PonyoLight')[4]
+gt.cols <- qualitative_hcl(8, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(8, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 
 grp1 <- tab[tab[,12]<=8,,drop=FALSE]
@@ -53,6 +66,7 @@ grp1 <- tab[tab$r0==0.1,,drop=FALSE]
 
 smry = tab
 
+{
 #Data
 {
 #summary_ABM_run.10.12.22_d_all.csv  >> zero migration
@@ -229,7 +243,7 @@ for(c in unique(smry[,12])){
 legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','low source het'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.2)
 
 ##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
-
+}
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 #create names for data so taht it is easier to call and change when the data change
 yr       = smry[,1]   #year
@@ -247,24 +261,11 @@ para     = smry[,12]
 noff     = smry[,13]  #number of offspring produced that year
 fstvs    = smry[,14]  #fst vs the source pop
 fisvs    = smry[,15]  #fis vs the source pop
-col      = para  #c("#E16A86", "#909800", "#00AD9A", "#9183E6")#smry[,12] #-4
+col      = smry[,12] #para  #c("#E16A86", "#909800", "#00AD9A", "#9183E6")#smry[,12] #-4
 #What is the best way to plot?? do I put all data in one dataset and then do a loop?
 #or keep all data seperate so that it is easier to do the colors, etc?
 
-pm = smry[smry$propmig!=0,,drop=FALSE]
-plot(pm$propmig~pm$Ho,col=gt.cols[col], pch=16)
-#how does the prop or migrants influence the heterozygosity?
-y<-lmer(Ho~propmig + (1|parameterset), data=smry)
-y<-lmer(Ho~propmig+yr*propmig + (1|parameterset), data=smry)
-summary(y)
-http://127.0.0.1:19921/graphics/plot_zoom_png?width=1147&height=900
-#think about propmig~LRS also -- will need to merge the datasets
-
-png("popsize_overtime.png")
-plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
-points(yr, n, col="firebrick")
-dev.off()
-
+############Averages
 plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
 for(p in unique(para)){
   dat = smry[smry[,12]==p,,drop=FALSE]
@@ -278,6 +279,58 @@ for(d in unique(para)){
   avg = aggregate(x = dat[,5], by = list(dat[,1]), FUN = "mean")
   lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
 }
+
+plot(-100, -100 , xlab="year", ylab="Fst", xlim=c(0, max(yr)), ylim=c((min(fst)-.01), (max(fst))))
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,10], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="Fst vs source", xlim=c(0, max(yr)), ylim=c(0, max(fstvs)))
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,14], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="prop migrant SNPs", xlim=c(0, max(yr)), ylim=c(0, max(smry[,17])))
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,17], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="Fis", xlim=c(0, max(yr)), ylim=c((min(fis)), (max(fis)))) 
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,6], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="sex ratio", xlim=c(0, max(yr)), ylim=c((min(sx)-.1), (max(sx)+.1)))
+for(d in unique(para)){
+  dat = smry[smry[,12]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,8], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+
+######Points
+{
+pm = smry[smry$propmig!=0,,drop=FALSE]
+plot(pm$propmig~pm$Ho,col=gt.cols[col], pch=16)
+#how does the prop or migrants influence the heterozygosity?
+y<-lmer(Ho~propmig + (1|parameterset), data=smry)
+y<-lmer(Ho~propmig+yr*propmig + (1|parameterset), data=smry)
+summary(y)
+http://127.0.0.1:19921/graphics/plot_zoom_png?width=1147&height=900
+#think about propmig~LRS also -- will need to merge the datasets
+
+png("popsize_overtime.png")
+plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+points(yr, n, col=gt.cols[col]) #"firebrick"
+dev.off()
 
 png("Ho_overtime.png")
 plot(-100, -100 , xlab="year", ylab="Ho", xlim=c(0, max(yr)), ylim=c((min(Ho)), (max(Ho)))) 
@@ -300,6 +353,7 @@ points(tab6[,1],tab6[,6],col="gold")
 points(tab9[,1],tab9[,6],col="springgreen")
 dev.off()
 
+
 png("sexratio_overtime.png")
 plot(-100, -100 , xlab="year", ylab="sex ratio", xlim=c(0, max(yr)), ylim=c((min(sx)-.1), (max(sx)+.1)))
 points(yr,sx,col=gt.cols[col])
@@ -317,6 +371,7 @@ points(tab0[,1],tab0[,10],col="firebrick")
 points(tab6[,1],tab6[,10],col="gold")
 points(tab9[,1],tab9[,10],col="springgreen")
 dev.off()
+
 
 png("noffspring_overtime.png")
 plot(-100, -100 , xlab="year", ylab="number of offpsring produced", xlim=c(0, max(yr)), ylim=c(0, (max(noff))))
@@ -351,7 +406,7 @@ points(yr,smry[,17],col=gt.cols[col])
 plot(-100, -100 , xlab="Ho drift SNPs", ylab="Ho all SNPS", xlim=c(0, 1), ylim=c(0, 1))
 points(Ho,smry[,18],col=gt.cols[col])
 abline(a=0,b=1)
-
+}
 
 ########################################################################
 ########################################################################
@@ -374,20 +429,35 @@ rep_ = read.table("run_d_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_e_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_a_quickie_repsuc.csv", header=T, sep=",")
 rep = read.table("run_f_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_g_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_b_quickie_repsuc.csv", header=T, sep=",")
-rep = read.table("run_14_quickie_repsuc.csv", header=T, sep=",")
+red = read.table("ABMrun_3.3.23_f_quickie_repsuc.csv", header=T, sep=",")
+rev = read.table("ABMrun_3.3.23_i_quickie_repsuc.csv", header=T, sep=",")
+rep = read.table("ABMrun_3.3.23_e_quickie_repsuc.csv", header=T, sep=",")
 rep[is.na(rep)] <- 0
+red[is.na(red)] <- 0
+rev[is.na(rev)] <- 0
 
-rep=rep_
-rep=na.omit(rep)
+#ABG, CDH, EFI
+#rep = 1,2,3
+#red = 4,5,6
+#rev = 7,8
+
+#give each parameter set a unique identifier
+red[,10] = red[,10]+3
+table(red[,10])
+
+rev[,10] = rev[,10]+6
+table(rev[,10])
+
+rep = rbind(rep, red, rev)
+
+library(colorspace)
+gt.cols <- qualitative_hcl(8, "Dark2") #ghibli_palette('PonyoMedium')#[4]
+lt.gt.col <- qualitative_hcl(8, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 
-het1<- rep[rep[,10]<=4,,drop=FALSE]
-het2<- rep[(rep[,10]>4)&(rep[,10]<9),,drop=FALSE]
-het2<- rep[rep[,10]>=5,,drop=FALSE]
-
-rep <- het2
+#het1<- rep[rep[,10]<=4,,drop=FALSE]
+#het2<- rep[(rep[,10]>4)&(rep[,10]<9),,drop=FALSE]
+#het2<- rep[rep[,10]>=5,,drop=FALSE]
 
 library(ghibli)
 library(scales)
@@ -398,6 +468,7 @@ gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- qualitative_hcl(6, "Pastel1") #ghibli_palette('PonyoLight')[4]
 
 col = rep[,10] #-4  #color by parameter
+para = rep[,10]
 yr  = rep[,1]   #year
 n   = rep[,2]   #n born
 LRS = rep[,3]   #mean LRS
@@ -406,23 +477,51 @@ LRSf= rep[,5]   #female LRS
 LRSm= rep[,6]   #male LRS
 RRS = rep[,7]   #mean RRS
 SDR = rep[,8]   #SD of RRS
-rep = rep[,9]   #replicate
+replic = rep[,9]   #replicate
 LRSmig = rep[,11] #LRS of migrants
 LRSnat = rep[,12] #LRS of natives
+
+#Averages
+plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
+for(d in unique(para)){
+  dat = rep[rep[,10]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,3], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="RRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(RRS)))
+for(d in unique(para)){
+  dat = rep[rep[,10]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,7], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
+
+plot(-100, -100 , xlab="year", ylab="nborn", xlim=c(min(yr), max(yr)), ylim=c(0, max(n)))
+for(d in unique(para)){
+  dat = rep[rep[,10]==d,,drop=FALSE]
+  avg = aggregate(x = dat[,2], by = list(dat[,1]), FUN = "mean")
+  lines(avg[,1], avg[,2], col=gt.cols[d], lwd = 3)
+}
  
-#give each parameter set a unique identifier
-rep7[,10] <- "g"
-rep8[,10] <- "h"
-rep9[,10] <- "i"
-
-legend('topright', legend = c('mig=0','mig=1migpergen','mig=300@yr 175', 'mig=100@yr 175,201,225','mig=1migpergen y <100 & >150','mig=2migpergen y>150'), col = gt.cols[1:4], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
+plot(-100, -100 , xlim=c(min(yr), max(yr)), ylim=c(0, max(n)))
+legend('top', legend = c('mig=0',
+                              'mig=1migpergen',
+                              'mig=1migpergen y<100 & >151', 
+                              'mig=100@yr151',
+                              'mig=25@yr151,165,181,195',
+                              'mig=1migpergen y>151',
+                         'mig=100@yr125',
+                         'mig=25@yr125,140,155,170'), 
+       col = gt.cols[1:8], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
 #miggy.V       = c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
+legend('center', legend = c('mig=1migpergen_NOAllee', 'mig=1migpergen_WAllee','mig=1migpergen_NOAllee', 'mig=0_WAllee','mig=1migpergen_WAllee','mig=0', 'mig=100@yr 175,201,225','mig=1mpg y <100 & >150','mig=2migpergen y>150'), col = gt.cols[1:6], pch = 19, bty = 'n', cex = 1.75, pt.cex = 2, horiz = FALSE, x.intersp = 0.5)
 
+####POints
+{
 plot(-100, -100 , xlab="year", ylab="LRS", xlim=c(min(yr), max(yr)), ylim=c(0, max(LRS)))
 points(yr, LRS, col=gt.cols[col], pch=19)
 points(rep8[,1],rep8[,3], col="dodgerblue")
 points(rep9[,1],rep9[,3], col="firebrick")
-all<- rbind(rep7,rep8,rep9)
 
 plot(-100, -100 , xlab="year", ylab="nborn", xlim=c(min(yr), max(yr)), ylim=c(0, max(n)))
 points(yr, n, col=gt.cols[col])
@@ -451,9 +550,10 @@ points(yr, LRSmig, col=gt.cols[col])
 
 plot(-100, -100 , xlab="year", ylab="LRS of natives", xlim=c(min(yr), max(yr)), ylim=c(0, 5)) #max(LRSnat)
 points(yr, LRSnat, col=gt.cols[col])
-
+}
 
 ##### Generic plotting code
+{
 #1=yr, 2=nborn, 3=meanLRS, 4=SD, 5=LRSFemale, 6=LRSmale, 7=meanRRS, 8=SDRRS, 9=replicate, 10=parameterset, 11=LRSmigrants, 12=LRSnatives, 13=project, 14=group
 var = 7
 
@@ -527,7 +627,7 @@ for(c in unique(rep[,10])){
 legend('topleft', legend = c('mig=0', 'mig=3x,25indv@y=175','high source het','low source het'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = FALSE, x.intersp = 0.2)
 
 ##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
-
+}
 
 #############################################################################3
 #############################################################################
