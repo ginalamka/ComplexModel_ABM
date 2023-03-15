@@ -320,6 +320,9 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           break
         }
         
+        #Notes 3/15/23 
+        #Need to make sure that number of indv is actually at or close to K rather than under cuza AgeDeath
+        
         print(paste("DONE!", y, "param", r, "rep", rr))
         
         #clean up by removing dead indv every 25 years
