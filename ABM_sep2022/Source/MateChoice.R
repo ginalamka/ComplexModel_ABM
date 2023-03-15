@@ -1,7 +1,7 @@
 #Mate
 #used for complex model for ABM class
 
-MateChoice = function(pop, sex, maturity, allee){
+MateChoice = function(pop, sex, maturity, allee, matemigs){
   dead = pop[pop[,8] == 0, , drop=FALSE]          #remove dead indvs
   pop = pop[which(pop[,1]%NOTin%dead), , drop=FALSE]
   
@@ -40,11 +40,26 @@ MateChoice = function(pop, sex, maturity, allee){
       al = nrow(pairs)
       matedpairs <- cbind(pairs, rep(1, al))
       for(lee in 1:nrow(matedpairs)){
-        #find random chance of mates finding each other so that as Nc ^, chance of interacting ^
-        matedpairs[lee,3] = base::sample(x=c(0,1), size = 1, replace = TRUE, prob = c(1/al,(1-(1/al)))) 
+        #if preferentially mating migrants switch is turned on (1 = on, 0 = off)
+        if(matemigs == 1){
+          #grab pairs with migrant parents
+          mom = matedpairs[lee,1]
+          dad = matedpairs[lee,2]
+          if(mom >= 1 & dad >= 1){
+            #find random chance of mates finding each other so that as Nc ^, chance of interacting ^
+            matedpairs[lee,3] = base::sample(x=c(0,1), size = 1, replace = TRUE, prob = c(1/al,(1-(1/al)))) 
+          }else{
+            #give migrant parents unique identitifier
+            matedpairs[lee,3] = 2
+          }
+          remove(mom, dad)
+        }else{
+          #find random chance of mates finding each other so that as Nc ^, chance of interacting ^ -- happens for all if switch is turned off
+          matedpairs[lee,3] = base::sample(x=c(0,1), size = 1, replace = TRUE, prob = c(1/al,(1-(1/al))))
+        }
       }
-      keptpairs = matedpairs[matedpairs[,3]==1,,drop=FALSE]
-      pairs = keptpairs[,c(1:2)]
+      keptpairs = matedpairs[matedpairs[,3]>=1,,drop=FALSE]
+      pairs = keptpairs #keptpairs[,c(1:2)]  <- use this if don't want migrant identifier
       
       remove(lee, matedpairs, keptpairs)
     }
@@ -55,7 +70,7 @@ MateChoice = function(pop, sex, maturity, allee){
       pairs <- pairs[rand, ]
       
       #pairs <- rand
-      colnames(pairs) <- c('mom','dad')
+      colnames(pairs) <- c('mom','dad','migident')
     }
     
     remove(dead, immature, mates, rand)

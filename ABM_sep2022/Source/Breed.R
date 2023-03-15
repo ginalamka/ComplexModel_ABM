@@ -1,12 +1,23 @@
-Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp){
+Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs){
  
   #randomly narrow down pairings from pairs if n_pairs > numboff
   if(is.null(nrow(pairs))==TRUE){
     print(paste("no pairs of parents available"))
     break
   }else if(nrow(pairs)>= numboff){
-    pairings = sample(1:nrow(pairs), numboff, replace = F, prob = NULL)
-    parents <- pairs[pairings,,drop=FALSE]
+    #if preferentially mating migrants switch is turned on (1 = on, 0 = off)
+    if(matemigs == 1){
+      migparents = pairs[pairs[,3]==2,,drop=FALSE]
+      nonmigrents = pairs[pairs[,3]!=2,,drop=FALSE]
+      pairings = sample(1:nrow(nonmigrents), numboff-nrow(migparents), replace = F, prob = NULL)
+      parents <- nonmigrents[pairings,,drop=FALSE]
+      parents <- rbind(migparents,parents)
+      remove(migparents, nonmigrents)
+    }else{
+      #if not preferentially mating migrants, randonmly select pairs
+      pairings = sample(1:nrow(pairs), numboff, replace = F, prob = NULL)
+      parents <- pairs[pairings,,drop=FALSE]
+    }
   }else{
     pairings = NULL
     parents <- pairs
@@ -15,7 +26,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   
   #generate fecundity for each set of parents
   fecundity = sample(seq(1,broodsize,1),nrow(parents),replace=T, prob = NULL) 
-  parents <- cbind(parents, fecundity)
+  parents[,3] = fecundity       #cbind(parents, fecundity)
   nbabes = sum(parents[,3])
   TEMP = NULL
   for(n in 1:nrow(parents)){
@@ -57,15 +68,42 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     bb = nrow(babies)
     #print("no reproduction")
     #return(list(pop,0))
-  }else if(nrow(babies) > numboff){ 
-    rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
-    babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
+  }else if(nrow(babies) > numboff){
+    #if preferentially mating migrants switch is turned on (1 = on, 0 = off)
+    if(matemigs == 1){
+      migbbys = babies[babies[,2]<=0|babies[,3]<=0,,drop=FALSE]
+      #if only migrant offspring, select from them the numboff needed
+      if(nrow(migbbys) > numboff){
+        kept = sample(migbbys[,1], numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
+        babies = babies[which(babies[,1]%in%kept), , drop=FALSE] 
+        remove(kept, migbbys)
+      }else{
+        keep = migbbys[,1]
+        if(length(keep)>=1){
+          BABIES = babies[-which(babies[,1]%in%keep),,drop=FALSE]
+        }else{
+          BABIES = babies
+        }
+        rm = sample(BABIES[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
+        BABIES = BABIES[-which(BABIES[,1]%in%rm), , drop=FALSE] 
+        babies <- rbind(migbbys, BABIES)
+        remove(keep, migbbys, BABIES)
+      }
+    }else{
+      #if not preferentially choosing migrant offspring, randomly select to have numboff needed
+      rm = sample(babies[,1], nrow(babies)-numboff, replace = FALSE, prob = NULL) 
+      babies = babies[-which(babies[,1]%in%rm), , drop=FALSE] 
+    }
     bb = nrow(babies)
     remove(rm)
   }else if(is.null(nrow(babies))==TRUE){
       bb = 1
       print(paste("only one new baby"))
   }
+  
+  ##NOTES 3/14/23 -- preferentially choose the migrant babies 
+    #babies wiht migrant parents taken out, then randomly select additional babies to be added. 
+    #will need to do this in allee effect too --migrant parents cannot be removed due to allee effect. 
   
   #rename babies so count doesnt get messed up
   babies =  as.matrix(babies)
@@ -179,7 +217,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   NE[1,12] = grp
   
   if(isTRUE(y == 1 && r == 1 && rr == 1)){
-    write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE)
+    write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
   }else{
     write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
   }

@@ -38,6 +38,7 @@ remove(k.V, nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V
 
 replicates    = 1 #20 #5 #10
 allee         = 1    #1=yes, 0=no
+matemigs      = 1    #1=yes, 0=no
 plotit        = 0    #1=yes, 0=no
 plotit2       = 0    #1=yes, 0=no
 mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899

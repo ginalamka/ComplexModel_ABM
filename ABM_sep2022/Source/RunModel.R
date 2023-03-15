@@ -46,7 +46,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     popgen = matrix(nrow=k, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = sample(seq(from=0.4, to=0.6, by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
+      p = sample(seq(from=0.4, to=0.5, by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
                rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
@@ -255,7 +255,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        pairs = MateChoice(pop, sex, maturity, allee)  
+        pairs = MateChoice(pop, sex, maturity, allee, matemigs)  
         if(is.null(pairs)==TRUE){
           print(paste("skipping pop size next, breed due to no parents"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
@@ -270,7 +270,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         numboff = pp[[1]]
         K = pp[[2]]
         if(numboff >= 1){
-          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp) #still needs work 
+          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs) #still needs work 
           pop = ttt[[1]]
           bb = ttt[[2]]
           sz = sz + bb
@@ -304,7 +304,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           remove(alive, adult, adult_f, adult_m)
           
           if(isTRUE(y == 1 && r == 1 && rr == 1)){
-            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=TRUE, quote=FALSE, row.names=FALSE)
+            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
           }else{
             write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
           }
