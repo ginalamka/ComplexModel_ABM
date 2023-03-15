@@ -51,7 +51,6 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
     }else{mig=0}
   }else if(miggy == "c"){
     if(y == 175|y == 201|y==225){
-      # if(y == 175){
       mig = 75   #25 #1  #sample(c(1:15), 1, replace=T) #put in the number of migrants for this set of runs #OLD
       #note that the 1:mig might affect the number. pay attention to this.
       
