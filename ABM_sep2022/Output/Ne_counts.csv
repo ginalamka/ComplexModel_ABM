@@ -1,4 +1,8 @@
 year,eff_mom,eff_dad,nbabies,naliveadults,possible_mom,possible_dad,eff_mig,parameterset,replicate,project,group
-1,0,0,0,67,28,39,0,1,1,_proj_,_group_
-2,10,10,12,86,38,48,0,1,1,_proj_,_group_
-3,10,9,13,84,38,46,2,1,1,_proj_,_group_
+1,0,0,0,62,25,37,0,1,1,_proj_,_group_
+2,4,4,6,92,37,55,1,1,1,_proj_,_group_
+3,17,16,19,75,32,43,0,1,1,_proj_,_group_
+4,15,11,19,74,34,40,2,1,1,_proj_,_group_
+5,16,14,22,70,30,40,3,1,1,_proj_,_group_
+6,18,14,23,67,31,36,2,1,1,_proj_,_group_
+7,18,14,22,67,34,33,2,1,1,_proj_,_group_

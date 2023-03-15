@@ -11,6 +11,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     nSNP          = parameters$nSNP[r]
     miggy         = parameters$miggy[r]
     LBhet         = parameters$LBhet[r]
+    LBp           = parameters$LBp[r]
     nMicro        = parameters$nMicro[r]
     #REMOVED###sex           = parameters$sex[r]
     maxage        = parameters$maxage[r]
@@ -46,7 +47,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     popgen = matrix(nrow=k, ncol=nSNP*2)
     columns = seq(1,(nSNP*2),2)
     for(l in 1:nSNP){
-      p = sample(seq(from=0.4, to=0.5, by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
+      p = sample(seq(from=LBp, to=(LBp+0.1), by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
       #create pool of genotypes in HWE
       pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
                rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  

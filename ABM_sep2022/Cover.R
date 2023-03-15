@@ -13,7 +13,8 @@ grp = "_group_"
 k.V           = 100 #1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
 nSNP.V        = 100 #1000  #scaleup                #number of SNPs simulated, used to track drift
 miggy.V       = "a" #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
-LBhet.V       = 0.45 #c(0.45, 0.07) #c(0.1, 0.45, 0.8) #lowerbound limit  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
+LBhet.V       = 0.45 #c(0.45, 0.07) #c(0.1, 0.45, 0.8) #lowerbound limit for SOURCE POP  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
+LBp.V         = 0.45 #c(0.45, 0.07) #lowerbound limit for FOCAL POP
 maxage.V      = 9 #c(15, 3) #9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2 #c(4, 6)  #2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
@@ -28,12 +29,12 @@ nSNP.cons.V   = 0        #number of conserved alleles within species -- used to 
 #potential migration rates: 1-5 indv, 5-10 indv, no migration
 
 #generate list of parameter combinations
-parameters = expand.grid(k.V, nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V)
-colnames(parameters) = c("k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
+parameters = expand.grid(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V)
+colnames(parameters) = c("k", "nSNP", "miggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
 write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
 
 #clean up, remember that these are still available in parameters
-remove(k.V, nSNP.V, miggy.V, LBhet.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V) 
+remove(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V) 
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 1 #20 #5 #10

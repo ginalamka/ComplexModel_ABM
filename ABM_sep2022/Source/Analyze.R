@@ -10,6 +10,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   nSNP          = parameters$nSNP[r]
   miggy         = parameters$miggy[r]
   LBhet         = parameters$LBhet[r]
+  LBp           = parameters$LBp[r]
   #REMOVED###nMicro        = parameters$nMicro[r]
   #REMOVED###sex           = parameters$sex[r]
   maxage        = parameters$maxage[r]
@@ -247,7 +248,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   params = parameters[rep(r, nrow(FIN)),]
   out = cbind(FIN,params)
   colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs", "project", "group",
-                    "k", "nSNP", "miggy", "LBhet", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
+                    "k", "nSNP", "miggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
   
   remove(alive, adults, data, FIN, fstdata, genotype, locus, params, popident,
          freqs, geno, HE, het, het.expected, het.observed, HO, homozygous, loc.pos)
