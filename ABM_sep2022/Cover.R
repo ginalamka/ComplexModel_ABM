@@ -12,9 +12,9 @@ grp = "_group_"
 #parameters
 k.V           = 100 #1000 #c(1000, 5000, 500) #c(500, 1000, 5000, 10000)                #carrying capacity
 nSNP.V        = 100 #1000  #scaleup                #number of SNPs simulated, used to track drift
-miggy.V       = "a" #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
+miggy.V       = "b" #c(0,"a","b","c")  #"a"=one mig per gen, "b"=1xof50@175, "c"=3xpf25@175|201|225  #migration parameter type
 LBhet.V       = 0.45 #c(0.45, 0.07) #c(0.1, 0.45, 0.8) #lowerbound limit for SOURCE POP  #c(0.4, 0.6) #c(0.8, 0.9)   #THINK ABOUT THE BEST WAY TO SET THIS UP -- either give the values for lower bound and then in RunModel, +1 for upper bound. or change the lower and upper depending on the run
-LBp.V         = 0.45 #c(0.45, 0.07) #lowerbound limit for FOCAL POP
+LBp.V         = 0.07 #c(0.45, 0.07) #lowerbound limit for FOCAL POP
 maxage.V      = 9 #c(15, 3) #9     #low ages dont work              #maximum age individuals can be; add one at first, so they will die at 4, start at -1
 broodsize.V   = 2 #c(4, 6)  #2     #this is now the MAX brood size, aka max fecundity   #REMOVED##c(0:2)              #aka fecundity, remember that this is typically not constant in life; potentially Poisson distribution
 maturity.V    = 1                   #age indv becomes reproductively mature
@@ -38,11 +38,11 @@ remove(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, 
 #2/28/22 I am removing k.V from this so I can reference it in Stochastsic.R
 
 replicates    = 1 #20 #5 #10
-allee         = 1    #1=yes, 0=no
-matemigs      = 1    #1=yes, 0=no
+allee         = 0    #1=yes, 0=no
+matemigs      = 0    #1=yes, 0=no
 plotit        = 0    #1=yes, 0=no
 plotit2       = 0    #1=yes, 0=no
-mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
+mutate        = 0    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #krats = 2844.77 MB = 2844770000 bp x 2.2*10-9  = 6.258494 === does this matter here??? 
 #bannertailed 0.0081 mutants/generation/locus, in Busch, Waser, and DeWoody 2007 doi: 10.1111/j.1365-294X.2007.03283.x.
 mu            = 0.001  #mutation rate
