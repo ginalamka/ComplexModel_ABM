@@ -11,7 +11,7 @@ setwd(paste(directory,"/Source/", sep = '')) #set temp working directory
 #install.packages("hierfstat", lib="/home/gfl0003", repos='http://cran.us.r-project.org/')
 #install.packages("plyr", lib="/home/gfl0003", repos='http://cran.us.r-project.org/')
 #install.packages("gtools", lib="/home/gfl0003", repos='http://cran.us.r-project.org/')
-.libPaths("/home/gfl0003") 
+#.libPaths("/home/gfl0003") 
 
 #library()
 library(reshape2)   #commented out 10/4/22 cuz I was getting pissed. I think this is just for plotting
