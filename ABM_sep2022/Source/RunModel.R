@@ -1,58 +1,55 @@
-#RunModel.R for complex migration model for ABM class fall 2021
+#RunModel.R for Lamka and Willoughby 2023
 
 RunModel = function(parameters, r, directory, replicates, prj, grp){
   FINAL = NULL
   REP   = NULL
   POP   = NULL 
-  #rr=1  #remove this when not skipping through the below line
+  #rr=1  #use this when debugging, remove this when not skipping through the below line
   for(rr in 1:replicates){
+    #call parameters for this replicate run
     k             = parameters$k[r]
-    #REMOVED###allele        = parameters$allele[r]
     nSNP          = parameters$nSNP[r]
     miggy         = parameters$miggy[r]
     LBhet         = parameters$LBhet[r]
     LBp           = parameters$LBp[r]
     nMicro        = parameters$nMicro[r]
-    #REMOVED###sex           = parameters$sex[r]
     maxage        = parameters$maxage[r]
     broodsize     = parameters$broodsize[r]
-    #REMOVED###sexratio      = parameters$sexratio[r]
     maturity      = parameters$maturity[r]
     years         = parameters$years[r]
     r0            = parameters$r0[r]
-    #REMOVED###ratemort      = parameters$ratemort[r]
-    nSNP.mig      = parameters$nSNP.mig[r]                   #number of special alleles for migrants -- these are ADDITIONAL alleles, migrants = 1, orig pop = 0, this will be easier to track than a random value
-    nSNP.cons     = parameters$nSNP.cons[r]                  #number of conserved alleles
+    nSNP.mig      = parameters$nSNP.mig[r] 
+    nSNP.cons     = parameters$nSNP.cons[r]
+    #if add more parameters in Cover.R, add them here as well
     
-    #initialize population
-    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row.. matrix > dataframe -- "ncol = 7 + (nloci)*2
+    #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
+    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
     colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    pop[,1] = seq(1,k,1)                    #each individual has unique ID name; sequence starting at 1, through k, with each 1 interation
-    pop[,2:3] = 0                            #at this point, we are putting all equal to zero because this is the initial generation and we dont know parents
-    #pop[,2] = rep(0,k)                      #mom id - later will not be 0, this is useful for debugging #saying replicate 0 100 times
-    #pop[,3] = rep(0,k)                      #dad id - later will not be 0, this is useful for debugging
-    pop[,4] = rpois(k,maturity)-1  ##sample(seq(0,maxage,1),k,replace=T)-1   #set age between 0 and 4 and subtract 1 because we add one at the first generation #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1 
-    pop[,5] = sample(c(0,1),k,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
-    pop[,6] = NA #this will be for number of times as a parent  #REMOVED###sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
-    pop[,7] = NA #this will be for number of times offspring survive to maturity   #REMOVED###sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
-    pop[,8] = 1                             #alive or dead? alive = 1, dead = 0
-    pop[,9] = 0                             #generation born
-    pop[,10] = 0                            #generation died
-    pop[,11] = NA                            #relative fitness #at this point, we are putting all equal to zero because this is the initial generation
-    pop[,12] = 0                            #proportion of migrant SNPs - initial pop will all be 0
-    sz = k #to keep track of the number of indv for ID'ing later
+    pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
+    pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
+    pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
+    pop[,5] = sample(c(0,1),k,replace=T)     #assign indvs as male (1) or female (0) 
+    pop[,6] = NA                             #this will be for number of times as a parent - calculated in RepSucc.R
+    pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
+    pop[,8] = 1                              #alive or dead? alive = 1, dead = 0
+    pop[,9] = 0                              #generation born
+    pop[,10] = 0                             #generation died
+    pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+    pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+    sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
-    #generate SNPs for the starting pop -- taken from Janna's Captive breeding IBM
+    #generate SNPs for the starting pop 
     popgen = matrix(nrow=k, ncol=nSNP*2)
-    columns = seq(1,(nSNP*2),2)
+    columns = seq(1,(nSNP*2),2)  #create 2 columns per SNP with 0-1 for each allele
     for(l in 1:nSNP){
-      p = sample(seq(from=LBp, to=(LBp+0.1), by=0.01),1) ##0.5 #sample(seq(from=0, to=1, by=0.01), 1)
-      #create pool of genotypes in HWE
+      p = sample(seq(from=LBp, to=(LBp+0.1), by=0.01),1)  #introduce variation by selecting p, range defined in Cover.R
+      #create pool of genotypes in HWE to select from
       pool = c(rep(0, round(k*p*p, 0)),                                      #homozygous p*p
                rep(1, round(k*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
                rep(2, k-(round(k*p*p, 0)+(round(k*(1-p)*(1-p), 0))))         #heterozygous
                )
+      #connect pool to indvs and assign the genotypes
       gtype = sample(pool, k, replace = FALSE)
       for(kk in 1:k){
         if(gtype[kk]==0){                 #homo (0,0)
@@ -67,88 +64,67 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           popgen[kk,columns[l]+1] = 1
         }
       }
-      #for(qq in 1:ncol(popgen)){colnames(popgen[qq])<-c("SNP",qq)} #couldnt get this to work - 12/14/22 - issue was when merging dead and pop but wont even hold genotypes anymore
-      #colnames(popgen) <- c('SNP', name)
-      pool = NULL
-      
-      #add genotypes to pop matrix
+      pool = NULL  #nullify the variable for use in generating source genotypes below
     }
     
+    #calculate heterozygosity values for generated genotypes - NOTE this is across nSNPs only
     het <- matrix(nrow=nrow(popgen), ncol=1)
     for(g in 1:nrow(popgen)){
-      w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)
+      w <- sum(popgen[g ,seq(1,ncol(popgen),2)]!=popgen[g,seq(2,ncol(popgen),2)])/(ncol(popgen)/2)   #add up number of hetero sites per number of SNPs
       het[g,1] <- w
-    } #note to add the other SNPs in here if wanted
-    pop[,11] <- het
+    } 
+    pop[,11] <- het  #fill in calculated heterozygosities in the pop matrix
     
-    #create migrant and nonmigrant unique SNPs 
+    #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
     popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
     columnsb = seq(1,(nSNP.mig*2),2)
     for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
-      popSNPs[b,] = 0
+      popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
     }
     
-    #REMOVE4EVOLUTION###create conserved SNPs    
-    #REMOVE4EVOLUTION##conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
-    #REMOVE4EVOLUTION##columnsc = seq(1,(nSNP.cons*2),2)
-    #REMOVE4EVOLUTION##for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-    #REMOVE4EVOLUTION##  conSNPs[c,] = 0
-    #REMOVE4EVOLUTION##}
+    #REMOVE###create conserved SNPs - will be used to follow mutation    
+    #REMOVE##conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
+    #REMOVE##columnsc = seq(1,(nSNP.cons*2),2)
+    #REMOVE##for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE##  conSNPs[c,] = 0    #all indv of the species have nSNP.cons = 0
+    #REMOVE##}
     
-    #REMOVE4EVOLUTION##focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##??not sure why, but not binding correctly???
-    focalpop <- cbind(pop, popgen, popSNPs)
+    #REMOVE##focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
+    focalpop <- cbind(pop, popgen, popSNPs)  
     pop <- focalpop
-    
-    #calculate heterozygosity for each indv, put it in pop table
-    
     
     #write starting pop to table
     ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
     remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool) #focalpop, conSNPs
-    
-    #notes from talking with Janna 10/21 -- doesnt quite work yet
-    #plan is to add in additional SNPs to track genotypes. this will help set up Breed.R
-    #f = 0.2 #allele freq, means 20% of the time, allele 0, 80% of the time, allele 1
-    #x = sample(c(0,1), 2(nrow(pop)), freq = c(f,1-f))
-    #pop[,i] = x[1:nrow(pop)]
-    #pop[,i+1] = x[nrow(pop)+1:length(x)]
-    #for(i in 1:10){
-    #  seq(1,nSNP*2,2)
-    #  }
-    
 
-    #make sure to add in additional SNPs for Source pop also!!
-    
-    #options for SNPs = can do 0-2 values with 1 column per SNP OR 2 columns per SNP with 0-1 
-    #implications of each decision is based on calculating heterozygosity vs generating offspring
-    
     #initialize source population 
-    source = matrix(nrow=s, ncol=12)            #each individual gets its own row.. matrix > dataframe
+    source = matrix(nrow=s, ncol=12)            #each individual gets its own row.
     colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
-    source[,1] = seq(-(s),-1,1)                     #each individual has unique ID name; sequence starting at -1, through -k, with each 1 interation, negative flag for source pop
-    source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents/parents arent in focal pop
-    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and 4 (source isnt aged, so dont subtract 1); consider if age 0 should be able to migrate
-    source[,5] = sample(c(0,1),s,replace=T)    #each individual assigned male (1) or female (0) #sample from zero k times, with replacements. aka set sex
-    source[,6] = NA #this will be for number of times as a parent   #REMOVED##sample(c(0,1),k,replace=T)    #set allele 1 as either A=1 or a=0
-    source[,7] = NA #for number of offspring that reach maturity ##REMOVED#### sample(c(0,1),k,replace=T)    #set allele 2 as either A=1 or a=0
-    source[,8] = 1                             #alive or dead? alive = 1, dead = 0
-    source[,9] = -1                            #generation born
-    source[,10] = 0                            #generation died
-    source[,11] = NA                            #relative fitness
-    source[,12] = 1                            #proportion of migrant SNPs - initial pop will all be 1
+    source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
+    source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
+    source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
+    source[,5] = sample(c(0,1),s,replace=T)     #each individual assigned male (1) or female (0) 
+    source[,6] = NA                             #this will be for number of times as a parent
+    source[,7] = NA                             #for number of offspring that reach maturity
+    source[,8] = 1                              #alive or dead? alive = 1, dead = 0
+    source[,9] = -1                             #generation born - will be changed in Migrate.R to the generation entered focal pop
+    source[,10] = 0                             #generation died
+    source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
+    source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
     
     #generate source gentoypes
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
-    columns = seq(1,(nSNP*2),2)
+    columns = seq(1,(nSNP*2),2)  #create 2 columns per SNP with 0-1 for each allele
     for(l in 1:nSNP){
-      p = sample(seq(from=LBhet, to=(LBhet+0.1), by=0.01), 1)
+      p = sample(seq(from=LBhet, to=(LBhet+0.1), by=0.01), 1)  #introduce variation by selecting p, range defined in Cover.R
       #create pool of genotypes in HWE
       pool = c(rep(0, round(s*p*p, 0)),                                      #homozygous p*p
                rep(1, round(s*(1-p)*(1-p), 0)),                              #homozygous (1-p)*(1-p)  
                rep(2, s-(round(s*p*p, 0)+(round(s*(1-p)*(1-p), 0))))         #heterozygous
       )
+      #connect pool to indvs and assign the genotypes
       gtype = sample(pool, s, replace = FALSE)
       for(ss in 1:s){
         if(gtype[ss]==0){                 #homo (0,0)
@@ -163,43 +139,39 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           sourcegen[ss,columns[l]+1] = 1
         }
       }
-      #colnames(sourcegen) <- c('SNP', l)
-      #pool = NULL
-      
-      #add genotypes to source matrix
-      
     }
     
+    #calculate heterozygosity values for generated genotypes - NOTE this is across nSNPs only
     sourcehet <- matrix(nrow=nrow(sourcegen), ncol=1)
     for(j in 1:nrow(sourcegen)){
-      z <- sum(sourcegen[j ,seq(1,ncol(sourcegen),2)]!=sourcegen[j,seq(2,ncol(sourcegen),2)])/(ncol(sourcegen)/2)
+      z <- sum(sourcegen[j ,seq(1,ncol(sourcegen),2)]!=sourcegen[j,seq(2,ncol(sourcegen),2)])/(ncol(sourcegen)/2)  #add up number of hetero sites per number of SNPs
       sourcehet[j,1] <- z
-    } #note to add the other SNPs in here if wanted
-    source[,11] <- sourcehet
+    } 
+    source[,11] <- sourcehet  #fill in calculated heterozygosities in the source matrix
     
-    #create migrant and nonmigrant unique SNPs
+    #create migrant and nonmigrant unique SNPs - used to track migrant ancestry
     migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
     columnsd= seq(1,(nSNP.mig*2),2)
     for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
-      migSNPs[d,] = 1
+      migSNPs[d,] = 1              #all source pop indv have nSNP.mig = 1
     }
     
-    #REMOVE4EVOLUTION###create conserved SNPs    
-    #REMOVE4EVOLUTION##conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
-    #REMOVE4EVOLUTION##columnse = seq(1,(nSNP.cons*2),2)
-    #REMOVE4EVOLUTION##for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-    #REMOVE4EVOLUTION##  conSNPs[e,] = 0
-    #REMOVE4EVOLUTION##}
+    #REMOVE###create conserved SNPs - used to track mutation    
+    #REMOVE##conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
+    #REMOVE##columnse = seq(1,(nSNP.cons*2),2)
+    #REMOVE##for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
+    #REMOVE##  conSNPs[e,] = 0             #all indv of the species have nSNP.cons = 0
+    #REMOVE##}
     
-    #REMOVE4EVOLUTION##source1 <- cbind(source, sourcegen, migSNPs, conSNPs)        #also doesnt work????
+    #REMOVE##source1 <- cbind(source, sourcegen, migSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
     source1 <- cbind(source, sourcegen, migSNPs)
     source <- source1
     
     #prepare focal and source pop for Fst analysis in hierfstat (enacted in Analyze.R)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)                    #find number of SNPs
     pos1 = seq(1, SNPS, 2) #allele 1 positions, aka odd values
-    pos2 = pos1+1
-    
+    pos2 = pos1+1          #allele 2 positions, aka even values
+#STOPED HERE FOR CLEANUP    
     fstinit <- focalpop[, -c(ncol(focalpop)-(SNPS):ncol(focalpop))]               #grab SNPs
     fstinit[fstinit[,]==0] <-2                                                    #change 0s to 2s
     fstinit[,pos1] <- as.numeric(paste(fstinit[,pos1], fstinit[,pos2], sep=""))                     #merge SNPs
