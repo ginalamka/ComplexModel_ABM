@@ -6,12 +6,18 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
     break
   }else if(nrow(pairs)>= numboff){
     #if preferentially mating migrants switch is turned on (1 = on, 0 = off)
+    #note this is not prop migrant ancestry, but that migrants are mating so that the number of migrants~=number effective migrants
     if(matemigs == 1){
-      migparents = pairs[pairs[,3]==2,,drop=FALSE]
-      nonmigrents = pairs[pairs[,3]!=2,,drop=FALSE]
-      pairings = sample(1:nrow(nonmigrents), numboff-nrow(migparents), replace = F, prob = NULL)
-      parents <- nonmigrents[pairings,,drop=FALSE]
-      parents <- rbind(migparents,parents)
+      migparents = pairs[pairs[,3]==2,,drop=FALSE]           #grab parents with migrant ancestry
+      nonmigrents = pairs[pairs[,3]!=2,,drop=FALSE]          #grab parents without migrants
+      if(nrow(migparents) < numboff){                        #if there are more offspring needed, grab some nonmig parents
+        pairings = sample(1:nrow(nonmigrents), numboff-nrow(migparents), replace = F, prob = NULL) #grab the additional parent pairs needed
+        parents <- nonmigrents[pairings,,drop=FALSE]
+        parents <- rbind(migparents,parents)                 #make parent matrix
+      }else{
+        parents <- migparents
+        pairings=NULL
+      }
       remove(migparents, nonmigrents)
     }else{
       #if not preferentially mating migrants, randonmly select pairs
@@ -77,6 +83,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
         kept = sample(migbbys[,1], numboff, replace = FALSE, prob = NULL) #remove babies so that you generate only the number needed
         babies = babies[which(babies[,1]%in%kept), , drop=FALSE] 
         remove(kept, migbbys)
+        rm=NULL
       }else{
         keep = migbbys[,1]
         if(length(keep)>=1){

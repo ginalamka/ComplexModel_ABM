@@ -62,6 +62,9 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
       pairs = keptpairs #keptpairs[,c(1:2)]  <- use this if don't want migrant identifier
       
       remove(lee, matedpairs, keptpairs)
+    }else{
+      al = nrow(pairs)
+      pairs <- cbind(pairs, rep(1, al))
     }
     
     if(nrow(pairs) >= 3){
@@ -70,8 +73,8 @@ MateChoice = function(pop, sex, maturity, allee, matemigs){
       pairs <- pairs[rand, ]
       
       #pairs <- rand
-      colnames(pairs) <- c('mom','dad','migident')
     }
+    colnames(pairs) <- c('mom','dad','migident')
     
     remove(dead, immature, mates, rand)
     
