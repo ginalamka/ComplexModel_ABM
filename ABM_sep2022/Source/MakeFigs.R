@@ -1,53 +1,33 @@
 #MakeFigs
 
-setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local/holding") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
+setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local/finaldata") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
 directory = getwd()
 outdir = paste(directory, "/figs/", sep = "")
 
-tab0 = read.table("summary_ABM_run.10.12.22_d_all.csv", header=T, sep=",")
-tab1 = read.table("ABM_run.11.8.22_1a_all_summary.csv", header=T, sep=",")  
-tab2 = read.table("ABM_run.11.7.22_2a_all_summary.csv", header=T, sep=",")
-tab3 = read.table("ABM_run.11.7.22_3a_all_summary.csv", header=T, sep=",")
-tab4 = read.table("ABM_run.11.8.22_4a_all_summary.csv", header=T, sep=",")
-tab5 = read.table("ABM_run.11.8.22_5a_all_summary.csv", header=T, sep=",")
-tab6 = read.table("ABM_run.11.14.22_6a_all_summary.csv", header=T, sep=",")
-tab7 = read.table("ABM_run.11.14.22_7a_all_summary.csv", header=T, sep=",")
-tab8 = read.table("ABM_run.11.14.22_8a_all_summary.csv", header=T, sep=",")
-tab9 = read.table("ABM_run.11.14.22_9a_all_summary.csv", header=T, sep=",")
-tab = read.table("ABM_run.12.9.22_0c_all_summary.csv", header=T, sep=",")
-tab = read.table("ABM_run.1.5.23_A_all_summary.csv", header=T, sep=",")
-tab = read.table("ABM_run.12.14.22_1a_all_summary.csv", header=T, sep=",")
-tab = read.table("ABM_run.12.10.22_1A_all_summary.csv", header=T, sep=",") #this one has crashes
-tab = read.table("ABM_run.1.11.23_C_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.9.23_D_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.11.23_B_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.11.23_E_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.18.23_c_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.18.23_d_all_summary.csv", header=T, sep=",") 
-tab = read.table("ABM_run.1.18.23_a_all_summary.csv", header=T, sep=",") 
-tab = read.table("run_d_quickie_summary.csv", header=T, sep=",") 
-tab = read.table("run_e_quickie_summary.csv", header=T, sep=",") 
-tab = read.table("run_a_quickie_summary.csv", header=T, sep=",") 
-tab = read.table("run_f_quickie_summary.csv", header=T, sep=",")
-ted = read.table("ABMrun_3.15.23_e_quickie_summary.csv", header=T, sep=",")
-tat = read.table("ABMrun_3.1.23_e_quickie_summary.csv", header=T, sep=",")
-tab = read.table("ABMrun_3.15.23_emany2_all_summary.csv", header=T, sep=",")
-smry = read.table("ABMrun_3.3.23_e_quickie_summary.csv", header=T, sep=",")
+{
+#  A = 1 mig per gen
+#  b= 100 @ y=151
+#  c= 25 @y=151,165,181,195
+#  d= 1 mig wheny >= edyr + dur+1
+#  e= 100 @ y=125
+#  f= 25 @ y=125, 140, 155, 170
+}
 
-#ABG, CDH, EFI
-#tat = 1,2,3
-#tab = 4,5,6
-#smry = 7,8
+p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
+p3a = read.table("fin_5.10.23_1LL3a_all_summary.csv", header=T, sep=",")  
+p3b = read.table("fin_5.10.23_1LL3b_all_summary.csv", header=T, sep=",")
+p3c = read.table("fin_5.10.23_1LL3c_all_summary.csv", header=T, sep=",")
+p3d = read.table("fin_5.10.23_1LL3d_all_summary.csv", header=T, sep=",")
 
-ted[,12] = ted[,12]+3
-table(ted[,12])
+p3f = read.table("fin_5.10.23_1LL3f_all_summary.csv", header=T, sep=",")
+p7a = read.table("fin_5.11.23_1LL7a_all_summary.csv", header=T, sep=",")
+p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
 
-tat[,12] = tat[,12]+6
-table(tat[,12])
 
-smry = rbind(tat, tab, smry)
+smry = rbind(p30,p3a,p3b,p3d,p3f)
 
 library(colorspace)
+library(scales)
 gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
 lt.gt.col <- qualitative_hcl(5, "Pastel1") #ghibli_palette('PonyoLight')[4]
 "#C87A8A""#6B9D59""#5F96C2""#909646" "#00A396" "#9189C7"
@@ -55,27 +35,6 @@ gt.cols<- c("#C87A8A","#00A396","#9189C7","lightgreen","orange" )
 gt.cols<- c("#C87A8A","#00A396","#6B9D59","#AC8C4E")
 "orange" "lightgreen""#C87A8A" "#BF826A" "#AC8C4E" "#909646" "#6B9D59" "#39A277" "#00A396" "#169FB1" "#5F96C2" "#9189C7" "#B37EBE" "#C578A8"
 "#FFC5D0" "#E2D4A8" "#A8E1BF" "#A4DDEF" "#E4CBF9"
-v = matrix(nrow=1755,ncol=1) 
-v[1:350+1,1] = 1
-v[351:700+2,1]=2
-v[701:1050+3,1]=3
-v[1051:1400+4,1]=4
-v[1401:1750+5]=5
-
-grp1 <- tab[tab[,12]<=8,,drop=FALSE]
-grp2 <- tab[(tab[,12]>8)&(tab[,12]<17),,drop=FALSE]
-grp3 <- tab[tab[,12]>=17,,drop=FALSE]
-
-grp1a <- grp1[grp1[,12]<=4,,drop=FALSE]
-grp1b <- grp1[grp1[,12]>4,,drop=FALSE]
-
-grp1 <- tab[tab$maxage==3,,drop=FALSE]
-grp1a <- grp1[grp1$broodsize==4,,drop=FALSE]
-grp1b <- grp1[grp1$broodsize==6,,drop=FALSE]
-
-grp1 <- tab[tab$r0==0.1,,drop=FALSE]
-
-smry = tab
 
 {
 #Data
@@ -90,31 +49,33 @@ smry = tab
 #ABM_run.11.14.22_7a_all_summary.csv >> one migration of 50 indv at year 175, starting heterozy in source pop = .8-.9
 #ABM_run.11.14.22_8a_all_summary.csv >> three migrations of 25 indv at years 175, 201, 225, starting heterozy in source pop = .8-.9
 #ABM_run.11.14.22_9a_all_summary.csv >> three migrations of 25 indv at years 175, 201, 225, starting heterozy in source pop = .1-.2
+
+  
+  #give each parameter set a unique identifier
+  tab0[,12] <- "z"
+  tab1[,12] <- "a"
+  tab2[,12] <- "b"
+  tab3[,12] <- "c"
+  tab4[,12] <- "d"
+  tab5[,12] <- "e"
+  tab6[,12] <- "f"
+  tab7[,12] <- "g"
+  tab8[,12] <- "h"
+  tab9[,12] <- "i"
+  
+  #note that as written, figs are for FOUR (4) parameter sets -- no mig plus the 3 varieties
+  comp1 = rbind(tab0,tab1,tab2,tab3) #Change migration intensities @ .4-.6 het in source pop
+  comp2 = rbind(tab0,tab1,tab4,tab5) #change fitness of source pop @ 1 mig per gen
+  comp3 = rbind(tab0,tab2,tab6,tab7) #change fitness of source pop @ 1x pulse mig
+  comp4 = rbind(tab0,tab3,tab8,tab9) #change fitness of source pop @ 3x pulse mig 
+  comp5 = rbind(tab0,tab4,tab7,tab8) #change migration intensities @ .8-.9 het in source pop
+  comp6 = rbind(tab0,tab5,tab6,tab9) #change migration intensities @ .1-.2 het in source pop
+  
+  smry <- tab   #compX
 }
 
-#give each parameter set a unique identifier
-tab0[,12] <- "z"
-tab1[,12] <- "a"
-tab2[,12] <- "b"
-tab3[,12] <- "c"
-tab4[,12] <- "d"
-tab5[,12] <- "e"
-tab6[,12] <- "f"
-tab7[,12] <- "g"
-tab8[,12] <- "h"
-tab9[,12] <- "i"
-
-#note that as written, figs are for FOUR (4) parameter sets -- no mig plus the 3 varieties
-comp1 = rbind(tab0,tab1,tab2,tab3) #Change migration intensities @ .4-.6 het in source pop
-comp2 = rbind(tab0,tab1,tab4,tab5) #change fitness of source pop @ 1 mig per gen
-comp3 = rbind(tab0,tab2,tab6,tab7) #change fitness of source pop @ 1x pulse mig
-comp4 = rbind(tab0,tab3,tab8,tab9) #change fitness of source pop @ 3x pulse mig 
-comp5 = rbind(tab0,tab4,tab7,tab8) #change migration intensities @ .8-.9 het in source pop
-comp6 = rbind(tab0,tab5,tab6,tab9) #change migration intensities @ .1-.2 het in source pop
-
-smry <- tab   #compX
-  
 #~~~Avril's Code
+{
 ### set colors
 library(ghibli)
 library(scales)
@@ -182,19 +143,21 @@ for(c in unique(smry[,12])){
 }
 
 legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19, bty = 'n', cex = text.size, pt.cex = pt.cex, horiz = TRUE, x.intersp = 0.7)
-
-
-##### Generic plotting code
-#1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho, 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource
-var = 3
-smry = rbind(tab1,tab2,tab3,tab4)
-smry = rbind(tab1,tab2,tab5,tab6)
-range(smry[,var])
-if(anyNA(smry[,var]==TRUE)){
-  hold<- na.omit(smry)
-  smry <- hold
 }
 
+##### Generic plotting code
+#1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho[driftSNPS], 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource,
+#16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
+#29=years, 30=r0, 31=nSNP.mig, 32=nSNP.cons
+
+var = 5
+varname = "Observed Heterozygosty"
+title = "drop to 300, LL"
+range(smry[,var])
+#if(anyNA(smry[,var]==TRUE)){
+#  hold<- na.omit(smry)
+#  smry <- hold
+#}
 
 ymin <- round(min(smry[,var]), digits = 2)#-.1
 ymax <- round(max(smry[,var]), digits = 2)#+.1
@@ -202,38 +165,40 @@ ln.alph <- 0.5
 pt.alph <- 1.25
 diff <- 0.15
 xmin <- 0
-xmax <- 250
+xmax <- 350
 offsets <- c(-0.5, 0, 0.5, 0.1) #c(-0.2, -0.1, 0, 0.1, 0.2)
-orig.xs <- c(1, 100, 150, 201, 250) #years of interest 
+orig.xs <- c(50, 100, 151, 201, 250, 300, 350) #years of interest 
 text.size <- 1.75
 pt.cex <- 1.25
-lwd <- 2
+lwd <- 4
 
 ## make plot
-plot(0,0, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
-     xaxt = 'n', main = 'fst @comp4', xlab = 'Generation Time', ylab = 'Variable of Interest',
+plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+     xaxt = 'n', main = title, xlab = 'Generation Time', ylab = varname,
      cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
-#axis(2, at = c(-0.1, 0, 0.1, 0.2), cex.axis = text.size)
-axis(1, at = c(0, 100, 150, 200, 250), labels = c('0','100','150','200', '250'), cex.axis = text.size)
+axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
 #abline(h = 0, lty = 2)
 
 col <- 1
-for(c in unique(smry[,12])){
+for(c in unique(smry[,19])){
   print(c)
-  temp <- smry[smry[,12] == c,, drop=FALSE] #separate by parameter set
+  temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
   
   y1<-temp[temp[,1] == orig.xs[1],,]
   y2<-temp[temp[,1] == orig.xs[2],,]
   y3<-temp[temp[,1] == orig.xs[3],,]
   y4<-temp[temp[,1] == orig.xs[4],,]
   y5<-temp[temp[,1] == orig.xs[5],,]
+  y6<-temp[temp[,1] == orig.xs[6],,]
+  y7<-temp[temp[,1] == orig.xs[7],,]
   
   xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
   #columns <- c(18, 19, 20, 21)
-  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
-  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
-  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var])), 
-         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var])), 
+  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var]), mean(y6[,var])-sd(y6[,var]), mean(y7[,var])-sd(y7[,var])), 
+         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var]), mean(y6[,var])+sd(y6[,var]), mean(y7[,var])+sd(y7[,var])), 
          lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
   #  for(l in unique(orig.xs)){
   #    column <- columns[l]

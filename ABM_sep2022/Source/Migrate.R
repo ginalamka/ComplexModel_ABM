@@ -87,8 +87,8 @@ Migrate = function(pop, source, y, miggy, styr, edyr, dur){
       }
     }else{mig=0}
   }else if(miggy == "e"){
-    if(y >= edyr + dur){
-      mig = 1
+    if(y == 125){
+      mig = 100
       
       print(paste("there are", mig, "migrants this year"))
       

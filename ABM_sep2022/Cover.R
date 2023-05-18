@@ -46,11 +46,11 @@ remove(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, 
 
 #on/off switches for functions
 replicates    = 20 
-allee         = 0    #1=yes, 0=no
-matemigs      = 0    #1=yes, 0=no
+allee         = 1    #1=yes, 0=no
+matemigs      = 1    #1=yes, 0=no
 plotit        = 0    #1=yes, 0=no
 plotit2       = 0    #1=yes, 0=no
-mutate        = 0    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
+mutate        = 1    #1=yes, 0=no   #average mammalian genome mutation rate is 2.2 x 10^-9 per base pair per year, https://doi.org/10.1073/pnas.022629899
 #bannertailed krats = 0.0081 mutants/generation/locus, in Busch, Waser, and DeWoody 2007 doi: 10.1111/j.1365-294X.2007.03283.x.
 mu            = 0.001  #mutation rate
 
