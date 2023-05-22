@@ -23,6 +23,8 @@ p3f = read.table("fin_5.10.23_1LL3f_all_summary.csv", header=T, sep=",")
 p7a = read.table("fin_5.11.23_1LL7a_all_summary.csv", header=T, sep=",")
 p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
 
+tt= read.table("comb_fin_5.11.23_1LL1a_all_summary.csv", header=T, sep=",")
+
 
 smry = rbind(p30,p3a,p3b,p3d,p3f)
 
