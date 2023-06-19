@@ -49,14 +49,30 @@ HHa = HH0a[HH0a[,23]!=0,,drop=FALSE]
 HHa[,19] = "HHa"
 
 #data for supplemental
-p1c = read.table("fin_6.1.23_LL1c_all_summary.csv", header=T, sep=",")  #has pops that crashed!
+  #data for various conservation statuses
+p1b = read.table("comb_fin_6.1.23_LL1b_all_summary.csv", header=T, sep=",")  #has 14 pops that crashed!!!
+    #manually combined fin_6.1.23_LL1b_all_summary.csv and cpfin_6.1.23_LL1b_all_summary.csv
+p1b[,19] = "p1b"
+p1c = read.table("fin_6.1.23_LL1c_all_summary.csv", header=T, sep=",")  #has 3 pops that crashed!!!
+p5b = read.table("fin_6.1.23_LL5b_all_summary.csv", header=T, sep=",")
+p5c = read.table("comb_fin_6.1.23_LL5c_all_summary.csv", header=T, sep=",")
+    #manually combined fin_6.1.23_LL5b_all_summary.csv and cpfin_6.1.23_LL5b_all_summary.csv
 p7b = read.table("fin_6.1.23_LL7b_all_summary.csv", header=T, sep=",")
 p7c = read.table("fin_6.1.23_LL7c_all_summary.csv", header=T, sep=",")
+  #data for no bottleneck
+b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
+ba = read.table("fin_6.1.23_nbtl3a_all_summary.csv", header=T, sep=",")
+  #data for when migrants arent preferentially mated
+p30. = read.table("fin_6.1.23_1LL30._all_summary.csv", header=T, sep=",")
+p3a. = read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")  
+p3b. = read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
+p3c. = read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
 
-
-
+smry = rbind(p10, p1a, p1b, p1c)
+smry = rbind(p50, p5a, p5b, p5c)
+smry = rbind(b0, ba, p30, p3a)
 smry = rbind(p70, p7a, p7b, p7c)
-smry = rbind(p30,p3a,p3b,p3c,p3d,p3e,p3f)
+smry = rbind(p30.,p3a.,p3b.,p3c.) #,p3d,p3e,p3f
 smry = rbind(p1a, p3a, p5a, p7a)
 smry = rbind(p10, p30, p50, p70)
 smry = rbind(LL0, HL0, HH0)
@@ -192,7 +208,7 @@ legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19,
 {
 var = 5
 varname = "observed heterozygosity"
-title = "supplemental - migration rates in vulnerable sp"
+title = "supplemental - mig rates in a critically endangered sp"
 range(smry[,var])
 #if(anyNA(smry[,var]==TRUE)){
 #  hold<- na.omit(smry)
@@ -258,6 +274,7 @@ for(c in unique(smry[,19])){
   col <- col+1
 }
 
+#legend('topleft', legend = c('mig=0_no btlnk', 'mig=1 mig/gen_no btlnk', 'mig=0_w/btlnk', 'mig=1 mig/genw/btlnk'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 legend('topleft', legend = c('mig=0', 'mig=1 mig/gen','mig=100@y=151','mig=25@y=151,165,181,195'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 #legend('topleft', legend = c('critically endangered', 'endangered','threatened','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 #legend('bottomright', legend = c('low source, low focal', 'high source, low focal','high source, high focal'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
@@ -267,6 +284,39 @@ legend('topleft', legend = c('mig=0', 'mig=1 mig/gen','mig=100@y=151','mig=25@y=
 ##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
 }
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+plot(as.table(table(p10[,1]))/100, main = "no mig", ylab = "proportion pops survive", xlab = "time", col = gt.cols[1], cex.axis = text.size, cex.lab = text.size)
+plot(as.table(table(p1a[,1]))/100, main = "1 mig/gen", ylab = "proportion pops survive", xlab = "time", col = gt.cols[2], cex.axis = text.size, cex.lab = text.size)
+plot(as.table(table(p1b[,1]))/100, main = "bulk AM", ylab = "proportion pops survive", xlab = "time", col = gt.cols[3], cex.axis = text.size, cex.lab = text.size)
+plot(as.table(table(p1c[,1]))/100, main = "freq AM", ylab = "proportion pops survive", xlab = "time", col = gt.cols[4], cex.axis = text.size, cex.lab = text.size)
+
+####Survival Model for crashed populations!
+#https://rpkgs.datanovia.com/survminer/reference/ggsurvplot.html
+#https://rpkgs.datanovia.com/survminer/reference/ggsurvtable.html
+
+surv <- matrix(1,nrow=nrow(smry))
+colnames(surv) <- c("Survive")
+smry=cbind(smry,surv)
+smry[,33] = ifelse(smry[,1]<=350,1,0)
+
+library(coxme)
+library(survminer)
+library(ggplot2)
+library(survival)
+
+run0 <- survfit(Surv(year,Survive)~project, data =smry)
+summary(run0)
+ggsurvtable(run0, data=smry)
+
+run1 <- coxme(Surv(LatencyZ2360,Survive)~Treatment+(1|FishName)+(Age), data =etho)
+summary(run1)
+
+run2 <- coxme(Surv(CumDurZ2,Survive)~Treatment+(1|FishName), data =etho)
+summary(run2)
+
+plot1 <- ggsurvplot(data=smry, run0)
+
+plot1 <- ggsurvplot(survfit(run0), data=smry)
 {
 #create names for data so taht it is easier to call and change when the data change
 yr       = smry[,1]   #year
