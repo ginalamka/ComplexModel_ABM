@@ -4,6 +4,14 @@ setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local
 directory = getwd()
 outdir = paste(directory, "/figs/", sep = "")
 
+#NOTE: as of 7/5/23, we are using 84% confidence intervals to get an alpha = 0.05
+  #therefore, CIs will be between 8 and 92
+  #see https://academic.oup.com/jinsectscience/article/3/1/34/2577125 for more info
+
+#1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho[driftSNPS], 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource,
+#16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
+#29=years, 30=r0, 31=nSNP.mig, 32=nSNP.cons
+
 {
 #  A = 1 mig per gen
 #  b= 100 @ y=151
@@ -12,6 +20,150 @@ outdir = paste(directory, "/figs/", sep = "")
 #  e= 100 @ y=125
 #  f= 25 @ y=125, 140, 155, 170
 }
+
+library(colorspace)
+library(scales)
+library(FSA)
+gt.cols <- c("firebrick3", "darkorange1", "goldenrod1", "springgreen3")
+
+##Figure 1
+#1A - population size ~ year, by = IUCN status
+  #will want to get total pop size, therefore number adults and babies and numboff
+
+
+#1B - delta H ~ year, by = IUCN status [plus no crash]
+  #will want CR at bottom 
+p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
+p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
+p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
+b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
+smry = rbind(p10, p30, p70, b0) #p50, 
+
+{
+  var = 5
+  varname = "Heterozygosity"
+  title = "Fig 1B"
+  range(smry[,var])
+  
+  ymin <- round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.3 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', main = title, xlab = 'Generation Time', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#1C - fst ~ year, by = IUCN status [plus no crash]
+p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
+p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
+p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
+b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
+smry = rbind(p10, p30, p70, b0) #p50, 
+
+{
+  var = 10
+  varname = "Fst vs orig"
+  title = "Fig 1C"
+  range(smry[,var])
+  
+  ymin <- round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.3 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', main = title, xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+
+###Figure 2
+
+
+
+
 
 #data for Q1: migration rates
 p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
@@ -68,20 +220,22 @@ p3a. = read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")
 p3b. = read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
 p3c. = read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
 
+smry = rbind(p1b, p3b, p5b, p7b)
+smry = rbind(p1c, p3c, p5c, p7c)
 smry = rbind(p10, p1a, p1b, p1c)
 smry = rbind(p50, p5a, p5b, p5c)
 smry = rbind(b0, ba, p30, p3a)
 smry = rbind(p70, p7a, p7b, p7c)
 smry = rbind(p30.,p3a.,p3b.,p3c.) #,p3d,p3e,p3f
 smry = rbind(p1a, p3a, p5a, p7a)
-smry = rbind(p10, p30, p50, p70)
+smry = rbind(p10, p30, p70) #p50, 
 smry = rbind(LL0, HL0, HH0)
 smry = rbind(LLa, HLa, HHa)
 smry = rbind(LLa, HLa, HHa, LL0, HL0, HH0)
+gt.cols <- c("firebrick3", "darkorange1", "goldenrod1")
 gt.cols <- c("#FFC5D0", "#E2D4A8", "#A4DDEF","orchid3", "springgreen", "blue")
-gt.cols <- c("black", "#FFC5D0", "#A8E1BF", "#A4DDEF", "hotpink", "springgreen", "blue")
-library(colorspace)
-library(scales)
+gt.cols <- c("black", "#FFC5D0", "#A8E1BF", "#A4DDEF", "hotpink", "springgreen3", "blue")
+
 gt.cols <- c("#FFC5D0", "#E2D4A8", "#A4DDEF", "#E4CBF9")
 gt.cols <- c("orchid3", "springgreen", "blue", "hotpink") #"#A8E1BF", 
 gt.cols <- qualitative_hcl(6, "Dark2") #ghibli_palette('PonyoMedium')#[4]
@@ -208,7 +362,7 @@ legend('top', legend = c('tab1', 'tab2','tab3','tab4'), col = gt.cols, pch = 19,
 {
 var = 5
 varname = "observed heterozygosity"
-title = "supplemental - mig rates in a critically endangered sp"
+title = "various starting allele freqs"
 range(smry[,var])
 #if(anyNA(smry[,var]==TRUE)){
 #  hold<- na.omit(smry)
@@ -222,8 +376,8 @@ pt.alph <- 1.25
 diff <- 0.15
 xmin <- 0
 xmax <- 350
-offsets <- c(-0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
-orig.xs <- c(50, 100, 151, 201, 250, 300, 350) #years of interest 
+offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
 text.size <- 1.75
 pt.cex <- 1.25
 lwd <- 4
@@ -248,13 +402,14 @@ for(c in unique(smry[,19])){
   y5<-temp[temp[,1] == orig.xs[5],,]
   y6<-temp[temp[,1] == orig.xs[6],,]
   y7<-temp[temp[,1] == orig.xs[7],,]
+  y8<-temp[temp[,1] == orig.xs[8],,]
   
   xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
   #columns <- c(18, 19, 20, 21)
-  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
-  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
-  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var]), mean(y6[,var])-sd(y6[,var]), mean(y7[,var])-sd(y7[,var])), 
-         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var]), mean(y6[,var])+sd(y6[,var]), mean(y7[,var])+sd(y7[,var])), 
+  lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
+  points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+  arrows(x0 = xs, y0 = c(mean(y1[,var])-sd(y1[,var]), mean(y2[,var])-sd(y2[,var]), mean(y3[,var])-sd(y3[,var]), mean(y4[,var])-sd(y4[,var]), mean(y5[,var])-sd(y5[,var]), mean(y6[,var])-sd(y6[,var]), mean(y7[,var])-sd(y7[,var]), mean(y8[,var])-sd(y8[,var])), 
+         y1 = c(mean(y1[,var])+sd(y1[,var]), mean(y2[,var])+sd(y2[,var]), mean(y3[,var])+sd(y3[,var]), mean(y4[,var])+sd(y4[,var]), mean(y5[,var])+sd(y5[,var]), mean(y6[,var])+sd(y6[,var]), mean(y7[,var])+sd(y7[,var]), mean(y8[,var])+sd(y8[,var])), 
          lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
   #  for(l in unique(orig.xs)){
   #    column <- columns[l]
@@ -275,10 +430,10 @@ for(c in unique(smry[,19])){
 }
 
 #legend('topleft', legend = c('mig=0_no btlnk', 'mig=1 mig/gen_no btlnk', 'mig=0_w/btlnk', 'mig=1 mig/genw/btlnk'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
-legend('topleft', legend = c('mig=0', 'mig=1 mig/gen','mig=100@y=151','mig=25@y=151,165,181,195'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
-#legend('topleft', legend = c('critically endangered', 'endangered','threatened','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+#legend('topleft', legend = c('mig=0', 'mig=1 mig/gen','mig=100@y=151','mig=25@y=151,165,181,195'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+#legend('bottomleft', legend = c('critically endangered', 'endangered','threatened','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 #legend('bottomright', legend = c('low source, low focal', 'high source, low focal','high source, high focal'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
-#legend('topleft', legend = c('LL 1mig', 'HL 1mig','HH 1mig', 'LL no mig', 'HL no mig','HH no mig'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+legend('right', legend = c('LL 1mig', 'HL 1mig','HH 1mig', 'LL no mig', 'HL no mig','HH no mig'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 #legend('topleft', legend = c('mig=0', 'mig=1 mig/gen','mig=100@y=151','mig=25@y=151,165,181,195', 'mig=1mig@y=151','mig=100@y=125','mig=25 @ y=125,140,155,170'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 }
 ##NEED TO FIGURE OUT A WAY TO DO A POLYGON/GO ACROSS ALL YEARS
@@ -458,6 +613,34 @@ legend('center', legend = c('mig=0',
        col = gt.cols, pch = 19, bty = 'n', cex = 1.5, pt.cex = 3, horiz = FALSE, x.intersp = 0.5)
 
 
+ne = read.table("fin_5.23.23_1HL30_all_necounts.csv", header=T, sep=",")
+head(ne)
+
+allindv = matrix(nrow=nrow(ne), ncol=1)
+allindv = ne[,4]+ne[,5]
+ne = cbind(ne, allindv)
+
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+points(ne[,1], ne[,13], col=gt.cols[col], pch=16)
+
+plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+r=1
+for(z in unique(ne[,11])){
+  zne = ne[ne[,11]==z,,drop=FALSE]
+  for(b in 1:length(unique(zne[,12]))){
+    bne = zne[zne[,12]==b,,drop=FALSE]
+    for(p in 1:length(unique(smry[,10]))){
+      pne = bne[bne[,10]==p,,drop=FALSE]
+      lines(pne[,1], pne[,13], col=gt.cols[r], pch=16)
+    }
+  }
+  r=r+1
+}
+legend('bottomright', legend = c('critically endangered', 'endangered','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+
+#maybe need to add numboff to numb adults and numb babies?
+
+
 
 ######Points
 {
@@ -484,7 +667,7 @@ for(z in unique(smry[,19])){
   }
   r=r+1
 }
-legend('bottomright', legend = c('critically endangered', 'endangered','threatened','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+legend('bottomright', legend = c('critically endangered', 'endangered','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 
 
 points(yr, n, col=gt.cols[col], pch=16) #"firebrick"
