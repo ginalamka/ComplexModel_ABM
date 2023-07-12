@@ -8,6 +8,17 @@ outdir = paste(directory, "/figs/", sep = "")
   #therefore, CIs will be between 8 and 92
   #see https://academic.oup.com/jinsectscience/article/3/1/34/2577125 for more info
 
+{
+#helpful plotting links
+  #line types https://r-charts.com/base-r/line-types/
+  #axes labels https://r-charts.com/base-r/axes/#axis-labels
+  #pch https://r-charts.com/base-r/pch-symbols/
+  #legend https://r-charts.com/base-r/legend/
+  #making a figure panel https://r-charts.com/base-r/combining-plots/
+  #size of png https://stackoverflow.com/questions/8399100/r-plot-size-and-resolution
+  #moving axis label closer to axis https://stackoverflow.com/questions/30265728/in-r-base-plot-move-axis-label-closer-to-axis
+}
+
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho[driftSNPS], 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource,
 #16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
 #29=years, 30=r0, 31=nSNP.mig, 32=nSNP.cons
@@ -21,28 +32,195 @@ outdir = paste(directory, "/figs/", sep = "")
 #  f= 25 @ y=125, 140, 155, 170
 }
 
+#make panel order by row, with 2 rows and 2 columns
+par(mfrow = c(2,2))
+
+par(mar = c(5, 5, 4, 4)+.25)
+plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
+     cex.axis = text.size, cex.lab = text.size)
+lines(c(2,4,5,6,7, 8), c(1.3, 1.5, 1.35, 1.52, 1.65,1.7), lwd = 7)
+title(ylab = 'Genetic Diversity', line = 1, cex.lab = text.size*3) #1.5
+title(xlab = 'Time', line = 2.5, cex.lab = text.size*3)
+par(new=TRUE) #merge two plots
+lines(c(2,4,5,6,8), c(1.1, 1.15, 1.5, 1.6,1.8), lwd = 7, col = "blue")
+axis(4, yaxt = "n")
+mtext('Population Divergence', side = 4, line = 2.5, cex = text.size*2.87, col = "blue") #1.2
+
+{
+plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
+     cex.axis = text.size, cex.lab = text.size)
+lines(c(2,4,5,6, 8), c(1.1, 1.2, 1.6, 1.65, 1.7), lwd = 5)
+title(ylab = 'Proportion Migrant \n Ancestry (%)', line = 1, cex.lab = text.size*1.5)
+title(xlab = 'Time', line = 1.5, cex.lab = text.size*2)
+
+plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
+     cex.axis = text.size, cex.lab = text.size)
+lines(c(2,4,5,6,8), c(1.1, 1.15, 1.5, 1.6,1.8), lwd = 5)
+title(ylab = 'Original Population \n Divergence (Fst)', line = 1, cex.lab = text.size*1.5)
+title(xlab = 'Time', line = 1.5, cex.lab = text.size*2)
+
+plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = "", ylab = "",
+     cex.axis = text.size, cex.lab = text.size)
+lines(c(2,4,5,6, 8), c(1.8, 1.7, 1.4, 1.35, 1.3), lwd = 5)
+title(ylab = 'Migrant Source Population \n Divergence (Fst)', line = 1, cex.lab = text.size*1.5)
+title(xlab = 'Time', line = 1.5, cex.lab = text.size*2)
+}
+
+par(mfrow = c(1,1)) #go back to default where only one fig per panel
+
+{plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = 'Time', ylab = 'Proportion Migrant \n Ancestry (%)',
+      cex.axis = text.size, cex.lab = text.size)
+  lines(c(2,4,5,6, 8), c(1.1, 1.2, 1.6, 1.65, 1.7), lwd = 5)
+  
+  plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = 'Time', ylab = 'Original Population \n Divergence (Fst)',
+       cex.axis = text.size, cex.lab = text.size)
+  lines(c(2,4,5,6,8), c(1.1, 1.15, 1.5, 1.6,1.8), lwd = 5)
+  
+  plot(c(1, 9), 1:2, type = "n", xaxt = "n", yaxt = "n", xlab = 'Time', ylab = 'Migrant Source Population \n Divergence (Fst)',
+       cex.axis = text.size, cex.lab = text.size)
+  lines(c(2,4,5,6, 8), c(1.8, 1.7, 1.4, 1.35, 1.3), lwd = 5)
+}
+  
+par(mfrow = c(1,1)) #go back to default where only one fig per panel
+  
+
 library(colorspace)
 library(scales)
 library(FSA)
-gt.cols <- c("firebrick3", "darkorange1", "goldenrod1", "springgreen3")
+gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") #"springgreen3"
 
+#plot specs
+ln.alph <- 0.5
+pt.alph <- 1.25
+diff <- 0.15
+xmin <- 0
+xmax <- 350
+offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+text.size <- 1.75
+pt.cex <- 1.25
+lwd <- 4
+
+#poly specs
+dens = NULL #c(100, 100, 100, 100, NULL, NA, NULL, NA)
+ang = 45
+bo = NA #c(NULL, NULL, NULL, NULL, NA, NA, NA, NA) #alpha(gt.cols[col], .8)
+alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
+lty = c(3,3,3,3,1,1,1,1)
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##Figure 1
-#1A - population size ~ year, by = IUCN status
-  #will want to get total pop size, therefore number adults and babies and numboff
-
-
-#1B - delta H ~ year, by = IUCN status [plus no crash]
-  #will want CR at bottom 
+{
 p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
 p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
 p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
 b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
-smry = rbind(p10, p30, p70, b0) #p50, 
+smry = rbind(b0,p10, p30, p70) #p50, 
 
+#make panel order by row, with 2 rows and 2 columns
+par(mfrow = c(2,2))
+
+#1A - population size ~ year, by = IUCN status
+  #will want to get total pop size, therefore number adults and babies and numboff
+plot(-20, -20 , xlab="Year", ylab="Population Size", xlim=c(0, 350), ylim=c(0, 1000),
+     cex.axis = text.size, cex.lab = text.size) 
+title("A", adj = 0, cex.main = text.size, line = 2)
+col=1
+for(z in unique(smry[,19])){
+  zsmry = smry[smry[,19]==z,,drop=FALSE]
+  for(b in 1:length(unique(zsmry[,20]))){
+    bsmry = zsmry[zsmry[,20]==b,,drop=FALSE]
+    for(p in 1:length(unique(smry[,11]))){
+      psmry = bsmry[bsmry[,11]==p,,drop=FALSE]
+      lines(psmry[,1], psmry[,2], col=gt.cols[col], pch=16)
+    }
+  }
+  col=col+1
+}
+#legend('bottomright', legend = c('critically endangered', 'endangered','vulnerable'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+#legend('bottomright', legend = c('LC', 'CR','EN', 'VU'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+
+#1B - delta H ~ year, by = IUCN status [plus no crash]
+  #will want CR at bottom 
 {
   var = 5
   varname = "Heterozygosity"
   title = "Fig 1B"
+  range(smry[,var])
+  
+  ymin <- 0.1 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.3 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("B", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+      
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#1C - fst ~ year, by = IUCN status [plus no crash]
+{
+  var = 10
+  varname = "Original Population \n Divergence (Fst)"
+  title = "Fig 1C"
   range(smry[,var])
   
   ymin <- round(min(smry[,var]), digits = 2)#-.1
@@ -58,10 +236,817 @@ smry = rbind(p10, p30, p70, b0) #p50,
   pt.cex <- 1.25
   lwd <- 4
   
+  par(mar = c(4,6,4,2))
   ## make plot
   plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
-       xaxt = 'n', main = title, xlab = 'Generation Time', ylab = varname,
+       xaxt = 'n', xlab = 'Year', ylab = varname,
        cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("C", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#1D - fst vs source ~ year, by IUCN staus [plus no crash]
+{
+  var = 14
+  varname = "Migrant Source Population \n Divergence (Fst)"
+  title = "Fig 1C"
+  range(smry[,var])
+  
+  ymin <- 0.3 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.5 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Figure 2
+{
+#2A - prop mig SNPs (ancestry) ~ year, by = IUCN status
+LL0 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
+LLa = read.table("fin_5.10.23_1LL3a_all_summary.csv", header=T, sep=",") 
+HL0 = read.table("fin_5.23.23_1HL30_all_summary.csv", header=T, sep=",")
+HLa = read.table("fin_5.23.23_1HL3a_all_summary.csv", header=T, sep=",")
+HH0a = read.table("comb_fin_5.10.23_2HH30a_all_summary.csv", header=T, sep=",")
+#HH0a >> manually combined fin_5.10.23_2HH30a_all_summary.csv and cpfin_5.10.23_2HH30a_all_summary.csv
+HH0 = HH0a[HH0a[,23]==0,,drop=FALSE]
+HH0[,19] = "HH0"
+HHa = HH0a[HH0a[,23]!=0,,drop=FALSE]
+HHa[,19] = "HHa"
+
+smry = rbind(LLa, HLa, HHa)
+gt.cols =  c("cyan3", "maroon2", "purple")
+
+{
+  var = 17
+  varname = "Proportion Migrant\n Ancestry (%)"
+  title = "Fig 2A"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 1 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("A", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = 1)
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('topleft', legend = c('LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#2B - Ho ~ year, by = high and low allele freq, low = grey, high = black, mig = solid, non-mig = dotted
+smry = rbind(LL0, HH0, LLa, HLa, HHa)
+gt.cols =  c("cyan3", "purple", "cyan3", "maroon2", "purple")
+
+dens = NULL #c(100, 100, 100, 100, NULL, NA, NULL, NA)
+ang = 45
+bo = NA #c(NULL, NULL, NULL, NULL, NA, NA, NA, NA) #alpha(gt.cols[col], .8)
+alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
+lty <- c(3,3,1,1,1)
+
+{
+  var = 5
+  varname = "Heterozygosity"
+  title = "Fig 2B"
+  range(smry[,var])
+  
+  ymin <- .1 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- .5 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("B", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('left', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#2C - Fst vs orig ~ year, by = starting allele freqs
+{
+  var = 10
+  varname = "Original Population \n Divergence (Fst)"
+  title = "Fig 2C"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.4 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("C", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('topleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#2D - Fst vs source ~ year, by = starting allele freqs
+{
+  var = 14
+  varname = "Migrant Source Population \n Divergence (Fst)"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- .5 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Figure 3
+{
+#3A - Ho ~ year, by = IUCN, mig and no mig
+p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
+p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
+p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
+b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
+p7a = read.table("fin_5.11.23_1LL7a_all_summary.csv", header=T, sep=",")
+p3a = read.table("fin_5.10.23_1LL3a_all_summary.csv", header=T, sep=",")  
+p1a = read.table("comb_fin_5.11.23_1LL1a_all_summary.csv", header=T, sep=",") 
+ba = read.table("fin_6.1.23_nbtl3a_all_summary.csv", header=T, sep=",")
+
+#3A - ancestry ~ year, by = IUCN
+smry = rbind(ba, p1a, p3a, p7a) #p50, 
+{
+  var = 17
+  varname = "Proportion Migrant\n Ancestry (%)"
+  title = "Fig 3A"
+  
+  ymin <- 0
+  ymax <- 1
+  
+  par(mar = c(4,6,4,4))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n', pin=c(1,1))
+  title("A", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  #r=1
+  #for(z in unique(smry[,19])){
+  #  zsmry = smry[smry[,19]==z,,drop=FALSE]
+  #  for(b in 1:length(unique(zsmry[,20]))){
+  #    bsmry = zsmry[zsmry[,20]==b,,drop=FALSE]
+  #    for(p in 1:length(unique(smry[,11]))){
+  #      psmry = bsmry[bsmry[,11]==p,,drop=FALSE]
+  #      lines(psmry[,1], psmry[,var], col=gt.cols[r], pch=16)
+  #    }
+  #  }
+  #  r=r+1
+  #}
+  #legend('bottomright', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#3B - H ~ time, IUCN stat
+smry = rbind(b0, p10, p30, p70, ba, p1a, p3a, p7a) #p50, 
+gt.cols <- c("grey", "firebrick3", "darkorange1", "gold", "grey", "firebrick3", "darkorange1", "gold") # "springgreen3"
+{
+  var = 5
+  varname = "Heterozygosity"
+  title = "Fig 3B"
+  range(smry[,var])
+  
+  ymin <- .1 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- .3 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  lty <- c(3,3,3,3, 1,1,1,1)
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("B", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#3C - orig fst ~ year, by = IUCN
+{
+  var = 10
+  varname = "Original Population \n Divergence (Fst)"
+  title = "Fig 3C"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.4 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  lty <- c(3,3,3,3, 1,1,1,1)
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("C", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#3D - source fst ~ year, by = IUCN
+{
+  var = 14
+  varname = "Migrant Source Population \n Divergence (Fst)"
+  title = "Fig 3D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.5 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  lty <- c(3,3,3,3, 1,1,1,1)
+  
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  
+  #legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Figure 4
+{
+par(mfcol = c(4,4))
+
+#4A, 4D, 4G, 4J
+p1a = read.table("comb_fin_5.11.23_1LL1a_all_summary.csv", header=T, sep=",") 
+p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
+p1b = read.table("comb_fin_6.1.23_LL1b_all_summary.csv", header=T, sep=",")  #has 14 pops that crashed!!!
+p1b[,19] = "p1b"
+p1c = read.table("fin_6.1.23_LL1c_all_summary.csv", header=T, sep=",")  #has 3 pops that crashed!!!
+smry = rbind(p10, p1a, p1b, p1c)
+#gt.cols = c("hotpink","orchid3", "springgreen", "blue") #c("black", "chartreuse3", "chocolate3", "goldenrod3")
+
+gt.cols = "firebrick3"
+lty = c(3, 1, 2, 4)
+pch = c(18, 19, 15, 17)
+
+#A
+var = 5
+varname = "Heterozygosity"
+title = "A"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
   axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
   axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
   #abline(h = 0, lty = 2)
@@ -81,35 +1066,1278 @@ smry = rbind(p10, p30, p70, b0) #p50,
     y8<-temp[temp[,1] == orig.xs[8],,]
     
     xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
-    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
-    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
     arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
            y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
-           lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
     
     print(mean(y1[,var]))
     print(mean(y7[,var]))
     col <- col+1
   }
-  
-  legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+  legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 }
 
-#1C - fst ~ year, by = IUCN status [plus no crash]
-p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
+#E
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "E"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#I
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "I"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#M
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "M"
+ymin <- 0
+ymax <- .5
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
 p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
-p10 = read.table("comb_fin_5.11.23_1LL10_all_summary.csv", header=T, sep=",")
-b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
-smry = rbind(p10, p30, p70, b0) #p50, 
+p3a = read.table("fin_5.10.23_1LL3a_all_summary.csv", header=T, sep=",")  
+p3b = read.table("fin_5.10.23_1LL3b_all_summary.csv", header=T, sep=",")
+p3c = read.table("fin_5.10.23_1LL3c_all_summary.csv", header=T, sep=",")
+smry = rbind(p30, p3a, p3b, p3c)
+
+
+gt.cols = "darkorange1"
+lty = c(3, 1, 2, 4)
+pch = c(18, 19, 15, 17)
+
+#B
+var = 5
+varname = "Heterozygosity"
+title = "B"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#F
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "F"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#J
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "J"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#N
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "N"
+ymin <- 0
+ymax <- .5
 
 {
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+p7a = read.table("fin_5.11.23_1LL7a_all_summary.csv", header=T, sep=",")
+p70 = read.table("fin_5.11.23_1LL70_all_summary.csv", header=T, sep=",")
+p7b = read.table("fin_6.1.23_LL7b_all_summary.csv", header=T, sep=",")
+p7c = read.table("fin_6.1.23_LL7c_all_summary.csv", header=T, sep=",")
+smry = rbind(p70, p7a, p7b, p7c)
+
+gt.cols = c("goldenrod1")
+lty = c(3, 1, 2, 4)
+pch = c(18, 19, 15, 17)
+
+#C
+var = 5
+varname = "Heterozygosity"
+title = "C"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#G
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "G"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#K
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "K"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#O
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "O"
+ymin <- 0
+ymax <- .5
+
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+b0 = read.table("fin_6.1.23_nbtl30_all_summary.csv", header=T, sep=",")
+ba = read.table("fin_6.1.23_nbtl3a_all_summary.csv", header=T, sep=",")
+smry = rbind(b0, ba)
+
+gt.cols = "grey"
+lty = c(3, 1)
+pch = c(18, 19)
+
+#first
+var = 5
+varname = "Heterozygosity"
+title = "D"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#second
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "H"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#third
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "L"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#fourth
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "P"
+ymin <- 0
+ymax <- .5
+
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    y1<-temp[temp[,1] == orig.xs[1],,]
+    y2<-temp[temp[,1] == orig.xs[2],,]
+    y3<-temp[temp[,1] == orig.xs[3],,]
+    y4<-temp[temp[,1] == orig.xs[4],,]
+    y5<-temp[temp[,1] == orig.xs[5],,]
+    y6<-temp[temp[,1] == orig.xs[6],,]
+    y7<-temp[temp[,1] == orig.xs[7],,]
+    y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+           lwd = 1, col = alpha(gt.cols, ln.alph), code=3, angle=90, length=0.1)
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, ln.alph), lwd = lwd, lty = lty[col])
+    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols, pt.alph), pch = pch[col], cex = 2) #pt.cex
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Figure 5
+{
+#5A - timing of burst mig rates (B&E) ~ year 
+par(mfcol = c(4,2))
+
+p3b = read.table("fin_5.10.23_1LL3b_all_summary.csv", header=T, sep=",")
+p3e = read.table("cpfin_5.10.23_1LL3e_all_summary.csv", header=T, sep=",")
+smry = rbind(p3b, p3e)
+gt.cols <- c("black", "grey")
+lty = c(1,1)
+
+#A
+var = 5
+varname = "Heterozygosity"
+title = "A"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#C
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "C"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#E
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "E"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#G
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "H"
+ymin <- 0
+ymax <- .5
+
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+p3c = read.table("fin_5.10.23_1LL3c_all_summary.csv", header=T, sep=",")
+p3f = read.table("fin_5.10.23_1LL3f_all_summary.csv", header=T, sep=",")
+smry = rbind(p3c, p3f)
+
+#B
+var = 5
+varname = "Heterozygosity"
+title = "B"
+ymin <- .1
+ymax <- .3
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#D
+var = 17
+varname = "Proportion Migrant\n Ancestry (%)"
+title = "D"
+ymin <- 0
+ymax <- 1
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#F
+var = 10
+varname = "Original Population \n Divergence (Fst)"
+title = "F"
+ymin <- 0
+ymax <- .4
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = '', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#H
+var = 14
+varname = "Migrant Source Population \n Divergence (Fst)"
+title = "H"
+ymin <- 0
+ymax <- .5
+
+{
+  par(mar = c(4,6,4,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = '',
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  title(title, adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    
+    print(mean(y1[,var]))
+    print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+}
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+#working polygons:
+dens = c(100, 100, 100, 100, NULL, NA, NULL, NA)
+ang = 45
+bo = c(NULL, NULL, NULL, NULL, NA, NA, NA, NA)
+{
   var = 10
-  varname = "Fst vs orig"
+  varname = "Original Population \n Divergence (Fst)"
   title = "Fig 1C"
   range(smry[,var])
   
   ymin <- round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 0.3 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 0.5 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -120,7 +2348,10 @@ smry = rbind(p10, p30, p70, b0) #p50,
   text.size <- 1.75
   pt.cex <- 1.25
   lwd <- 4
+  lty = c(3,3,3,3, 1,1,1,1)
+  pch = c(18, 19, 15, 17, 18, 19, 15, 17)
   
+  par(mar = c(4,6,4,4))
   ## make plot
   plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
        xaxt = 'n', main = title, xlab = 'Year', ylab = varname,
@@ -144,11 +2375,15 @@ smry = rbind(p10, p30, p70, b0) #p50,
     y8<-temp[temp[,1] == orig.xs[8],,]
     
     xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
-    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd)
-    points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
-    arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
-           y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
-           lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = pch[col], cex = pt.cex)
+    btm = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08)))
+    tp = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92))
+    polygon(x = c(xs,rev(xs)) , y = c(btm,rev(tp)), density = dens[col], angle = ang, border = alpha(gt.cols[col], .8),
+            col = adjustcolor(alpha(gt.cols[col], pt.alph), alpha.f=0.5))
+    lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], .8), lwd = lwd, lty = lty[col])
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = gt.cols[col], code=3, angle=90, length=0.1)
     
     print(mean(y1[,var]))
     print(mean(y7[,var]))
@@ -159,11 +2394,222 @@ smry = rbind(p10, p30, p70, b0) #p50,
 }
 
 
-###Figure 2
+
+#working polygons FOR EVERY YEAR:
+dens = NULL #c(100, 100, 100, 100, NULL, NA, NULL, NA)
+ang = 45
+bo = NA #c(NULL, NULL, NULL, NULL, NA, NA, NA, NA) #alpha(gt.cols[col], .8)
+alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
+{
+  var = 5
+  varname = "Heterozygosity"
+  title = "Fig 1C"
+  range(smry[,var])
+  
+  ymin <- round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.3 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  lty = c(3,3,3,3, 1,1,1,1)
+  pch = c(18, 19, 15, 17, 18, 19, 15, 17)
+  
+  par(mar = c(4,6,4,4))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', main = title, xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  TBL = NULL
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      #tbl[(d+1),5] = as.character(dat[1,19])
+      
+      
+    }
+    TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+
+    col <- col+1
+  }
+  
+  legend('topleft', legend = c('CR', 'EN','VU', 'LC'), col = gt.cols, pch = 15, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+head(smry)
+hold <- matrix(ncol = 6, nrow = nrow(tbl))
+for(i in 1:nrow(TBL)){
+  hold[i,1] = hold[i,2] - hold[i]
+}
+
+subs = matrix(nrow = nrow(tbl), ncol = 4)
+subs[,1] = tbl[,1]
+for(n in 1:nrow(subs)){
+  subs[n,2] = as.numeric(mean_70[n,2]) - as.numeric(mean_nbtl0[n,2])
+}
+
+gt.cols <- c("firebrick3", "darkorange1", "gold", "firebrick3", "darkorange1", "gold")
+lty = c(3,3,3,1,1,1)
+comp = matrix(nrow = 351, ncol = 7)
+f = 1
+for(e in 1:nrow(comp)){
+  comp[e,1]=tbl[e,1]
+  comp[e,f+1] = mean_nbtl0[e,2] - mean_10[e,2] 
+  comp[e,f+2] = mean_nbtl0[e,2] - mean_30[e,2] 
+  comp[e,f+3] = mean_nbtl0[e,2] - mean_70[e,2] 
+  comp[e,f+4] = mean_nbtla[e,2] - mean_1a[e,2] 
+  comp[e,f+5] = mean_nbtla[e,2] - mean_3a[e,2] 
+  comp[e,f+6] = mean_nbtla[e,2] - mean_7a[e,2] 
+  
+  
+}
+
+plot(-1,-1, xlim = c(xmin, xmax), ylim = c(0, .1))
+col=1
+for(z in 1:(ncol(comp))){
+  lines(comp[,1], comp[,z+1], col = gt.cols[col], lwd = lwd, lty = lty[col])
+  col=col+1
+}
+
+comp = matrix(nrow = 351, ncol = 7)
+f = 1
+for(e in 1:nrow(comp)){
+  comp[e,1]=tbl[e,1]
+  if(e<99){
+    next
+    }else{
+      comp[e,f+1] = mean_30[e,2] / mean_30[99,2] 
+      comp[e,f+2] = mean_3a[e,2] / mean_3a[99,2]
+      comp[e,f+3] = mean_3b[e,2] / mean_3b[99,2] 
+      comp[e,f+4] = mean_3c[e,2] / mean_3c[99,2] 
+  
+  }
+}
+for(e in 1:nrow(comp)){
+  comp[e,1]=tbl[e,1]
+  if(e<99){
+    next
+  }else{
+    comp[e,f+1] = mean_H_70[e,2] / mean_H_70[99,2] 
+    comp[e,f+2] = mean_H_7a[e,2] / mean_H_7a[99,2]
+    comp[e,f+3] = mean_H_7b[e,2] / mean_H_7b[99,2] 
+    comp[e,f+4] = mean_H_7c[e,2] / mean_H_7c[99,2] 
+    
+  }
+}
+
+lty = c(3, 1, 2, 4)
+pch = c(18, 19, 15, 17)
+plot(-1,-1, xlim = c(xmin, xmax), ylim = c(.5, 1.5))
+col=1
+for(z in 1:(ncol(comp))){
+  points(comp[,1], comp[,z+1], col = gt.cols[col], pch=pch[col])
+  col=col+1
+}
+
+comp_VU = comp
+mean_H_30 = mean_30
+mean_H_3a = mean_3a
+mean_H_3b = mean_3b
+mean_H_3c = mean_3c
+
+H_a = cbind(comp[,1], comp_CR[,3], comp_EN[,3], comp_VU[,3])
+H_b = cbind(comp[,1], comp_CR[,4], comp_EN[,4], comp_VU[,4])
+H_c = cbind(comp[,1], comp_CR[,5], comp_EN[,5], comp_VU[,5])
+col=1
+for(z in 1:(ncol(H_a))){
+  lines(H_a[,1], H_a[,z+1], col = gt.cols[col], lwd = lwd, lty=1)
+  col=col+1
+}
+col=1
+for(z in 1:(ncol(H_b))){
+  lines(H_b[,1], H_b[,z+1], col = gt.cols[col], lwd = lwd, lty=1)
+  col=col+1
+}
+col=1
+for(z in 1:(ncol(H_c))){
+  lines(H_c[,1], H_c[,z+1], col = gt.cols[col], lwd = lwd, lty=1)
+  col=col+1
+}
 
 
 
 
+colnames(comp_CR) <- c("year", "CR_0", "CR_a", "CR_b", "CR_c", "NA", "NA")
+colnames(comp_EN) <- c("year", "EN_0", "EN_a", "EN_b", "EN_c", "NA", "NA")
+colnames(comp_VU) <- c("year", "VU_0", "VU_a", "VU_b", "VU_c", "NA", "NA")
+
+write.table(comp_CR, paste(directory, "/means&comps/H99-Ht_CR_var.mig.rates.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(comp_EN, paste(directory, "/means&comps/H99-Ht_EN_var.mig.rates.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(comp_VU, paste(directory, "/means&comps/H99-Ht_VU_var.mig.rates.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+
+colnames(H_a) <- c("year", "CR", "EN", "VU")
+colnames(H_b) <- c("year", "CR", "EN", "VU")
+colnames(H_c) <- c("year", "CR", "EN", "VU")
+
+write.table(H_a, paste(directory, "/means&comps/H99-Ht_a_var.IUCN.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(H_b, paste(directory, "/means&comps/H99-Ht_b_var.IUCN.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(H_c, paste(directory, "/means&comps/H99-Ht_c_var.IUCN.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+
+colnames(mean_H_30) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_3a) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_3b) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_3c) <- c("year", "mean", "LQ", "UQ", "NA")
+
+write.table(mean_H_30, paste(directory, "/means&comps/H_30_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_3a, paste(directory, "/means&comps/H_3a_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_3b, paste(directory, "/means&comps/H_3b_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_3c, paste(directory, "/means&comps/H_3c_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+
+colnames(mean_H_70) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_7a) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_7b) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_7c) <- c("year", "mean", "LQ", "UQ", "NA")
+
+write.table(mean_H_70, paste(directory, "/means&comps/H_70_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_7a, paste(directory, "/means&comps/H_7a_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_7b, paste(directory, "/means&comps/H_7b_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_7c, paste(directory, "/means&comps/H_7c_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+
+colnames(mean_H_10) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_1a) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_1b) <- c("year", "mean", "LQ", "UQ", "NA")
+colnames(mean_H_1c) <- c("year", "mean", "LQ", "UQ", "NA")
+
+write.table(mean_H_10, paste(directory, "/means&comps/H_10_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_1a, paste(directory, "/means&comps/H_1a_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_1b, paste(directory, "/means&comps/H_1b_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+write.table(mean_H_1c, paste(directory, "/means&comps/H_1c_m&qs.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+
+
+
+
+#~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 #data for Q1: migration rates
 p30 = read.table("fin_5.10.23_1LL30_all_summary.csv", header=T, sep=",")
@@ -620,10 +3066,10 @@ allindv = matrix(nrow=nrow(ne), ncol=1)
 allindv = ne[,4]+ne[,5]
 ne = cbind(ne, allindv)
 
-plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+plot(-100, -100 , xlab="year", ylab="Ne", xlim=c(0, 350), ylim=c(0, 1000)) 
 points(ne[,1], ne[,13], col=gt.cols[col], pch=16)
 
-plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, 350), ylim=c(0, 1000)) 
 r=1
 for(z in unique(ne[,11])){
   zne = ne[ne[,11]==z,,drop=FALSE]
@@ -654,7 +3100,7 @@ summary(y)
 #think about propmig~LRS also -- will need to merge the datasets
 
 png("popsize_overtime.png")
-plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, max(yr)), ylim=c(0, max(n))) 
+plot(-100, -100 , xlab="year", ylab="population size", xlim=c(0, 350), ylim=c(0, 1000)) 
 r=1
 for(z in unique(smry[,19])){
   zsmry = smry[smry[,19]==z,,drop=FALSE]
