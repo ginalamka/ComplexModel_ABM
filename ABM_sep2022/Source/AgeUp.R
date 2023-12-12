@@ -1,4 +1,4 @@
-#AgeUp.R for Lamka and Willoughby 2023
+#Age the population for Lamka and Willoughby 2023
 
 AgeUp = function(pop){
   dead = pop[pop[,8] == 0, , drop=FALSE]                 #define dead indvs
@@ -8,7 +8,7 @@ AgeUp = function(pop){
   }
   
   if(!is.null(nrow(pop))){
-    pop[,4] = pop[,4] + 1                                #add one year to all live indv's ages
+    pop[,4] = pop[,4] + 1                                #add one year to all alive indv's ages
     
   }
   pop<- rbind(pop,dead)                                  #recall dead indvs

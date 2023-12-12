@@ -1,4 +1,4 @@
-#FunctionSourcer.R for Lamka and Willoughby 2023
+#Source packages and functions for Lamka and Willoughby 2023
 
 #set working directory, import packages, source functions,
 setwd(paste(directory,"/Source/", sep = '')) #set temp working directory
@@ -38,8 +38,6 @@ source(paste(getwd(), "/MateChoice.R", sep = ''))
 source(paste(getwd(), "/PopSizeNext.R", sep = ''))
 source(paste(getwd(), "/Breed.R", sep = ''))
 source(paste(getwd(), "/Analyze.R", sep = ''))
-source(paste(getwd(), "/Plot.R", sep = ''))       #has on/off switch
-source(paste(getwd(), "/Plot2.R", sep = ''))      #has on/off switch
 source(paste(getwd(), "/RepSucc.R", sep = ''))
 
 ####old, removed functions
@@ -51,3 +49,5 @@ source(paste(getwd(), "/RepSucc.R", sep = ''))
 #source(paste(getwd(), "/SourcePop.R", sep = ''))
 #source(paste(getwd(), "/Sensitivity.R", sep = '')) #turn on as needed
 #source(paste(getwd(), "/FitBreed.R", sep = ''))    #if want fittest parents to breed, replace Breed.R with this
+#source(paste(getwd(), "/Plot.R", sep = ''))        #has on/off switch
+#source(paste(getwd(), "/Plot2.R", sep = ''))       #has on/off switch
