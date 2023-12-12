@@ -1,7 +1,7 @@
 ### Habitat remediation followed by managed connectivity reduces unwanted changes in evolutionary trajectory of high extirpation risk populations
 **Gina Lamka and Dr. Janna Willoughby**
 
-*Code accessed here is has been published in*
+*Code accessed here is in preprint at https://doi.org/10.1101/2023.11.03.565519*
 
 Model description last updated: 10/23/2023
 
