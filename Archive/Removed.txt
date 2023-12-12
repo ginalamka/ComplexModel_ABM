@@ -245,3 +245,37 @@ adults  = theEND[,7]               #population[population[,9]==1, ,drop=FALSE]
     #for(i in 1:10){
     #  seq(1,nSNP*2,2)
     #  }
+
+#####################################################################################################
+#Removed from AgeDeath.R
+
+#OLD CODE _ As of 2/20/23
+#kill some more individuals
+#nkill = round((nrow(pop) * ratemort), 0) - nrow(oldies)
+#if((nkill>0)){
+#kill  = sample(1:length(pop[,1]), nkill, replace=FALSE) #this is for RANDOM death
+
+#USE_OLD##kill  = sample(1:length(pop[,1]), nkill, replace=FALSE, prob=(1-pop[,11])) #this is for fitness-influenced death
+#pop[kill,8]  = 0
+#pop[kill,10] = y   #this is if I have a generation died column
+
+#mort.rate = (maxage - pop[,4])*.25  #this makes chance of death at age 0, 0==== ##pop[,4]/maxage                        #calculate mortality rate (age/maxage)
+
+#find old individuals and mark as dead
+#oldies = NULL
+#oldies = (pop[pop[,4]>=maxage, , drop=FALSE])
+
+#if(length(oldies) == 0){
+#  oldies_killed = 0
+#}else{
+#  pop[pop[,1] %in% oldies,8]  = 0     #oldies become dead
+#  pop[pop[,1] %in% oldies,10] = y    #this is to put year died if I create that column
+#  oldies = pop[(pop[,8] == 0), , drop = FALSE]
+#  pop = pop[(pop[,8] == 1), , drop = FALSE]
+#  oldies_killed = nrow(oldies)
+#}
+#print(paste("there are", oldies_killed, "oldies killed"))
+
+#notes 9/16/22 
+#do oldies > fitness at maturity age > age-based death (age/lifespan) === DO NOT PUT A LIMIT ON THE NUMBER TO KILL
+#
