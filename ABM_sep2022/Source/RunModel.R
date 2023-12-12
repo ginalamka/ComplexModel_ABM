@@ -22,7 +22,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     nSNP.cons     = parameters$nSNP.cons[r]
     #if add more parameters in Cover.R, add them here as well
     
-    #initialize population                   #matrix is easier to manipulate than a dataframe -- "ncol = X + (nloci)*2
+    #initialize population                   #matrix is easier to manipulate than a dataframe 
     pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
     colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
@@ -41,7 +41,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     
     #generate SNPs for the starting pop 
     popgen = matrix(nrow=k, ncol=nSNP*2)
-    columns = seq(1,(nSNP*2),2)  #create 2 columns per SNP with 0-1 for each allele
+    columns = seq(1,(nSNP*2),2)              #create 2 columns per SNP with 0-1 for each allele
     for(l in 1:nSNP){
       p = sample(seq(from=LBp, to=(LBp+0.1), by=0.01),1)  #introduce variation by selecting p, range defined in Cover.R
       #create pool of genotypes in HWE to select from
@@ -78,23 +78,23 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
     popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
     columnsb = seq(1,(nSNP.mig*2),2)
-    for(b in 1:nrow(popSNPs)){    #set up similar to above in case change the sequence or format later
+    for(b in 1:nrow(popSNPs)){    
       popSNPs[b,] = 0             #all focal pop indv have nSNP.mig = 0
     }
     
-    #REMOVE###create conserved SNPs - will be used to follow mutation    
-    #REMOVE##conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
-    #REMOVE##columnsc = seq(1,(nSNP.cons*2),2)
-    #REMOVE##for(c in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-    #REMOVE##  conSNPs[c,] = 0    #all indv of the species have nSNP.cons = 0
-    #REMOVE##}
+    #create conserved SNPs - will be used to follow mutation    
+    #conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
+    #columnsc = seq(1,(nSNP.cons*2),2)
+    #for(c in 1:nrow(conSNPs)){    
+    #  conSNPs[c,] = 0           #all indv of the species have nSNP.cons = 0
+    #}
     
-    #REMOVE##focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
+    #focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
     focalpop <- cbind(pop, popgen, popSNPs)  
     pop <- focalpop
     
     #write starting pop to table
-    ####REMOVED### write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
+    #write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
     remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool) #focalpop, conSNPs
@@ -152,23 +152,23 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     #create migrant and nonmigrant unique SNPs - used to track migrant ancestry
     migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
     columnsd= seq(1,(nSNP.mig*2),2)
-    for(d in 1:nrow(migSNPs)){    #set up similar to above in case change the sequence or format later
+    for(d in 1:nrow(migSNPs)){   
       migSNPs[d,] = 1              #all source pop indv have nSNP.mig = 1
     }
     
-    #REMOVE###create conserved SNPs - used to track mutation    
-    #REMOVE##conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
-    #REMOVE##columnse = seq(1,(nSNP.cons*2),2)
-    #REMOVE##for(e in 1:nrow(conSNPs)){    #set up similar to above in case change the sequence or format later
-    #REMOVE##  conSNPs[e,] = 0             #all indv of the species have nSNP.cons = 0
-    #REMOVE##}
+    #create conserved SNPs - used to track mutation    
+    #conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
+    #columnse = seq(1,(nSNP.cons*2),2)
+    #for(e in 1:nrow(conSNPs)){   
+    #  conSNPs[e,] = 0             #all indv of the species have nSNP.cons = 0
+    #}
     
-    #REMOVE##source1 <- cbind(source, sourcegen, migSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
+    #source1 <- cbind(source, sourcegen, migSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
     source1 <- cbind(source, sourcegen, migSNPs)
     source <- source1
     
     #write starting source to table
-    ###REMOVED### write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
+    #write.table(source, paste(directory, "/Output/source", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #prepare focal and source pop for Fst analysis in hierfstat (enacted in Analyze.R)
     SNPS = (nSNP*2) + (nSNP.mig*2) + (nSNP.cons*2)                                #find number of SNPs
@@ -193,76 +193,70 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     
     #clean up
     remove(source1, focalpop, initident, sourceident, sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j) #currently holding p if needed
-    #REMOVE##remove(conSNPs, columnsc,  columnse, c)  #use this if nSNP.cons != 0 
+    #remove(conSNPs, columnsc,  columnse, c)  #use this if nSNP.cons != 0 
     
     #create for loop for each time step
     for(y in 0:years){
       if(y != 0){
         pop = AgeUp(pop)                        #age pop + 1 year
         pop = FitnessDeath(pop, maturity, y)    #kill indv
-        #REMOVE##pop = DeathByAge(pop, maxage)          #age-dependent mortality
         if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
         }
-        #REMOVE##tttt = Stochastic(pop, stoch, k, numboff, styr, edyr, nwk, dur, y, years, r0, parameters, r)  #function for stochastic decline in pop
-        #REMOVE##pop = tttt[[1]]
-        #REMOVE##k = tttt[[2]]
-        #REMOVE##pop = RandomDeath(pop)                  #random mortality
         tt = Migrate(pop, source, y, miggy, styr, edyr, dur)        #subpop migration from source to focal
-        pop = tt[[1]]  #output 1 is the pop object
-        mig = tt[[2]]  #output 2 is the number of migrants
-        sz = sz + mig  #used for tracking number of indv and their ID numbers
-        source = tt[[3]] #output 3 is the source object
-        if(sum(pop[,8]) <= 4){                #if there are <=4 indv, crash pop
+        pop = tt[[1]]                           #output 1 is the pop object
+        mig = tt[[2]]                           #output 2 is the number of migrants
+        sz = sz + mig                           #used for tracking number of indv and their ID numbers
+        source = tt[[3]]                        #output 3 is the source object
+        if(sum(pop[,8]) <= 4){                  #if there are <=4 indv, crash pop
           print(paste("Population crash @ MateChoice, less than 4 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break
         }
         pairs = MateChoice(pop, sex, maturity, allee, matemigs)  #choose mates
-        if(is.null(pairs)==TRUE){    #if there are no mates, pop crashes
+        if(is.null(pairs)==TRUE){               #if there are no mates, pop crashes
           print(paste("skipping pop size next, breed due to no parents"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
           FINAL = rbind(FINAL, out[1,])
           break  #break out of this loop
         }
         pp = PopSizeNext(pop, k, r0, maturity, y, styr, edyr, nwk, dur, parameters, r, K) #calculate the next generation's pop size according to logistic growth eqn
-        numboff = pp[[1]]  #output 1 is the number of offspring to produce
-        K = pp[[2]]        #output 2 is the new K (carrying capacity)
+        numboff = pp[[1]]                       #output 1 is the number of offspring to produce
+        K = pp[[2]]                             #output 2 is the new K (carrying capacity)
         if(numboff >= 1){
           ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs) #create new babies!
-          pop = ttt[[1]]   #output 1 is the new pop object
-          bb = ttt[[2]]    #output 2 is the number of babies added
-          sz = sz + bb     #for tracking number of indv for IDing
+          pop = ttt[[1]]                        #output 1 is the new pop object
+          bb = ttt[[2]]                         #output 2 is the number of babies added
+          sz = sz + bb                          #for tracking number of indv for IDing
         }else if(numboff <= 0){
           print(paste("No new babies, skip breed")) 
-          #still fill out Ne count table
+          #still fill out Ne count table, otherwise done in Breed.R
           {
-          NE = matrix(nrow=1, ncol=12)   #create matrix for Ne Count table
+          NE = matrix(nrow=1, ncol=12)          #create matrix for Ne Count table
           colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
           
-          NE[1,1] = y                             #grab year
-          NE[1,2] = 0                             #grab n unique effective moms
-          NE[1,3] = 0                             #grab n unique effective dads
-          NE[1,4] = 0                             #grab n babies
+          NE[1,1] = y                           #grab year
+          NE[1,2] = 0                           #grab n unique effective moms
+          NE[1,3] = 0                           #grab n unique effective dads
+          NE[1,4] = 0                           #grab n babies
           
           alive = pop[pop[,8]==1,,drop=FALSE]
           adult = alive[alive[,4]!=0,,drop=FALSE]
           adult_f = adult[adult[,5]==0,,drop=FALSE]
           adult_m = adult[adult[,5]==1,,drop=FALSE]
-          NE[1,5] = nrow(adult)                   #grab n alive adults
-          NE[1,6] = nrow(adult_f)                 #grab n possible moms
-          NE[1,7] = nrow(adult_m)                 #grab n possible dads
+          NE[1,5] = nrow(adult)                 #grab n alive adults
+          NE[1,6] = nrow(adult_f)               #grab n possible moms
+          NE[1,7] = nrow(adult_m)               #grab n possible dads
+          NE[1,8] = 0                           #grab number of migrant parents
           
-          NE[1,8] = 0                             #grab number of migrant parents
-          
-          NE[1,9] = r                             #parameter number
-          NE[1,10] = rr                           #replicate number
-          NE[1,11] = prj                          #defined project
-          NE[1,12] = grp                          #defined group
+          NE[1,9] = r                           #parameter number
+          NE[1,10] = rr                         #replicate number
+          NE[1,11] = prj                        #defined project
+          NE[1,12] = grp                        #defined group
           
           remove(alive, adult, adult_f, adult_m)  #clean up
           
@@ -296,7 +290,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
           pop <- pop[pop[,8]==1,,drop=FALSE] #make new pop object with only alive indv
           remove(dead, deadindv) #clean up
         }
-        #REMOVE##pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- use this if don't need to hold dead indv above and not using RepSucc.R -- this will speed it up!!
+        #pop <- pop[pop[,8]==1,, drop=FALSE] #remove dead indv -- use this if don't need to hold dead indv above and not using RepSucc.R -- this will speed it up!!
       }
       if(y == 0){
         K = k
@@ -307,23 +301,19 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     }
     #read in dead indv for RepSucc.R
     died = read.table(paste(directory, "/Output/dead.csv", sep=""), header=F, sep=",")
-    indv = pop[, c(1:sz_col)]  #remove indv genotypes - just a check, should have happened when saving dead indv above
+    indv = pop[, c(1:sz_col)]   #remove indv genotypes - just a check, should have happened when saving dead indv above
     colnames(died) = colnames(indv)
     pop_indv = rbind(indv,died) #add dead to pop for RepSucc calculations
-    remove(pop, indv, died)   #clean up
+    remove(pop, indv, died)     #clean up
     
     #calc Reproductive Success using pop data
     aa = RepSucc(pop_indv, maturity, years, rr, r, prj, grp)
-    pop_indv = aa[[1]]  #output 1 is the final pop with all indv and all indv data
-    rep = aa[[2]]       #output 2 are calculations of repro success
-    REP = rbind(REP, rep)  #combine with other runs
-    #REMOVE##POP = rbind(POP, pop)  #use this if tracking pop, slows computation considerably
+    pop_indv = aa[[1]]          #output 1 is the final pop with all indv and all indv data
+    rep = aa[[2]]               #output 2 are calculations of repro success
+    REP = rbind(REP, rep)       #combine with other runs
+    #POP = rbind(POP, pop)      #use this if tracking pop, slows computation considerably
     
     print(paste("REPLICATE", rr, "OF PARAM", r, "DONE!"))  #track where you are in the sim
   } 
   return(list(FINAL, REP)) #POP,        #return final datatables!
 }
-
-#note on simulation checks:
-  #next will go to the next loop AKA the next year
-  #break will completely stop the loop AKA the next replicate
