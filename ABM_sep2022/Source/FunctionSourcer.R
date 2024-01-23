@@ -13,14 +13,14 @@ setwd(paste(directory,"/Source/", sep = '')) #set temp working directory
 #.libPaths("/home/gfl0003") #need this when defining location of libraries in HPC
 
 #call installed libraries
-library(reshape2)    #need this for plotting
-library(adegenet)    #need this for plotting
+#library(reshape2)    #need this for plotting
+#library(adegenet)    #need this for plotting
 library(scales)      #need this for plotting, this allows transparency in colors for overlapping lines
 library(matrixStats) #need this for colCount and rowCount in ReproSuc.R
 library(hierfstat)   #need this for FST analysis in Analyze.R
 library(tidyr)       #need this for FST analysis in Analyze.R
-library(gtools)      #need this for plotting
-#library(MASS)       #used to write out dead indv - only necessary if writing out a matrix
+#library(gtools)      #need this for plotting
+library(MASS)       #used to write out dead indv - only necessary if writing out a matrix
 
 '%NOTin%' <- Negate(`%in%`) #this defines the Not In function so that I can select identities that are not defined by something (see RandomDeaths.R for an example)
 #note that the ' ' is not included in the %NOTin% operator -- see https://r-lang.com/not-in-r/#:~:text=The%20not%20in%20operator%20is%20a%20logical%20vector%2C,a%20vector.%20The%20%21%20indicates%20logical%20negation%20%28NOT%29.

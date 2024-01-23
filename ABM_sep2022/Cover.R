@@ -15,23 +15,23 @@ grp = "_group_"
 
 #parameters
 k.V           = 1000          #carrying capacity
-nSNP.V        = 1000          #number of SNPs simulated, used to track drift
-miggy.V       = c(0,          #migration parameter type -- set in Migrate.R; 0 = no migration
+nSNP.V        = 100#0          #number of SNPs simulated, used to track drift
+miggy.V       = 0 #c(0,          #migration parameter type -- set in Migrate.R; 0 = no migration
                   "a",        #"a"=one mig per gen  
                   "b",        #"b"=1xof100@151  
                   "c",        #"c"=4xof25@151|165|181|195
                   "d",        #"d"=one mig per gen @ >=edyr+dur+1 
                   "e",        #"e"=1xof100@125
                   "f")        #"f"=4xof25@125|140|155|170
-LBhet.V       = c(0.4, 0.05)  #lowerbound limit for SOURCE POP -- called in RunModel.R
-LBp.V         = c(0.4, 0.05)  #lowerbound limit for FOCAL POP -- called in RunModel.R
+LBhet.V       = 0.4 #c(0.4, 0.05)  #lowerbound limit for SOURCE POP -- called in RunModel.R
+LBp.V         = 0.4 #c(0.4, 0.05)  #lowerbound limit for FOCAL POP -- called in RunModel.R
 maxage.V      = 9             #maximum age individuals can be -- note, first step is ageing, so some indv start at -1
 broodsize.V   = 2             #max brood size, aka max fecundity  
-maturity.V    = 1             #age indv becomes re productively mature
-years.V       = 350           #total run time
+maturity.V    = 1             #age indv becomes reproductively mature
+years.V       = 25 #350           #total run time
 r0.V          = 1             #per capita growth rate 
-nSNP.mig.V    = 100           #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
-nSNP.cons.V   = 0             #number of conserved alleles within species -- used to track mutation
+nSNP.mig.V    = 10#0           #number of migrant specific alleles -- these are ADDITIONAL alleles to nSNP above, migrants = 1, orig pop = 0 -- called in RunModel.R and Breed.R
+nSNP.cons.V   = 10#0           #number of conserved alleles within species -- used to track mutation
 
 ### when adding additional variables, don't forget to add 3 times: in Cover.R below, in RunModel.R, and other functions that need the variable fed in
 
@@ -44,13 +44,17 @@ write.table(parameters, paste(directory, "/Output/parameters__proj___group_.csv"
 remove(k.V, nSNP.V, miggy.V, LBhet.V, LBp.V, maxage.V, broodsize.V, maturity.V, years.V, r0.V, nSNP.mig.V, nSNP.cons.V) 
 
 #on/off switches for functions
-replicates    = 20 
+replicates    = 1 
 allee         = 1    #1=yes, 0=no
 matemigs      = 1    #1=yes, 0=no
 plotit        = 0    #1=yes, 0=no
 plotit2       = 0    #1=yes, 0=no
-mutate        = 1    #1=yes, 0=no   
-mu            = 0.00000001  #mutation rate
+mutate        = 1    #1=yes, 0=no  
+mutate_init   = 1    #1=yes, 0=no
+mu            = .002 #0.0000000022  #mutation rate in noncoding SNPs #(2.2 x 10^-9) #https://www.ncbi.nlm.nih.gov/pmc/articles/PMC117386/
+mu_co         = .001 #0.00000000048 #deleterious mutation rate in coding SNPs #4.84 X10^-10 = 2.2x10^-9*.22 constraint #https://www.ncbi.nlm.nih.gov/pmc/articles/PMC263826/
+purge         = 1    #1=yes, 0=no
+purge_mutants = 1    #1=yes, 0=no
 
 #bottleneck parameters
 styr          = 100 #year to start pop decline
@@ -64,7 +68,7 @@ s             = 5000 #size of source pop
 theEND = NULL
 repEND = NULL
 finalPOP = NULL
-#r=1  #use this when debugging, remove this when not skipping through the below line
+r=1  #use this when debugging, remove this when not skipping through the below line
 for(r in 1:nrow(parameters)){
   ALL = RunModel(parameters, r, directory, replicates, prj, grp)
   FINAL = ALL[[1]]

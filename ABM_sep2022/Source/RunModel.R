@@ -4,7 +4,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
   FINAL = NULL
   REP   = NULL
   POP   = NULL 
-  #rr=1  #use this when debugging, remove this when not skipping through the below line
+  rr=1  #use this when debugging, remove this when not skipping through the below line
   for(rr in 1:replicates){
     #call parameters for this replicate run
     k             = parameters$k[r]
@@ -23,8 +23,8 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     #if add more parameters in Cover.R, add them here as well
     
     #initialize population                   #matrix is easier to manipulate than a dataframe 
-    pop = matrix(nrow=k, ncol=12)            #each individual gets its own row 
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
+    pop = matrix(nrow=k, ncol=18)            #each individual gets its own row 
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
     pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
     pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
@@ -33,9 +33,15 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     pop[,7] = NA                             #this will be for number of offspring survive to maturity - calculated in RepSucc.R
     pop[,8] = 1                              #alive or dead? alive = 1, dead = 0
     pop[,9] = 0                              #generation born
-    pop[,10] = 0                             #generation died
+    pop[,10] = NA                            #generation died
     pop[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     pop[,12] = 0                             #proportion of migrant SNPs - initial pop will all be 0
+    pop[,13] = 0                             #number of added mutations in drift SNPs
+    pop[,14] = 0                             #number of added mutations in pop-specific SNPs
+    pop[,15] = 0                             #number of added mutations in conserved SNPs
+    pop[,16] = 0                             #total number of mutations in conserved SNPs
+    pop[,17] = 0                             #number of deleterious recessive mutations in conserved SNPs
+    pop[,18] = NA                            #died how? - 1 = age death, 2 = het death, 3 = total mut (age death), 4 = del mut (fit death)
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
@@ -83,25 +89,40 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     }
     
     #create conserved SNPs - will be used to follow mutation    
-    #conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
-    #columnsc = seq(1,(nSNP.cons*2),2)
-    #for(c in 1:nrow(conSNPs)){    
-    #  conSNPs[c,] = 0           #all indv of the species have nSNP.cons = 0
-    #}
+    conSNPs = matrix(nrow=k, ncol=nSNP.cons*2)
+    columnsc = seq(1,(nSNP.cons*2),2)
+    for(c in 1:nrow(conSNPs)){    
+      conSNPs[c,] = 0           #all indv of the species have nSNP.cons = 0
+    }
     
-    #focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
-    focalpop <- cbind(pop, popgen, popSNPs)  
+    if(mutate_init == 1){
+      for(x in 1:nrow(conSNPs)){    
+        mut <- sample(c("Y","N"), nSNP.cons*2, replace = TRUE, prob = c(mu_co,1-mu_co)) #note CODING mutation rate (U)
+        pop[x,15] = length(which(mut=="Y"))
+        pop[x,16] = length(which(mut=="Y")) #since init pop, column 15 and 16 will be the same
+        init <- conSNPs[x,]                                      #keep track of the 'ancestral' state within this individual
+        conSNPs[x, which(mut=='Y' & conSNPs[x,]==1)] <- 0
+        #if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
+        #then set its index in mut to 'N', indicating that no further mutations should happen in this round.
+        mut[which(mut=='Y' & init==1)] <- 'N'
+        conSNPs[x, which(mut=='Y' & conSNPs[x,]==0)] <- 1
+      }
+      remove(x, mut, init)
+    }
+    
+    focalpop <- cbind(pop, popgen, popSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
+    #focalpop <- cbind(pop, popgen, popSNPs)  
     pop <- focalpop
     
     #write starting pop to table
     #write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool) #focalpop, conSNPs
+    remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool, conSNPs) #focalpop
 
     #initialize source population 
-    source = matrix(nrow=s, ncol=12)            #each individual gets its own row.
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs") #just to give a better understanding of what these variables are, set names
+    source = matrix(nrow=s, ncol=18)            #each individual gets its own row.
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
@@ -110,9 +131,15 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     source[,7] = NA                             #for number of offspring that reach maturity
     source[,8] = 1                              #alive or dead? alive = 1, dead = 0
     source[,9] = -1                             #generation born - will be changed in Migrate.R to the generation entered focal pop
-    source[,10] = 0                             #generation died
+    source[,10] = NA                            #generation died
     source[,11] = NA                            #relative fitness, aka heterozygosity *of nSNP only* - calculated below 
     source[,12] = 1                             #proportion of migrant SNPs - initial source pop will all be 1
+    source[,13] = 0                             #number of added mutations in drift SNPs
+    source[,14] = 0                             #number of added mutations in pop-specific SNPs
+    source[,15] = 0                             #number of added mutations in conserved SNPs
+    source[,16] = 0                             #total number of mutations in conserved SNPs
+    source[,17] = 0                             #number of deleterious recessive mutations in conserved SNPs
+    source[,18] = NA                            #died how? - 1 = age death, 2 = het death, 3 = total mut (age death), 4 = del mut (fit death)
     
     #generate source gentoypes
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
@@ -157,14 +184,29 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     }
     
     #create conserved SNPs - used to track mutation    
-    #conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
-    #columnse = seq(1,(nSNP.cons*2),2)
-    #for(e in 1:nrow(conSNPs)){   
-    #  conSNPs[e,] = 0             #all indv of the species have nSNP.cons = 0
-    #}
+    conSNPs = matrix(nrow=s, ncol=nSNP.cons*2)
+    columnse = seq(1,(nSNP.cons*2),2)
+    for(e in 1:nrow(conSNPs)){   
+      conSNPs[e,] = 0             #all indv of the species have nSNP.cons = 0
+    }
     
-    #source1 <- cbind(source, sourcegen, migSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
-    source1 <- cbind(source, sourcegen, migSNPs)
+    if(mutate_init == 1){
+      for(x in 1:nrow(conSNPs)){    
+        mut <- sample(c("Y","N"), nSNP.cons*2, replace = TRUE, prob = c(mu_co,1-mu_co)) #note CODING mutation rate (U)
+        source[x,15] = length(which(mut=="Y"))
+        source[x,16] = length(which(mut=="Y")) #since init pop, column 15 and 16 will be the same
+        init <- conSNPs[x,]                                      #keep track of the 'ancestral' state within this individual
+        conSNPs[x, which(mut=='Y' & conSNPs[x,]==1)] <- 0
+        #if a SNP is supposed to mutate, but its ancestral state was '1' (i.e., it's already been mutated in the previous line),
+        #then set its index in mut to 'N', indicating that no further mutations should happen in this round.
+        mut[which(mut=='Y' & init==1)] <- 'N'
+        conSNPs[x, which(mut=='Y' & conSNPs[x,]==0)] <- 1
+      }
+      remove(x, mut, init)
+    }
+    
+    source1 <- cbind(source, sourcegen, migSNPs, conSNPs)   ##use this when generating all 3 types of SNPs
+    #source1 <- cbind(source, sourcegen, migSNPs)
     source <- source1
     
     #write starting source to table
@@ -193,13 +235,13 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     
     #clean up
     remove(source1, focalpop, initident, sourceident, sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j) #currently holding p if needed
-    #remove(conSNPs, columnsc,  columnse, c)  #use this if nSNP.cons != 0 
+    remove(conSNPs, columnsc,  columnse, c)  #use this if nSNP.cons != 0 
     
     #create for loop for each time step
     for(y in 0:years){
       if(y != 0){
         pop = AgeUp(pop)                        #age pop + 1 year
-        pop = FitnessDeath(pop, maturity, y)    #kill indv
+        pop = FitnessDeath(pop, maturity, y, purge, nSNP.cons)    #kill indv
         if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
           print(paste("Crash @ FitnessDeath - Population low, less than 10 indv"))
           out = Analyze(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSNP.mig, nSNP.cons, numboff, K, pos1, pos2, prj, grp)
@@ -228,7 +270,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         numboff = pp[[1]]                       #output 1 is the number of offspring to produce
         K = pp[[2]]                             #output 2 is the new K (carrying capacity)
         if(numboff >= 1){
-          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs) #create new babies!
+          ttt = Breed(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, mutate, nSNP.cons, pos1, pos2, rr, r, prj, grp, matemigs, mu_co) #create new babies!
           pop = ttt[[1]]                        #output 1 is the new pop object
           bb = ttt[[2]]                         #output 2 is the number of babies added
           sz = sz + bb                          #for tracking number of indv for IDing

@@ -28,8 +28,12 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   alive = pop[pop[,8]==1, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=20)
-  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs", "project", "group")
+  FIN = matrix(nrow=years+1, ncol=31)
+  colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", 
+                    "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", 
+                    "Ho_allSNPs", "project", "group", "n_dead_tot_mut", "n_dead_del_mut", "sum_mu_drift", 
+                    "sum_mu_pop", "sum_mu_cons", "sum_tot_mu_cons", "mean_tot_mu_cons", "n_dead_age", "n_dead_het",
+                    "sum_del_mu", "mean_del_mu")
   
   f = 1
   FIN[f,1] <- y       #grab year
@@ -152,9 +156,48 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   
   FIN[f,20] = grp       #add group name
   
+  #if(y != 0){
+    dead_this_yr = pop[pop[,10] == y,,drop=FALSE]
+    dead_a = dead_this_yr[dead_this_yr[,18] == 1,, drop=FALSE]   #age death
+    dead_b = dead_this_yr[dead_this_yr[,18] == 2,, drop=FALSE]   #het death
+    dead_c = dead_this_yr[dead_this_yr[,18] == 3,, drop=FALSE]   #tot mut (age death)
+    dead_d = dead_this_yr[dead_this_yr[,18] == 4,, drop=FALSE]   #del mut (fit death)
+    
+    FIN[f,21] = nrow(dead_c)    #number indv died from tot number of mutations
+      
+    FIN[f,22] = nrow(dead_d)    #number indv died from deleterious mutations
+      
+    FIN[f,23] = sum(data[,13])  #sum mu_drift -- this is the number of added mutations in drift SNPs
+    
+    FIN[f,24] = sum(data[,14])  #sum mu_pop -- numb of added mutations in pop-specific SNPs
+    
+    FIN[f,25] = sum(data[,15])  #sum mu_cons -- number of added mutations in conserved SNPs
+    
+    FIN[f,26] = sum(data[,16])  #sum total mutations in conserved SNPs
+    
+    FIN[f,27] = mean(data[,16]) #mean total number of mutations in conserved SNPs
+    
+    FIN[f,28] = nrow(dead_a)    #number of indv died from age death
+    
+    FIN[f,29] = nrow(dead_b)    #number indv died from het death
+    
+    FIN[f,30] = sum(data[,17])  #sum total number of deleterious recessive mutations in conserved SNPs
+    
+    FIN[f,31] = mean(data[,17]) #mean number of deleterious recessive mutations in conserved SNPs
+    
+    remove(dead_a, dead_b, dead_c, dead_d)  #clean up
+    
+  #}else{
+  #  FIN[f,21:31]=NA
+  #}
+  
   params = parameters[rep(r, nrow(FIN)),]  #add parameter table
   out = cbind(FIN,params)
-  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", "Ho_allSNPs", "project", "group",
+  colnames(out) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", 
+                    "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", 
+                    "Ho_allSNPs", "project", "group", "n_dead_tot_mut", "n_dead_del_mut", "sum_mu_drift", 
+                    "sum_mu_pop", "sum_mu_cons", "sum_tot_mu_cons", "mean_tot_mu_cons", "n_dead_age", "n_dead_het",
+                    "sum_del_mu", "mean_del_mu",
                     "k", "nSNP", "miggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
   
   remove(alive, adults, data, FIN, fstdata, genotype, locus, params, popident,
@@ -162,3 +205,19 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   
   return(out)
 }
+
+#notes 1/16/24 after talking with Janna
+#per year, sum the number of mutations that occurred
+  #may want total number of muations too, and total number of homo mutations?
+  #then later will want to calculate the avg number mutations across indvs
+  #also want to keep track of number of indv purged (and probs total number died that year to relate ? issue is this probs just due to prob of death rates given)
+  
+#Pirmin Nietlisbach 2018 may tell realtionship of death and mutations https://onlinelibrary.wiley.com/doi/full/10.1111/eva.12713 
+#can also look at jannas RRS death function penalty for an example as well.
+
+#notes 1/15/24
+#do we want the total number of mutations?
+#or proportion of indvs that got mutated?
+#or the number of indvs died from purging due to deleterious mutations?
+#and do we want them to die at the age of maturity/fitness death time period or before even entering the pop?
+#and should they only die if homozygous for the deleterious allele?? -- run both ways. probs dif with inc number of alleles

@@ -21,6 +21,8 @@ AgeDeath = function(pop, maxage, y){
       }
       nkilled = NULL
       nkilled = pop[pop[,8]==0,,drop=FALSE]
+      pop = pop[pop[,8]==1,,drop=FALSE]
+      nkilled[,18] = 1
       totalkilled = nrow(nkilled)  
       print(paste("killed", totalkilled, "individuals"))
       
@@ -28,10 +30,32 @@ AgeDeath = function(pop, maxage, y){
       print(paste("no killing in AgeDeath"))
     }
   
-  #combine pop and previously removed dead indv
-  pop = rbind(pop, babes, dead)
+  if(purge == 1){
+    if(purge_mutants == 1){    #if only want to grab mutants
+      pop = pop[pop[,16]!=0,,drop=FALSE]
+      hold = pop[pop[,16]==0,,drop=FALSE]
+    }
+    for(aa in 1:nrow(pop)){
+      nmut = pop[aa,16] + 1           #controls for if nmut = 0
+      pop[aa,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(nmut/100,(1-(nmut/100))))
+      #NOTE, this kills indv based on TOTAL number of Mutations in CONSERVED SNPs 
+      #this is NOT number of homozygous deleterious mutations -- that occurs in FitnessDeath
+    }
+    npurged = pop[pop[,8]==0,,drop=FALSE]   #grab purged indv
+    pop = pop[pop[,8]==1,,drop=FALSE]       #grab mature alive indv
+    npurged[,18] = 3
+    npurged[,10] = y
+    
+    if(purge_mutants == 1){    #recombine subset datasets
+      pop = rbind(pop, hold)
+      remove(hold)
+    }
+  }
   
-  remove(babes, dead, nkilled, totalkilled, age)  #clean up
+  #combine pop and previously removed dead indv
+  pop = rbind(pop, babes, nkilled, npurged, dead)
+  
+  remove(babes, dead, nkilled, npurged, totalkilled, age)  #clean up
   
   return(pop)
 }
