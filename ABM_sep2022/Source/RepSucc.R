@@ -23,16 +23,18 @@ RepSucc = function(pop_indv, maturity, years, rr, r, prj, grp){
     }
   }
   
-  #calc the relative fitness - defined as repro succ of the indv/max repro succ
-  pop_indv[,7] <- as.numeric(pop_indv[,7])
-  max <- max(pop_indv[,7])
-  for(m in unique(pop_indv[,1])){
-    rel <- pop_indv[pop_indv[,1] == m, 7]
-    rel.fit <- rel/max
-    
-    pop_indv[pop_indv[,1] == m, 10] <- rel.fit             #put value in gen died column
+  #calc the relative fitness - defined as repro succ of the indv/max repro succ /birth generation
+  for(e in unique(pop_indv[,9])){
+    b_yr = pop_indv[pop_indv[,9]==e,,drop=FALSE]
+    b_yr[,7] <- as.numeric(b_yr[,7])
+    max <- max(b_yr[,7])
+    for(m in unique(b_yr[,1])){
+      rel <- b_yr[b_yr[,1] == m, 7]
+      rel.fit <- rel/max
+      
+      pop_indv[pop_indv[,1] == m, 10] <- rel.fit             #put value in gen died column
+    }
   }
-  
   
   #set up for calculations
   
