@@ -22,7 +22,9 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
     return()
   }
   #if no indv, exit
-  if(length(pop[,1])==0){return()}
+  if(length(pop[,1])==0){
+    print(paste("break error 1"))
+    return()}
   
   #separate out alive indv
   alive = pop[pop[,8]==1, , drop=FALSE]
@@ -45,9 +47,16 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   
   x=NULL
   x = try(length(data[,1]), silent=TRUE)
-  if(is.null(x)){break}
-  if(x<1){break}
-  if(!is.numeric(x)){break}
+  print(paste("at Analyze, x = ", x))
+  if(is.null(x)){
+    print(paste("break error 2"))
+    break}
+  if(x<1){
+    print(paste("break error 3"))
+    break}
+  if(!is.numeric(x)){
+    print(paste("break error 4"))
+    break}
   
   #number of indv
   FIN[f,2] = nrow(data)

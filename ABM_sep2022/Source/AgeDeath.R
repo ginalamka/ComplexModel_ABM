@@ -35,16 +35,21 @@ AgeDeath = function(pop, maxage, y){
       pop = pop[pop[,16]!=0,,drop=FALSE]
       hold = pop[pop[,16]==0,,drop=FALSE]
     }
-    for(aa in 1:nrow(pop)){
-      nmut = pop[aa,16] + 1           #controls for if nmut = 0
-      pop[aa,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(nmut/100,(1-(nmut/100))))
-      #NOTE, this kills indv based on TOTAL number of Mutations in CONSERVED SNPs 
-      #this is NOT number of homozygous deleterious mutations -- that occurs in FitnessDeath
-    }
-    npurged = pop[pop[,8]==0,,drop=FALSE]   #grab purged indv
-    pop = pop[pop[,8]==1,,drop=FALSE]       #grab mature alive indv
-    npurged[,18] = 3
-    npurged[,10] = y
+    if(nrow(pop)>1){
+      
+      for(aa in 1:nrow(pop)){
+        nmut = pop[aa,16] + 1           #controls for if nmut = 0
+        pop[aa,8] = sample(x=c(0,1), size = 1, replace = TRUE, prob = c(nmut/100,(1-(nmut/100))))
+        #NOTE, this kills indv based on TOTAL number of Mutations in CONSERVED SNPs 
+        #this is NOT number of homozygous deleterious mutations -- that occurs in FitnessDeath
+      }
+      npurged = pop[pop[,8]==0,,drop=FALSE]   #grab purged indv
+      pop = pop[pop[,8]==1,,drop=FALSE]       #grab mature alive indv
+      npurged[,18] = 3
+      npurged[,10] = y
+      
+    }else{print(paste("not enough mutants for age-induced purging"))
+      npurged = NULL}
     
     if(purge_mutants == 1){    #recombine subset datasets
       pop = rbind(pop, hold)
