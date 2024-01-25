@@ -1,6 +1,6 @@
 #MakeFigs for Lamka and Willoughby 2023
 
-setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local/finaldata/sept2023") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
+setwd("C:/Users/ginab/Box/New Computer/Auburn/Data/ComplexModel_ABM/Output_local/2024") #setwd("C:/Users/Gina/Desktop/2022/ComplexModel_ABM") 
 directory = getwd()
 outdir = paste(directory, "/figs/", sep = "")
 
@@ -745,6 +745,11 @@ lty <- c(3,3,1,1,1,1)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ###Figure 4
 {
+  p30 = read.table("end_9.18.23_LL30_all_summary_add.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary 
+  p3a = read.table("end_9.18.23_LL3a_all_summary_add.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
+  m30m = read.table("m_1.23.24_LL30_mi_all_summary.csv", header=T, sep=",") 
+  m30 = read.table("m_1.23.24_LL30_all_summary.csv", header=T, sep=",")
+  
 #3A - Ho ~ year, by = IUCN, mig and no mig
 p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
 p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
@@ -759,7 +764,7 @@ ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.
 par(mfrow = c(2,2))
 
 #3A - ancestry ~ year, by = IUCN
-smry = rbind(ba, p1a, p3a, p7a) #p50, 
+smry = rbind(p30, p3a, m30m, m30) #rbind(ba, p1a, p3a, p7a) #p50, 
 gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") 
 lty = c(1,1,1,1)
 {
@@ -4390,7 +4395,7 @@ smry = smry_new
 #16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
 #29=years, 30=r0, 31=nSNP.mig, 32=nSNP.cons
 {
-var = 5
+var = 21 #22, 26
 varname = "observed heterozygosity"
 title = "various starting allele freqs"
 range(smry[,var])
@@ -4399,8 +4404,8 @@ range(smry[,var])
 #  smry <- as.matrix(hold)
 #}
 
-ymin <- round(min(smry[,var]), digits = 2)#-.1
-ymax <- round(max(smry[,var]), digits = 2)#+.1
+ymin <- 0#round(min(smry[,var]), digits = 2)#-.1
+ymax <- 1000#round(max(smry[,var]), digits = 2)#+.1
 ln.alph <- 0.5
 pt.alph <- 1.25
 diff <- 0.15
@@ -4462,3 +4467,32 @@ for(c in unique(smry[,19])){
 }
 
 }
+
+#########################################################################
+#messing with data after submitting to Evol App -- 2024
+
+out = read.table("output.csv", header=T, sep=",")
+head(out)
+out_6 = matrix(nrow=nrow(out), ncol=1)
+for(i in 1:nrow(out)){
+  out_6[i,] = sum(out[i,2:5])
+}
+cbind(out,out_6)
+
+mean(out[,2]/out[,6]) #.86 = dead by age 
+mean(out[,3]/out[,6]) #.10 = dead by het
+mean(out[,4]/out[,6]) #.03 = dead by n mut
+mean(out[,5]/out[,6]) #.01 = dead by del mut
+
+le = read.table("result_data.csv", header=T, sep=",")
+plot(le[,2]~le[,1])
+mod = lm(le[,2]~le[,1],le)
+summary(mod)
+abline(mod, col="red")
+slope <- coef(mod)[2]
+cat("slope is", slope)
+
+#WANT indv inbreeding coeff
+#ROH??
+#remove het death and only do age and mut death
+#
