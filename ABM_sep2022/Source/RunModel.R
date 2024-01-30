@@ -23,8 +23,8 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     #if add more parameters in Cover.R, add them here as well
     
     #initialize population                   #matrix is easier to manipulate than a dataframe 
-    pop = matrix(nrow=k, ncol=18)            #each individual gets its own row 
-    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead") #just to give a better understanding of what these variables are, set names
+    pop = matrix(nrow=k, ncol=19)            #each individual gets its own row 
+    colnames(pop) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead", "longestROH") #just to give a better understanding of what these variables are, set names
     pop[,1] = seq(1,k,1)                     #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
     pop[,2:3] = 0                            #parent ID; at this point, we are putting all equal to zero because this is the initial generation and we don't know parents
     pop[,4] = rpois(k,maturity)-1            #set age with a poisson distribution around the age of maturity and subtract 1 because we age as the first step in the simulation   #FOR UNIFORM DIST: dunif(k, min =0, max = maturity, log = FALSE)-1  #FOR RANDOM DIST: sample(seq(0,maxage,1),k,replace=T)-1
@@ -42,6 +42,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     pop[,16] = 0                             #total number of mutations in conserved SNPs
     pop[,17] = 0                             #number of deleterious recessive mutations in conserved SNPs
     pop[,18] = NA                            #died how? - 1 = age death, 2 = het death, 3 = total mut (age death), 4 = del mut (fit death)
+    pop[,19] = NA                            #longest ROH in nSNPs - calculated below
     sz = k                                   #to keep track of the number of indv for ID'ing later
     sz_col = ncol(pop)
     
@@ -81,6 +82,35 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     } 
     pop[,11] <- het  #fill in calculated heterozygosities in the pop matrix
     
+    #calculate ROHs for generated genotypes across nSNPs only
+    popROH <- matrix(nrow=nrow(popgen), ncol=1)
+    for (row in 1:nrow(popgen)) {
+      current_run_length <- 0
+      longest_run <- 0
+      
+      for (col in 1:(ncol(popgen) - 1)) {
+        if (popgen[row, col] == popgen[row, col + 1]) {
+          # Columns are the same (homozygous)
+          current_run_length <- current_run_length + 1
+        } else {
+          # Columns are different (heterozygous)
+          if (current_run_length > longest_run) {
+            longest_run <- current_run_length
+          }
+          current_run_length <- 0
+        }
+      }
+      
+      # Check for the last run
+      if (current_run_length > longest_run) {
+        longest_run <- current_run_length
+      }
+      
+      # Store the result in the matrix
+      popROH[row, ] <- longest_run
+    }
+    pop[,19] = popROH
+    
     #create migrant and nonmigrant unique SNPs - will be used to follow migrant ancestry
     popSNPs = matrix(nrow=k, ncol=nSNP.mig*2)
     columnsb = seq(1,(nSNP.mig*2),2)
@@ -118,11 +148,11 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     #write.table(pop, paste(directory, "/Output/focal_population", r, ".csv", sep=""), sep=",", col.names=T, row.names=F)
     
     #clean up
-    remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool, conSNPs) #focalpop
+    remove(popgen, popSNPs, het, b, g, w, columns, columnsb, gtype, kk, l, pool, conSNPs, popROH) #focalpop
 
     #initialize source population 
-    source = matrix(nrow=s, ncol=18)            #each individual gets its own row.
-    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead") #just to give a better understanding of what these variables are, set names
+    source = matrix(nrow=s, ncol=19)            #each individual gets its own row.
+    colnames(source) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead", "longestROH") #just to give a better understanding of what these variables are, set names
     source[,1] = seq(-(s),-1,1)                 #each individual has unique ID name; sequence starting at -1, through -k, with each 1 iteration, negative flag for source pop
     source[,2:3] = -1                           #at this point, we are putting all equal to negative 1 to flag from source pop, and we dont know parents because parents arent in focal pop
     source[,4] = sample(seq(0,maxage,1),s,replace=T)   #set age between 0 and maxage (source isnt aged, so dont subtract 1)
@@ -140,6 +170,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     source[,16] = 0                             #total number of mutations in conserved SNPs
     source[,17] = 0                             #number of deleterious recessive mutations in conserved SNPs
     source[,18] = NA                            #died how? - 1 = age death, 2 = het death, 3 = total mut (age death), 4 = del mut (fit death)
+    source[,19] = NA                            #longest ROH of nSNP - calculated below
     
     #generate source gentoypes
     sourcegen = matrix(nrow=s, ncol=nSNP*2)
@@ -175,6 +206,35 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
       sourcehet[j,1] <- z
     } 
     source[,11] <- sourcehet  #fill in calculated heterozygosities in the source matrix
+    
+    #calculate ROHs for generated genotypes across nSNPs only
+    sourceROH <- matrix(nrow=nrow(sourcegen), ncol=1)
+    for (row in 1:nrow(sourcegen)) {
+      current_run_length <- 0
+      longest_run <- 0
+      
+      for (col in 1:(ncol(sourcegen) - 1)) {
+        if (sourcegen[row, col] == sourcegen[row, col + 1]) {
+          # Columns are the same (homozygous)
+          current_run_length <- current_run_length + 1
+        } else {
+          # Columns are different (heterozygous)
+          if (current_run_length > longest_run) {
+            longest_run <- current_run_length
+          }
+          current_run_length <- 0
+        }
+      }
+      
+      # Check for the last run
+      if (current_run_length > longest_run) {
+        longest_run <- current_run_length
+      }
+      
+      # Store the result in the matrix
+      sourceROH[row, ] <- longest_run
+    }
+    source[,19] = sourceROH
     
     #create migrant and nonmigrant unique SNPs - used to track migrant ancestry
     migSNPs = matrix(nrow=s, ncol=nSNP.mig*2)
@@ -234,7 +294,7 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
     fstsource <- cbind(sourceident,fstsource)                                         #merge identifier and genotypes
     
     #clean up
-    remove(source1, focalpop, initident, sourceident, sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j) #currently holding p if needed
+    remove(source1, focalpop, initident, sourceident, sourcegen, pool, migSNPs, l, d, ss, sourcehet, gtype, columns, columnsd, z, j, sourceROH) #currently holding p if needed
     remove(conSNPs, columnsc,  columnse, c)  #use this if nSNP.cons != 0 
     
     #create for loop for each time step

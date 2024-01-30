@@ -58,8 +58,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   #generate unique IDS
   SZ = seq(from = sz+1, to = sz + nrow(parents), by =1)
   
-  babies = matrix(nrow=nrow(parents), ncol=18)         #make new matrix for offspring     
-  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead")
+  babies = matrix(nrow=nrow(parents), ncol=19)         #make new matrix for offspring     
+  colnames(babies) <- c("id", "mom", "dad", "age", "sex", "n offspring", "n adult offspring", "alive", "gen born", "gen died", "relative fitness", "prop migrant SNPs", "mu_drift", "mu_pop", "mu_cons", "tot_mu_cons", "del_mu", "how dead", "longestROH")
   babies[,1] = SZ                                      #each individual has unique ID name; sequence starting at 1, through k, with each 1 iteration
   babies[,2] = parents[,1]                             #grab mom
   babies[,3] = parents[,2]                             #grab dad
@@ -78,6 +78,7 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,16] = NA                                     #total number of mutations in conserved SNPs
   babies[,17] = NA                                     #number of deleterious recessive mutations in conserved SNPs
   babies[,18] = NA                                     #died how? - 1 = age death, 2 = het death, 3 = total mut (age death), 4 = del mut (fit death)
+  babies[,19] = NA                                     #length of longest ROH in nSNPs - calculated below
   
   #create a check to make sure the correct number of babies are being added to pop
   #use bb to track number of added indvs for unique IDs
@@ -249,6 +250,35 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   } 
   babies[,11] <- het
   #note that all SNPs are being considered here
+  
+  #calculate ROHs for generated genotypes across nSNPs only
+  bbyROH <- matrix(nrow=nrow(babygeno), ncol=1)
+  for (row in 1:nrow(babygeno)) {
+    current_run_length <- 0
+    longest_run <- 0
+    
+    for (col in 1:(ncol(babygeno) - 1)) {
+      if (babygeno[row, col] == babygeno[row, col + 1]) {
+        # Columns are the same (homozygous)
+        current_run_length <- current_run_length + 1
+      } else {
+        # Columns are different (heterozygous)
+        if (current_run_length > longest_run) {
+          longest_run <- current_run_length
+        }
+        current_run_length <- 0
+      }
+    }
+    
+    # Check for the last run
+    if (current_run_length > longest_run) {
+      longest_run <- current_run_length
+    }
+    
+    # Store the result in the matrix
+    bbyROH[row, ] <- longest_run
+  }
+  babies[,19] = bbyROH
   
   #calculate proportion of migrant SNPs
   migrantgen <- babygeno[, -c(ncol(babygeno)-(nSNP.mig*2):ncol(babygeno))]

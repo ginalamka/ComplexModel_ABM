@@ -30,12 +30,12 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   alive = pop[pop[,8]==1, , drop=FALSE]
   
   #calculate summary stats for final pop
-  FIN = matrix(nrow=years+1, ncol=31)
+  FIN = matrix(nrow=years+1, ncol=34)
   colnames(FIN) = c("year", "popsize", "propmig", "He", "Ho", "Fis", "nadults", "sxratio", "nmig", "Fst", 
                     "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", 
                     "Ho_allSNPs", "project", "group", "n_dead_tot_mut", "n_dead_del_mut", "sum_mu_drift", 
                     "sum_mu_pop", "sum_mu_cons", "sum_tot_mu_cons", "mean_tot_mu_cons", "n_dead_age", "n_dead_het",
-                    "sum_del_mu", "mean_del_mu")
+                    "sum_del_mu", "mean_del_mu", "mean_longestROH", "maxROH", "minROH")
   
   f = 1
   FIN[f,1] <- y       #grab year
@@ -166,6 +166,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
   FIN[f,20] = grp       #add group name
   
   #if(y != 0){
+  dead_this_yr = dead_a = dead_b = dead_c = dead_d = NULL
     dead_this_yr = pop[pop[,10] == y,,drop=FALSE]
     dead_a = dead_this_yr[dead_this_yr[,18] == 1,, drop=FALSE]   #age death
     dead_b = dead_this_yr[dead_this_yr[,18] == 2,, drop=FALSE]   #het death
@@ -194,6 +195,12 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
     
     FIN[f,31] = mean(data[,17]) #mean number of deleterious recessive mutations in conserved SNPs
     
+    FIN[f,32] = mean(data[,19]) #mean length of longest ROH
+    
+    FIN[f,33] = max(data[,19])  #max length of longest ROH
+    
+    FIN[f,34] = min(data[,19])  #min lenght of longest ROH
+    
     remove(dead_a, dead_b, dead_c, dead_d)  #clean up
     
   #}else{
@@ -206,7 +213,7 @@ Analyze = function(parameters, r, pop, mig, fstinit, fstsource, y, rr, nSNP, nSN
                     "replicate", "parameterset", "numboff", "FstVSource", "FisVSource", "deltaK", "propMigSNPs", 
                     "Ho_allSNPs", "project", "group", "n_dead_tot_mut", "n_dead_del_mut", "sum_mu_drift", 
                     "sum_mu_pop", "sum_mu_cons", "sum_tot_mu_cons", "mean_tot_mu_cons", "n_dead_age", "n_dead_het",
-                    "sum_del_mu", "mean_del_mu",
+                    "sum_del_mu", "mean_del_mu", "mean_longestROH", "maxROH", "minROH",
                     "k", "nSNP", "miggy", "LBhet", "LBp", "maxage", "broodsize", "maturity", "years", "r0", "nSNP.mig", "nSNP.cons")
   
   remove(alive, adults, data, FIN, fstdata, genotype, locus, params, popident,
