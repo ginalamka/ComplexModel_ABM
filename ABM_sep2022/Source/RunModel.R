@@ -337,37 +337,37 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         }else if(numboff <= 0){
           print(paste("No new babies, skip breed")) 
           #still fill out Ne count table, otherwise done in Breed.R
-          {
-          NE = matrix(nrow=1, ncol=12)          #create matrix for Ne Count table
-          colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
-          
-          NE[1,1] = y                           #grab year
-          NE[1,2] = 0                           #grab n unique effective moms
-          NE[1,3] = 0                           #grab n unique effective dads
-          NE[1,4] = 0                           #grab n babies
-          
-          alive = pop[pop[,8]==1,,drop=FALSE]
-          adult = alive[alive[,4]!=0,,drop=FALSE]
-          adult_f = adult[adult[,5]==0,,drop=FALSE]
-          adult_m = adult[adult[,5]==1,,drop=FALSE]
-          NE[1,5] = nrow(adult)                 #grab n alive adults
-          NE[1,6] = nrow(adult_f)               #grab n possible moms
-          NE[1,7] = nrow(adult_m)               #grab n possible dads
-          NE[1,8] = 0                           #grab number of migrant parents
-          
-          NE[1,9] = r                           #parameter number
-          NE[1,10] = rr                         #replicate number
-          NE[1,11] = prj                        #defined project
-          NE[1,12] = grp                        #defined group
-          
-          remove(alive, adult, adult_f, adult_m)  #clean up
-          
-          if(isTRUE(y == 1 && r == 1 && rr == 1)){
-            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE) #create new table for this sim
-          }else{
-            write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE) #add to previous table
-          }
-          }
+          # {
+          # NE = matrix(nrow=1, ncol=12)          #create matrix for Ne Count table
+          # colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") #just to give a better understanding of what these variables are, set names
+          # 
+          # NE[1,1] = y                           #grab year
+          # NE[1,2] = 0                           #grab n unique effective moms
+          # NE[1,3] = 0                           #grab n unique effective dads
+          # NE[1,4] = 0                           #grab n babies
+          # 
+          # alive = pop[pop[,8]==1,,drop=FALSE]
+          # adult = alive[alive[,4]!=0,,drop=FALSE]
+          # adult_f = adult[adult[,5]==0,,drop=FALSE]
+          # adult_m = adult[adult[,5]==1,,drop=FALSE]
+          # NE[1,5] = nrow(adult)                 #grab n alive adults
+          # NE[1,6] = nrow(adult_f)               #grab n possible moms
+          # NE[1,7] = nrow(adult_m)               #grab n possible dads
+          # NE[1,8] = 0                           #grab number of migrant parents
+          # 
+          # NE[1,9] = r                           #parameter number
+          # NE[1,10] = rr                         #replicate number
+          # NE[1,11] = prj                        #defined project
+          # NE[1,12] = grp                        #defined group
+          # 
+          # remove(alive, adult, adult_f, adult_m)  #clean up
+          # 
+          # if(isTRUE(y == 1 && r == 1 && rr == 1)){
+          #   write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE) #create new table for this sim
+          # }else{
+          #   write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE) #add to previous table
+          # }
+          # }
         }
         pop = AgeDeath(pop, maxage, y)          #kill indv based on age
         if(sum(pop[,8]) <= 10){                 #if there are <=10 indv, crash pop
@@ -380,11 +380,11 @@ RunModel = function(parameters, r, directory, replicates, prj, grp){
         print(paste("DONE!", y, "param", r, "rep", rr))   #for tracking which sim run you're on
         
         #clean up by removing dead indv every 25 years, this will speed up computation time
-        if(is.wholenumber(y/25)==TRUE){
+        if(is.wholenumber(y/1)==TRUE){
           print(paste("Cleaning up dead!"))
           dead <- pop[pop[,8]==0,,drop=FALSE]
           deadindv <- dead[, c(1:sz_col)]  #remove indv genotypes, will speed up computation time
-          if(y==25){
+          if(y==1){
             write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=FALSE, quote=FALSE, row.names=FALSE) #create new dead for this parameter set
           }else{
             write.table(deadindv, paste(directory, "/Output/dead.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)  #add to previously made table
