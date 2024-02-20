@@ -244,21 +244,21 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   
   #calculate relative fitness (heterozygosity)
   het <- matrix(nrow=nrow(babygeno), ncol=1)
-  for(g in 1:nrow(babygeno)){
-    w <- sum(babygeno[g ,seq(1,ncol(babygeno),2)]!=babygeno[g,seq(2,ncol(babygeno),2)])/(ncol(babygeno)/2)
+  for(g in 1:nrow(drift)){
+    w <- sum(drift[g ,seq(1,ncol(drift),2)]!=drift[g,seq(2,ncol(drift),2)])/(ncol(drift)/2)
     het[g,1] <- w
   } 
   babies[,11] <- het
-  #note that all SNPs are being considered here
+  #note that only nSNPs (drift SNPs) are being considered here
   
   #calculate ROHs for generated genotypes across nSNPs only
   bbyROH <- matrix(nrow=nrow(babygeno), ncol=1)
-  for (row in 1:nrow(babygeno)) {
+  for (row in 1:nrow(drift)) {
     current_run_length <- 0
     longest_run <- 0
     
-    for (col in 1:(ncol(babygeno) - 1)) {
-      if (babygeno[row, col] == babygeno[row, col + 1]) {
+    for (col in 1:(ncol(drift) - 1)) {
+      if (drift[row, col] == drift[row, col + 1]) {
         # Columns are the same (homozygous)
         current_run_length <- current_run_length + 1
       } else {
@@ -281,46 +281,46 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies[,19] = bbyROH
   
   #calculate proportion of migrant SNPs
-  migrantgen <- babygeno[, -c(ncol(babygeno)-(nSNP.mig*2):ncol(babygeno))]
-  migrantgen <- matrix(unlist(migrantgen), nrow = bb, ncol = nSNP.mig*2)
+  #migrantgen <- babygeno[, -c(ncol(babygeno)-(nSNP.mig*2)-(nSNP.cons*2)+1:ncol(babygeno)-(nSNP.cons*2))]
+  #migrantgen <- matrix(unlist(migrantgen), nrow = bb, ncol = nSNP.mig*2)
   mSNP <- matrix(nrow = bb, ncol = 1)
-  for(q in 1:nrow(migrantgen)){
-    ww <- sum(migrantgen[q,])/ncol(migrantgen)
+  for(q in 1:nrow(miggeno)){
+    ww <- sum(miggeno[q,])/ncol(miggeno)
     mSNP[q,1] <- ww
   }
   babies[,12] <- mSNP
   
-  #create matrix for the number of effective parents
-  NE = matrix(nrow=1, ncol=12)
-  colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") 
-  
-  NE[1,1] = y                             #grab year
-  NE[1,2] = length(unique(babies[,2]))    #grab n unique effective moms
-  NE[1,3] = length(unique(babies[,3]))    #grab n unique effective dads
-  NE[1,4] = nrow(babies)                  #grab n babies
-  
-  alive = pop[pop[,8]==1,,drop=FALSE]
-  adult = alive[alive[,4]!=0,,drop=FALSE]
-  adult_f = adult[adult[,5]==0,,drop=FALSE]
-  adult_m = adult[adult[,5]==1,,drop=FALSE]
-  NE[1,5] = nrow(adult)                   #grab n alive adults
-  NE[1,6] = nrow(adult_f)                 #grab n possible moms
-  NE[1,7] = nrow(adult_m)                 #grab n possible dads
-  
-  mig_f = babies[babies[,2]<=-2,,drop=FALSE]
-  mig_m = babies[babies[,3]<=-2,,drop=FALSE]
-  NE[1,8] = length(unique(mig_f[,2])) + length(unique(mig_m[,3]))    #grab number of migrant parents
-  
-  NE[1,9] = r
-  NE[1,10] = rr
-  NE[1,11] = prj
-  NE[1,12] = grp
-  
-  if(isTRUE(y == 1 && r == 1 && rr == 1)){   #create new table for first run
-    write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
-  }else{                                     #append to the previously made table if not the first run
-    write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
-  }
+  # #create matrix for the number of effective parents
+  # NE = matrix(nrow=1, ncol=12)
+  # colnames(NE) <- c("year", "eff_mom", "eff_dad", "nbabies", "naliveadults", "possible_mom", "possible_dad", "eff_mig", "parameterset", "replicate", "project", "group") 
+  # 
+  # NE[1,1] = y                             #grab year
+  # NE[1,2] = length(unique(babies[,2]))    #grab n unique effective moms
+  # NE[1,3] = length(unique(babies[,3]))    #grab n unique effective dads
+  # NE[1,4] = nrow(babies)                  #grab n babies
+  # 
+  # alive = pop[pop[,8]==1,,drop=FALSE]
+  # adult = alive[alive[,4]!=0,,drop=FALSE]
+  # adult_f = adult[adult[,5]==0,,drop=FALSE]
+  # adult_m = adult[adult[,5]==1,,drop=FALSE]
+  # NE[1,5] = nrow(adult)                   #grab n alive adults
+  # NE[1,6] = nrow(adult_f)                 #grab n possible moms
+  # NE[1,7] = nrow(adult_m)                 #grab n possible dads
+  # 
+  # mig_f = babies[babies[,2]<=-2,,drop=FALSE]
+  # mig_m = babies[babies[,3]<=-2,,drop=FALSE]
+  # NE[1,8] = length(unique(mig_f[,2])) + length(unique(mig_m[,3]))    #grab number of migrant parents
+  # 
+  # NE[1,9] = r
+  # NE[1,10] = rr
+  # NE[1,11] = prj
+  # NE[1,12] = grp
+  # 
+  # if(isTRUE(y == 1 && r == 1 && rr == 1)){   #create new table for first run
+  #   write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=TRUE, append=FALSE, quote=FALSE, row.names=FALSE)
+  # }else{                                     #append to the previously made table if not the first run
+  #   write.table(NE, paste(directory, "/Output/Ne_counts.csv", sep=""), sep=",", col.names=FALSE, append=TRUE, quote=FALSE, row.names=FALSE)
+  # }
   
   print(paste("there are", nrow(babies), "babies added to the pop"))
   
@@ -328,8 +328,8 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   pop = rbind(pop, babies)
   
   remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents, pairings, 
-         t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, nbabes, SZ, 
-         NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
+         t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, nbabes, SZ)
+         #NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
   
   return(list(pop,bb))
 }

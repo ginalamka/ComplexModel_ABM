@@ -138,14 +138,20 @@ gt.cols <- c("grey", "firebrick3", "darkorange1", "gold")
 lty = c(1,1,1,1)
 par(mfrow=c(1,3))
 
+p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") 
+p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",") 
+p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",") 
+p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") 
+smry = rbind(p30, p3a, p3b, p3c)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##Figure 2
 {
-p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
-p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary
-p10[,19] = "LL10"
-b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
+p70 = read.table("p_2.5.24_LL70_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL70 ##fin_5.11.23_1LL70_all_summary
+p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 ##fin_5.10.23_1LL30_all_summary
+p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
+#p10[,19] = "LL10"
+b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
 smry = rbind(b0,p10, p30, p70) #p50, 
 
 #make panel order by row, with 2 rows and 2 columns
@@ -182,7 +188,7 @@ for(z in unique(smry[,19])){
   title = "Fig 1B"
   range(smry[,var])
   
-  ymin <- 0.1 #round(min(smry[,var]), digits = 2)#-.1
+  ymin <- 0.05 #round(min(smry[,var]), digits = 2)#-.1
   ymax <- 0.25 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
@@ -337,7 +343,7 @@ for(z in unique(smry[,19])){
   range(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 0.4 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 0.5 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -410,12 +416,12 @@ for(z in unique(smry[,19])){
 ###Figure 3
 {
 #2A - prop mig SNPs (ancestry) ~ year, by = IUCN status
-LL0 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-LLa = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_summary
-HLa = read.table("end_9.27.23_HL3a_all_summary.csv", header=T, sep=",") #fin_5.23.23_1HL3a_all_summary
-LHa = read.table("end_9.27.23_LH3a_all_summary.csv", header=T, sep=",")
-HHa = read.table("end_9.18.23_HH3a_all_summary.csv", header=T, sep=",")
-HH0 = read.table("end_9.18.23_HH30_all_summary.csv", header=T, sep=",")
+LL0 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 ##fin_5.10.23_1LL30_all_summary
+LLa = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
+HLa = read.table("p_1.30.24_HL3a_mi_all_summary.csv", header=T, sep=",") #end_9.27.23_HL3a ##fin_5.23.23_1HL3a_all_summary
+LHa = read.table("p_1.30.24_LH3a_mi_all_summary.csv", header=T, sep=",") #end_9.27.23_LH3a
+HHa = read.table("p_1.30.24_HH3a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_HH3a
+HH0 = read.table("p_1.30.24_HH30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_HH30
 
 #DONTNEED#HL0 = read.table("fin_5.23.23_1HL30_all_summary.csv", header=T, sep=",")
 #DONTNEED#HH0a = read.table("comb_fin_5.10.23_2HH30a_all_summary.csv", header=T, sep=",")
@@ -745,26 +751,26 @@ lty <- c(3,3,1,1,1,1)
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ###Figure 4
 {
-  p30 = read.table("end_9.18.23_LL30_all_summary_add.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary 
-  p3a = read.table("end_9.18.23_LL3a_all_summary_add.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
-  m30m = read.table("m_1.23.24_LL30_mi_all_summary.csv", header=T, sep=",") 
-  m30 = read.table("m_1.23.24_LL30_all_summary.csv", header=T, sep=",")
+  #p30 = read.table("p_1.30.24_LL30_mi_all_summary_add.csv", header=T, sep=",") #end_9.18.23_LL30 ##fin_5.10.23_1LL30_all_summary 
+  #p3a = read.table("p_1.30.24_LL3a_mi_all_summary_add.csv", header=T, sep=",")  #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
+  #m30m = read.table("m_1.23.24_LL30_mi_all_summary.csv", header=T, sep=",") 
+  #m30 = read.table("m_1.23.24_LL30_all_summary.csv", header=T, sep=",")
   
 #3A - Ho ~ year, by = IUCN, mig and no mig
-p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
-p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary
-p10[,19] = "LL10"
-b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
-p7a = read.table("end_9.18.23_LL7a_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_summary
-p3a = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
-p1a = read.table("end_9.18.23_LL1a_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_summary
-ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
+p70 = read.table("p_2.5.24_LL70_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL70 #fin_5.11.23_1LL70_all_summary
+p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 #fin_5.10.23_1LL30_all_summary
+p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
+#p10[,19] = "LL10"
+b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+p7a = read.table("p_2.5.24_LL7a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL7a ##fin_5.11.23_1LL7a_all_summary
+p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")  #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
+p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl3a ##fin_6.1.23_nbtl3a_all_summary
 
 par(mfrow = c(2,2))
 
 #3A - ancestry ~ year, by = IUCN
-smry = rbind(p30, p3a, m30m, m30) #rbind(ba, p1a, p3a, p7a) #p50, 
+smry = rbind(ba, p1a, p3a, p7a) #p50, 
 gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") 
 lty = c(1,1,1,1)
 {
@@ -1095,15 +1101,15 @@ lty = c(3,3,3,3,1,1,1,1)
   pt.size <- 1.5
   
   #4A, 4D, 4G, 4J
-  p1a = read.table("end_9.18.23_LL1a_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_summary
-  p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary  #has 42 pops that crashed!!
-  p10[,19] = "LL10"
-  p1b = read.table("end_comb_LL1b_all_summary.csv", header=T, sep=",") #comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
-  p1b[,19] = "p1b"
-  p1c = read.table("end_comb_LL1c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
-  p1c[,19] = "p1c"
-  b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
-  ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
+  p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+  p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary  #has 42 pops that crashed!!
+  #p10[,19] = "LL10"
+  p1b = read.table("p_2.5.24_LL1b_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
+  #p1b[,19] = "p1b"
+  p1c = read.table("p_2.5.24_LL1c_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
+  #p1c[,19] = "p1c"
+  b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+  ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl3a ##fin_6.1.23_nbtl3a_all_summary
   smry = rbind(b0, ba, p10, p1a, p1b, p1c)
   #gt.cols = c("hotpink","orchid3", "springgreen", "blue") #c("black", "chartreuse3", "chocolate3", "goldenrod3")
   
@@ -3419,13 +3425,13 @@ ymax <- .5
 #Supp Figure 2
 #data for the proportion of populations that crashed
 {
-p1a = read.table("end_9.18.23_LL1a_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_summary
-p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary
-p10[,19] = "LL10"
-p1b = read.table("end_comb_LL1b_all_summary.csv", header=T, sep=",") #comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
-p1b[,19] = "p1b"
-p1c = read.table("end_comb_LL1c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
-p1c[,19] = "p1c"
+p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
+#p10[,19] = "LL10"
+p1b = read.table("p_2.5.24_LL1b_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
+#p1b[,19] = "p1b"
+p1c = read.table("p_2.5.24_LL1c_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
+#p1c[,19] = "p1c"
 smry = rbind(p10, p1a, p1b, p1c)
 
 par(mfrow = c(1,1)) #go back to default where only one fig per panel
@@ -4069,6 +4075,13 @@ lty  = c(4, 4, 4)
 
 ###Supp Figure 5
 #LRS
+r30 = read.table("p_1.30.24_LL30_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
+r3a = read.table("p_1.30.24_LL3a_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
+r3b = read.table("p_1.30.24_LL3b_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
+r3c = read.table("p_1.30.24_LL3c_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_repsuc
+
+smry = rbind(r30, r3a, r3b, r3c)
+
 {
 r30 = read.table("end_9.18.23_LL30_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
 r3a = read.table("end_9.18.23_LL3a_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
@@ -4392,20 +4405,22 @@ smry = smry_new
 
 ##### Generic plotting code
 #1=yr, 2=pop size, 3=propmig, 4=He, 5=Ho[driftSNPS], 6=fis, 7=nadult, 8=sxratio, 9=nmig, 10=fst, 11=replicate, 12=paramset, 13=noffspring, 14=fstvsource, 15=fisvsource,
-#16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
+#16=deltaK, 17=propMigSNPs, 18=HoallSNPs, 19=projectname, 20=groupnumb, ##ADD 14 -- 21=k, 22=nSNP, 23=miggy, 24=LBhet, 25=LBp, 26=maxage, 27=broodsize, 28=maturity,
+#21=n_dead_tot_mu, 22=n_dead_del_mu, 23=sum_mu_drift, 24=sum_mu_pop, 25=sum_mu_cons, 26=sum_tot_mu_cons, 27=mean_tot_mu_cons
+#28=n_dead_age, 29=n_dead_het, 30=sum_del_mu, 31=mean_del_mu, 32=mean_longestROH, 33=maxROH, 34=minROH, 35=k...
 #29=years, 30=r0, 31=nSNP.mig, 32=nSNP.cons
 {
-var = 21 #22, 26
-varname = "observed heterozygosity"
-title = "various starting allele freqs"
+var = 31 #22, 26
+varname = "min longest ROH"
+title = "various allele frequencies"
 range(smry[,var])
 #if(anyNA(smry[,var]==TRUE)){
 #  hold<- na.omit(smry[,var],drop=FALSE)
 #  smry <- as.matrix(hold)
 #}
 
-ymin <- 0#round(min(smry[,var]), digits = 2)#-.1
-ymax <- 1000#round(max(smry[,var]), digits = 2)#+.1
+ymin <- round(min(smry[,var]), digits = 2)#-.1
+ymax <- round(max(smry[,var]), digits = 2)#+.1
 ln.alph <- 0.5
 pt.alph <- 1.25
 diff <- 0.15
@@ -4496,3 +4511,503 @@ cat("slope is", slope)
 #ROH??
 #remove het death and only do age and mut death
 #
+
+################################################################################
+#ROHs
+
+#various allel freqs
+LL0 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 ##fin_5.10.23_1LL30_all_summary
+LLa = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
+HLa = read.table("p_1.30.24_HL3a_mi_all_summary.csv", header=T, sep=",") #end_9.27.23_HL3a ##fin_5.23.23_1HL3a_all_summary
+LHa = read.table("p_1.30.24_LH3a_mi_all_summary.csv", header=T, sep=",") #end_9.27.23_LH3a
+HHa = read.table("p_1.30.24_HH3a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_HH3a
+HH0 = read.table("p_1.30.24_HH30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_HH30
+
+smry = rbind(LL0, HH0, LLa, HLa, HHa, LHa)
+gt.cols =  c("cyan3", "purple", "cyan3", "maroon2", "purple", "blue")
+
+dens = NULL #c(100, 100, 100, 100, NULL, NA, NULL, NA)
+ang = 45
+bo = NA #c(NULL, NULL, NULL, NULL, NA, NA, NA, NA) #alpha(gt.cols[col], .8)
+alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
+lty <- c(3,3,1,1,1,1)
+{
+  par(mfrow=c(1,3))
+  
+  {
+    var = 32
+    varname = "Mean Longest ROH"
+    title = "Fig 2B"
+    range(smry[,var])
+    
+    ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+    ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+    ln.alph <- 0.5
+    pt.alph <- 1.25
+    diff <- 0.15
+    xmin <- 0
+    xmax <- 350
+    offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+    orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+    text.size <- 1.75
+    pt.cex <- 1.25
+    lwd <- 4
+    
+    par(mar = c(2,6,2,2))
+    ## make plot
+    plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+         xaxt = 'n', xlab = 'Year', ylab = varname,
+         cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+    text(-5, ymax, "B", cex=text.size, family="sans")
+    #title("B", adj = 0, cex.main = text.size, line = 2)
+    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+    axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+    #abline(h = 0, lty = 2)
+    
+    col <- 1
+    for(c in unique(smry[,19])){
+      print(c)
+      temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+      
+      #y1<-temp[temp[,1] == orig.xs[1],,]
+      #y2<-temp[temp[,1] == orig.xs[2],,]
+      #y3<-temp[temp[,1] == orig.xs[3],,]
+      #y4<-temp[temp[,1] == orig.xs[4],,]
+      #y5<-temp[temp[,1] == orig.xs[5],,]
+      #y6<-temp[temp[,1] == orig.xs[6],,]
+      #y7<-temp[temp[,1] == orig.xs[7],,]
+      #y8<-temp[temp[,1] == orig.xs[8],,]
+      
+      tbl = NULL
+      tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+      
+      for(d in unique(temp[,1])){
+        dat = temp[temp[,1]==d,,drop=FALSE]
+        tbl[(d+1),1] = as.numeric(d)
+        tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+        tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+        tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+        tbl[(d+1),5] = as.character(dat[1,19])
+      }
+      print(paste(tail(tbl)))
+      #TBL = rbind(TBL, tbl)
+      #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+      polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+              col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+      lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+      
+      #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+      #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+      #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+      #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+      #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+      #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+      
+      #print(mean(y1[,var]))
+      #print(mean(y7[,var]))
+      print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
+      col <- col+1
+    }
+    #legend('left', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+  }
+  
+  #2C - Fst vs orig ~ year, by = starting allele freqs
+  {
+    var = 33
+    varname = "Max Longest ROH"
+    title = "Fig 2C"
+    range(smry[,var])
+    
+    ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+    ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+    ln.alph <- 0.5
+    pt.alph <- 1.25
+    diff <- 0.15
+    xmin <- 0
+    xmax <- 350
+    offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+    orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+    text.size <- 1.75
+    pt.cex <- 1.25
+    lwd <- 4
+    
+    par(mar = c(4,6,2,2))
+    ## make plot
+    plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+         xaxt = 'n', xlab = 'Year', ylab = varname,
+         cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+    text(-5, ymax, "C", cex=text.size, family="sans")
+    #title("C", adj = 0, cex.main = text.size, line = 2)
+    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+    axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+    #abline(h = 0, lty = 2)
+    
+    col <- 1
+    for(c in unique(smry[,19])){
+      print(c)
+      temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+      
+      #y1<-temp[temp[,1] == orig.xs[1],,]
+      #y2<-temp[temp[,1] == orig.xs[2],,]
+      #y3<-temp[temp[,1] == orig.xs[3],,]
+      #y4<-temp[temp[,1] == orig.xs[4],,]
+      #y5<-temp[temp[,1] == orig.xs[5],,]
+      #y6<-temp[temp[,1] == orig.xs[6],,]
+      #y7<-temp[temp[,1] == orig.xs[7],,]
+      #y8<-temp[temp[,1] == orig.xs[8],,]
+      
+      tbl = NULL
+      tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+      
+      for(d in unique(temp[,1])){
+        dat = temp[temp[,1]==d,,drop=FALSE]
+        tbl[(d+1),1] = as.numeric(d)
+        tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+        tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+        tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+        tbl[(d+1),5] = as.character(dat[1,19])
+      }
+      #TBL = rbind(TBL, tbl)
+      #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+      polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+              col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+      lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+      
+      #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+      #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+      #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+      #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+      #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+      #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+      
+      #print(mean(y1[,var]))
+      #print(mean(y7[,var]))
+      col <- col+1
+    }
+    #legend('topleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+  }
+  
+  #2D - Fst vs source ~ year, by = starting allele freqs
+  {
+    var = 34
+    varname = "Minimum Longest ROH"
+    title = "Fig 2D"
+    range(smry[,var])
+    
+    ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+    ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+    ln.alph <- 0.5
+    pt.alph <- 1.25
+    diff <- 0.15
+    xmin <- 0
+    xmax <- 350
+    offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+    orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+    text.size <- 1.75
+    pt.cex <- 1.25
+    lwd <- 4
+    
+    par(mar = c(4,6,2,2))
+    ## make plot
+    plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+         xaxt = 'n', xlab = 'Year', ylab = varname,
+         cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+    text(-5, ymax, "D", cex=text.size, family="sans")
+    #title("D", adj = 0, cex.main = text.size, line = 2)
+    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+    axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+    #abline(h = 0, lty = 2)
+    
+    col <- 1
+    for(c in unique(smry[,19])){
+      print(c)
+      temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+      
+      #y1<-temp[temp[,1] == orig.xs[1],,]
+      #y2<-temp[temp[,1] == orig.xs[2],,]
+      #y3<-temp[temp[,1] == orig.xs[3],,]
+      #y4<-temp[temp[,1] == orig.xs[4],,]
+      #y5<-temp[temp[,1] == orig.xs[5],,]
+      #y6<-temp[temp[,1] == orig.xs[6],,]
+      #y7<-temp[temp[,1] == orig.xs[7],,]
+      #y8<-temp[temp[,1] == orig.xs[8],,]
+      
+      tbl = NULL
+      tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+      
+      for(d in unique(temp[,1])){
+        dat = temp[temp[,1]==d,,drop=FALSE]
+        tbl[(d+1),1] = as.numeric(d)
+        tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+        tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+        tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+        tbl[(d+1),5] = as.character(dat[1,19])
+      }
+      #TBL = rbind(TBL, tbl)
+      #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+      polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+              col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+      lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+      
+      #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+      #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+      #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+      #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+      #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+      #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+      
+      #print(mean(y1[,var]))
+      #print(mean(y7[,var]))
+      col <- col+1
+    }
+    #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+  }
+}
+
+#dif pop sizes 
+p7a = read.table("p_2.5.24_LL7a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL7a ##fin_5.11.23_1LL7a_all_summary
+p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")  #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
+p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl3a ##fin_6.1.23_nbtl3a_all_summary
+
+smry = rbind(ba, p1a, p3a, p7a) #p50, 
+gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") 
+lty = c(1,1,1,1)
+par(mfrow=c(1,3))
+
+#migration strategies
+p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") 
+p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")
+p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",") 
+p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") 
+smry = rbind(p30, p3a, p3b, p3c)
+
+{
+  var = 32
+  varname = "Mean Longest ROH"
+  title = "Fig 2B"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(2,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "B", cex=text.size, family="sans")
+  #title("B", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    print(paste(tail(tbl)))
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
+    col <- col+1
+  }
+  #legend('left', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#2C - Fst vs orig ~ year, by = starting allele freqs
+{
+  var = 33
+  varname = "Max Longest ROH"
+  title = "Fig 2C"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "C", cex=text.size, family="sans")
+  #title("C", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('topleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
+#2D - Fst vs source ~ year, by = starting allele freqs
+{
+  var = 34
+  varname = "Minimum Longest ROH"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "D", cex=text.size, family="sans")
+  #title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+}
+
