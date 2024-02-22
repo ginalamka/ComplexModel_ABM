@@ -327,9 +327,9 @@ Breed = function(pop, pairs, numboff, k, sz, nSNP, nSNP.mig, broodsize, y, mu, m
   babies = cbind(babies, babygeno)
   pop = rbind(pop, babies)
   
-  remove(babies, babygeno, dd, fem, het, mal, migrantgen, mm, mSNP, pairs, parents, pairings, 
+  remove(babies, babygeno, dd, fem, het, mal, mm, mSNP, pairs, parents, pairings, 
          t, dadgeno, dadgeno.s, f, fecundity, momgeno, momgeno.s, nbabes, SZ)
-         #NE, alive, adult, adult_f, adult_m, mig_f, mig_m)
+         #NE, alive, adult, adult_f, adult_m, mig_f, mig_m, migrantgen)
   
   return(list(pop,bb))
 }
