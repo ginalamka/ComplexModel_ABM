@@ -144,6 +144,19 @@ p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",")
 p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") 
 smry = rbind(p30, p3a, p3b, p3c)
 
+#testing the mutation and new measures
+z30 = read.table("p_2.20.24_LL30_mi_all_summary.csv", header=T, sep=",") 
+z3a = read.table("p_2.20.24_LL3a_mi_all_summary.csv", header=T, sep=",") 
+z3a2 = read.table("p_2.20.24_LL3a_mi_2_all_summary.csv", header=T, sep=",") 
+#z3a3 = read.table("p_2.20.24_LL3a_mi_3_all_summary.csv", header=T, sep=",") 
+smry = rbind(z30, z3a, z3a2)
+
+#testing nutation and new measures but with repro succ
+x30 = read.table("p_2.20.24_LL30_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
+x3a = read.table("p_2.20.24_LL3a_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
+x3a2 = read.table("p_2.20.24_LL3a_mi_2_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
+smry = rbind(x30, x3a, x3a2)
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##Figure 2
 {
@@ -925,6 +938,7 @@ lty = c(3,3,3,3,1,1,1,1)
     #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
     #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
     
+    print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
     #print(mean(y1[,var]))
     #print(mean(y7[,var]))
     col <- col+1
@@ -4132,7 +4146,7 @@ alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
   range(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 3.5 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 10 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4788,8 +4802,8 @@ smry = rbind(p30, p3a, p3b, p3c)
   title = "Fig 2B"
   range(smry[,var])
   
-  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ymin <- 20 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 175 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4866,8 +4880,8 @@ smry = rbind(p30, p3a, p3b, p3c)
   title = "Fig 2C"
   range(smry[,var])
   
-  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ymin <- 20 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 175 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4942,8 +4956,8 @@ smry = rbind(p30, p3a, p3b, p3c)
   title = "Fig 2D"
   range(smry[,var])
   
-  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 450 #round(max(smry[,var]), digits = 2)#+.1
+  ymin <- 20 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 175 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -5011,3 +5025,303 @@ smry = rbind(p30, p3a, p3b, p3c)
   #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 }
 
+#~~~~~~~~~~~~~~~~~~~~~~``
+
+##23,25,26
+{
+  var = 23
+  varname = "Sum of Mutations\n in Drift SNPs"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 400 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "D", cex=text.size, family="sans")
+  #title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+} #sum mu_drift -- this is the number of added mutations in drift SNPs
+{
+  var = 25
+  varname = "Sum of Mutations\n in Conserved SNPs"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 20 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "D", cex=text.size, family="sans")
+  #title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+} #sum mu_cons -- number of added mutations in conserved SNPs
+{
+  var = 26
+  varname = "Sum of Total Mutations\n in Conserved SNPs"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 400 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "D", cex=text.size, family="sans")
+  #title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+} #sum total mutations in conserved SNPs
+
+{
+  var = 30
+  varname = "Sum of Deleterious Mutations\n in Conserved SNPs"
+  title = "Fig 2D"
+  range(smry[,var])
+  
+  ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 15 #round(max(smry[,var]), digits = 2)#+.1
+  ln.alph <- 0.5
+  pt.alph <- 1.25
+  diff <- 0.15
+  xmin <- 0
+  xmax <- 350
+  offsets <- c(-0.1, -0.5, 0, 0.5, 0.1, 0.15, 0.2, 0.25) #c(-0.2, -0.1, 0, 0.1, 0.2) #must have the same number of parameter sets
+  orig.xs <- c(1, 50, 100, 151, 201, 250, 300, 350) #years of interest 
+  text.size <- 1.75
+  pt.cex <- 1.25
+  lwd <- 4
+  
+  par(mar = c(4,6,2,2))
+  ## make plot
+  plot(-1,-1, xlim = c(xmin, xmax), ylim = c(ymin, ymax), 
+       xaxt = 'n', xlab = 'Year', ylab = varname,
+       cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
+  text(-5, ymax, "D", cex=text.size, family="sans")
+  #title("D", adj = 0, cex.main = text.size, line = 2)
+  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
+  #abline(h = 0, lty = 2)
+  
+  col <- 1
+  for(c in unique(smry[,19])){
+    print(c)
+    temp <- smry[smry[,19] == c,, drop=FALSE] #separate by parameter set/aka project name
+    
+    #y1<-temp[temp[,1] == orig.xs[1],,]
+    #y2<-temp[temp[,1] == orig.xs[2],,]
+    #y3<-temp[temp[,1] == orig.xs[3],,]
+    #y4<-temp[temp[,1] == orig.xs[4],,]
+    #y5<-temp[temp[,1] == orig.xs[5],,]
+    #y6<-temp[temp[,1] == orig.xs[6],,]
+    #y7<-temp[temp[,1] == orig.xs[7],,]
+    #y8<-temp[temp[,1] == orig.xs[8],,]
+    
+    tbl = NULL
+    tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
+    
+    for(d in unique(temp[,1])){
+      dat = temp[temp[,1]==d,,drop=FALSE]
+      tbl[(d+1),1] = as.numeric(d)
+      tbl[(d+1),2] = as.numeric(mean(dat[,var]))
+      tbl[(d+1),3] = as.numeric(quantile(dat[,var], probs=0.08))
+      tbl[(d+1),4] = as.numeric(quantile(dat[,var], probs=0.92))
+      tbl[(d+1),5] = as.character(dat[1,19])
+    }
+    #TBL = rbind(TBL, tbl)
+    #xs <- tbl[,1] + offsets[col]  #dont forget you're in a loop, dummy
+    polygon(x = c(tbl[,1],rev(tbl[,1])) , y = c(tbl[,3],rev(tbl[,4])), density = dens[col], angle = ang, border = bo[col],
+            col = adjustcolor(alpha(gt.cols[col], .7), alpha.f=alf[col]))  #border = alpha(gt.cols[col], .8)
+    lines(tbl[,1], tbl[,2], col = gt.cols[col], lwd = lwd, lty = lty[col])
+    
+    #xs <- orig.xs + offsets[col]  #dont forget you're in a loop, dummy
+    #lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
+    #points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = 19, cex = pt.cex)
+    #arrows(x0 = xs, y0 = c(quantile(y1[,var], probs=0.08), quantile(y2[,var], probs=c(0.08)), quantile(y3[,var], probs=c(0.08)), quantile(y4[,var], probs=c(0.08)), quantile(y5[,var], probs=c(0.08)), quantile(y6[,var], probs=c(0.08)), quantile(y7[,var], probs=c(0.08)), quantile(y8[,var], probs=c(0.08))), 
+    #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
+    #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
+    
+    #print(mean(y1[,var]))
+    #print(mean(y7[,var]))
+    col <- col+1
+  }
+  #legend('bottomleft', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
+} #sum total number of deleterious recessive mutations in conserved SNPs
