@@ -84,9 +84,9 @@ par(mfrow = c(1,1)) #go back to default where only one fig per panel
 par(mfrow = c(1,1)) #go back to default where only one fig per panel
   
 
-library(colorspace)
+#library(colorspace)
 library(scales)
-library(FSA)
+#library(FSA)
 gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") #"springgreen3"
 
 #plot specs
@@ -157,15 +157,56 @@ x3a = read.table("p_2.20.24_LL3a_mi_all_repsuc.csv", header=T, sep=",") #fin_5.1
 x3a2 = read.table("p_2.20.24_LL3a_mi_2_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
 smry = rbind(x30, x3a, x3a2)
 
+#~~~~~~~~~SHORT DATA
+
+a30 = read.table("a_2.22.24_LL30_all_summary.csv", header=T, sep=",") 
+a3a = read.table("a_2.22.24_LL3a_all_summary.csv", header=T, sep=",") 
+a3b = read.table("a_2.22.24_LL3b_all_summary.csv", header=T, sep=",") 
+a3c = read.table("a_2.22.24_LL3c_all_summary.csv", header=T, sep=",") 
+a3e = read.table("a_2.22.24_LL3e_all_summary.csv", header=T, sep=",") 
+a3f = read.table("a_2.22.24_LL3f_all_summary.csv", header=T, sep=",") 
+#smry = rbind(a30, a3a, a3b, a3c)
+
+a10 = read.table("a_2.22.24_LL10_all_summary.csv", header=T, sep=",")
+a1a = read.table("a_2.22.24_LL1a_all_summary.csv", header=T, sep=",")
+a1b = read.table("a_2.22.24_LL1b_all_summary.csv", header=T, sep=",")
+a1c = read.table("a_2.22.24_LL1c_all_summary.csv", header=T, sep=",")
+
+a70 = read.table("a_2.22.24_LL70_all_summary.csv", header=T, sep=",")
+a7a = read.table("a_2.22.24_LL7a_all_summary.csv", header=T, sep=",")
+a7b = read.table("a_2.22.24_LL7b_all_summary.csv", header=T, sep=",")
+a7c = read.table("a_2.22.24_LL7c_all_summary.csv", header=T, sep=",")
+
+aHH0 = read.table("a_2.22.24_HH30_all_summary.csv", header=T, sep=",")
+aHLa = read.table("a_2.22.24_HL3a_all_summary.csv", header=T, sep=",")
+aHHa = read.table("a_2.22.24_HH3a_all_summary.csv", header=T, sep=",")
+aLHa = read.table("a_2.22.24_LH3a_all_summary.csv", header=T, sep=",")
+aLLa = read.table("a_2.22.24_LL3a_all_summary.csv", header=T, sep=",")
+smry = rbind(aHH0, aHLa, aHHa, aLHa, aLLa)
+
+ab0 = read.table("a_2.22.24_LLnbtl0_all_summary.csv", header=T, sep=",")
+aba = read.table("a_2.22.24_LLnbtla_all_summary.csv", header=T, sep=",")
+
+a30. = read.table("a_2.22.24_LL30._all_summary.csv", header=T, sep=",") 
+a3a. = read.table("a_2.22.24_LL3a._all_summary.csv", header=T, sep=",") 
+a3b. = read.table("a_2.22.24_LL3b._all_summary.csv", header=T, sep=",") 
+a3c. = read.table("a_2.22.24_LL3c._all_summary.csv", header=T, sep=",") 
+
+#smry_h = smry[smry[,1]!="year",,drop=FALSE]
+#smry <- smry_h
+
+
 #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 ##Figure 2
 {
-p70 = read.table("p_2.5.24_LL70_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL70 ##fin_5.11.23_1LL70_all_summary
+p70 = read.table("p_2.5.24_LL70_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL70 ##fin_5.11.23_1LL70_all_summary
+p70[,19] = "LL70"
 p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 ##fin_5.10.23_1LL30_all_summary
 p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
-#p10[,19] = "LL10"
-b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+b0[,19] = "nbtl0"
 smry = rbind(b0,p10, p30, p70) #p50, 
+gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") 
 
 #make panel order by row, with 2 rows and 2 columns
 par(mfrow = c(2,2))
@@ -195,14 +236,19 @@ for(z in unique(smry[,19])){
 
 #1B - delta H ~ year, by = IUCN status [plus no crash]
   #will want CR at bottom 
+smry_h = rbind(ab0,a10, a30, a70)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,5] <- as.numeric(smry_h[,5])
+
+
 {
   var = 5
   varname = "Heterozygosity"
   title = "Fig 1B"
   range(smry[,var])
   
-  ymin <- 0.05 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 0.25 #round(max(smry[,var]), digits = 2)#+.1
+  ymin <- 0.09 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- 0.2 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -221,7 +267,7 @@ for(z in unique(smry[,19])){
        cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
   text(-5,ymax, "B", cex=text.size, family="sans")
   #title("B", adj = 0, cex.main = text.size, line = 2)
-  axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+  axis(2, at = c(.1, .15, .2), cex.axis = text.size)
   axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = c('0','50', '100','150','200', '250', '300','350'), cex.axis = text.size)
   #abline(h = 0, lty = 2)
   
@@ -273,6 +319,7 @@ for(z in unique(smry[,19])){
 }
 
 #1C - fst ~ year, by = IUCN status [plus no crash]
+smry = rbind(b0,p10, p30, p70)
 {
   var = 10
   varname = "Recipient Population \n Divergence (Fst)"
@@ -445,6 +492,9 @@ HH0 = read.table("p_1.30.24_HH30_mi_all_summary.csv", header=T, sep=",") #end_9.
 #DONTNEED#HHa[,19] = "HHa"
 
 smry = rbind(LLa, HLa, HHa, LHa)
+smry_h = rbind(aLLa, aHLa, aHHa, aLHa)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,17] <- smry_h[,17]
 gt.cols =  c("cyan3", "maroon2", "purple", "blue")
 
 {
@@ -452,6 +502,7 @@ gt.cols =  c("cyan3", "maroon2", "purple", "blue")
   varname = "Proportion Migrant\n Ancestry (%)"
   title = "Fig 2A"
   range(smry[,var])
+  smry[,var] = as.numeric(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
   ymax <- 1 #round(max(smry[,var]), digits = 2)#+.1
@@ -525,6 +576,9 @@ gt.cols =  c("cyan3", "maroon2", "purple", "blue")
 
 #2B - Ho ~ year, by = high and low allele freq, low = grey, high = black, mig = solid, non-mig = dotted
 smry = rbind(LL0, HH0, LLa, HLa, HHa, LHa)
+smry_h = rbind(p30, aHH0, aLLa, aHLa, aHHa, aLHa)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,5] <- as.numeric(smry_h[,5])
 gt.cols =  c("cyan3", "purple", "cyan3", "maroon2", "purple", "blue")
 
 dens = NULL #c(100, 100, 100, 100, NULL, NA, NULL, NA)
@@ -609,6 +663,7 @@ lty <- c(3,3,1,1,1,1)
   #legend('left', legend = c('LL0', 'HL0', 'HH0', 'LLa', 'HLa', 'HHa'), col = gt.cols, pch = 19, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 }
 
+smry = rbind(LL0, HH0, LLa, HLa, HHa, LHa)
 #2C - Fst vs orig ~ year, by = starting allele freqs
 {
   var = 10
@@ -754,6 +809,7 @@ lty <- c(3,3,1,1,1,1)
     #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
     #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
     
+    print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
     #print(mean(y1[,var]))
     #print(mean(y7[,var]))
     col <- col+1
@@ -770,20 +826,26 @@ lty <- c(3,3,1,1,1,1)
   #m30 = read.table("m_1.23.24_LL30_all_summary.csv", header=T, sep=",")
   
 #3A - Ho ~ year, by = IUCN, mig and no mig
-p70 = read.table("p_2.5.24_LL70_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL70 #fin_5.11.23_1LL70_all_summary
+p70 = read.table("p_2.5.24_LL70_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL70 #fin_5.11.23_1LL70_all_summary
+p70[,19] = "p70"
 p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL30 #fin_5.10.23_1LL30_all_summary
 p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
-#p10[,19] = "LL10"
-b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
-p7a = read.table("p_2.5.24_LL7a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL7a ##fin_5.11.23_1LL7a_all_summary
+b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+b0[,19] = "nbtl0"
+p7a = read.table("p_2.5.24_LL7a_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL7a ##fin_5.11.23_1LL7a_all_summary
+p7a[,19] = "p7a"
 p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")  #end_9.18.23_LL3a ##fin_5.10.23_1LL3a_all_summary
-p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+p1a = read.table("p_2.5.24_LL1a_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+p1a[,19] = "p1a"
 ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl3a ##fin_6.1.23_nbtl3a_all_summary
 
 par(mfrow = c(2,2))
 
 #3A - ancestry ~ year, by = IUCN
-smry = rbind(ba, p1a, p3a, p7a) #p50, 
+smry = rbind(ba, p1a, p3a, p7a)
+smry_h = rbind(aba, a1a, a3a, a7a) #p50, 
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,17] <- as.numeric(smry_h[,17])
 gt.cols <- c("grey", "firebrick3", "darkorange1", "gold") 
 lty = c(1,1,1,1)
 {
@@ -843,6 +905,7 @@ lty = c(1,1,1,1)
     #       y1 = c(quantile(y1[,var], probs=0.92), quantile(y2[,var], probs=0.92), quantile(y3[,var], probs=0.92), quantile(y4[,var], probs=0.92), quantile(y5[,var], probs=0.92), quantile(y6[,var], probs=0.92), quantile(y7[,var], probs=0.92), quantile(y8[,var], probs=0.92)), 
     #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
     
+    print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
     #print(mean(y1[,var]))
     #print(mean(y7[,var]))
     col <- col+1
@@ -867,6 +930,9 @@ lty = c(1,1,1,1)
 
 #3B - H ~ time, IUCN stat
 smry = rbind(b0, p10, p30, p70, ba, p1a, p3a, p7a) #p50, 
+smry_h = rbind(ab0, a10, a30, a70, aba, a1a, a3a, a7a)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,5] = as.numeric(smry_h[,5])
 gt.cols <- c("grey", "firebrick3", "darkorange1", "gold", "grey", "firebrick3", "darkorange1", "gold") # "springgreen3"
 lty = c(3,3,3,3,1,1,1,1)
 {
@@ -875,8 +941,8 @@ lty = c(3,3,3,3,1,1,1,1)
   title = "Fig 3B"
   range(smry[,var])
   
-  ymin <- .05 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- .25 #round(max(smry[,var]), digits = 2)#+.1
+  ymin <- .10#.05 #round(min(smry[,var]), digits = 2)#-.1
+  ymax <- .20#.25 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -939,6 +1005,8 @@ lty = c(3,3,3,3,1,1,1,1)
     #       lwd = lwd, col = alpha(gt.cols[col], pt.alph), code=3, angle=90, length=0.1)
     
     print(c(tbl[2,2],tbl[20,2],tbl[51,2],tbl[101,2],tbl[151,2],tbl[351,2]))
+    print(c(tbl[2,3],tbl[20,3],tbl[51,3],tbl[101,3],tbl[151,3],tbl[351,3]))
+    print(c(tbl[2,4],tbl[20,4],tbl[51,4],tbl[101,4],tbl[151,4],tbl[351,4]))
     #print(mean(y1[,var]))
     #print(mean(y7[,var]))
     col <- col+1
@@ -1115,17 +1183,26 @@ lty = c(3,3,3,3,1,1,1,1)
   pt.size <- 1.5
   
   #4A, 4D, 4G, 4J
-  p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+  p1a = read.table("p_2.5.24_LL1a_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+  p1a[,19] = "p1a"
   p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary  #has 42 pops that crashed!!
-  #p10[,19] = "LL10"
-  p1b = read.table("p_2.5.24_LL1b_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
-  #p1b[,19] = "p1b"
-  p1c = read.table("p_2.5.24_LL1c_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
-  #p1c[,19] = "p1c"
-  b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+  p1b = read.table("p_2.5.24_LL1b_mi_all_summary_comb.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
+  p1b[,19] = "p1b"
+  p1c = read.table("p_2.5.24_LL1c_mi_all_summary_comb.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
+  p1c[,19] = "p1c"
+  b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_nbtl30 ##fin_6.1.23_nbtl30_all_summary
+  b0[,19] = "b0"
   ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_nbtl3a ##fin_6.1.23_nbtl3a_all_summary
-  smry = rbind(b0, ba, p10, p1a, p1b, p1c)
+  smry = rbind(b0, ba, p10, p1a, p1b) #, p1c
+  smry_h = rbind(ab0, aba, a10, a1a, a1b) #, a1c
+  smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+  smry = smry[smry[,1]!="year",,drop=FALSE]
+  smry[,10] = as.numeric(smry[,10])
+  smry[,14] = as.numeric(smry[,14])
+  smry[,17] = as.numeric(smry_h[,17])
+  smry[,5] = as.numeric(smry_h[,5])
   #gt.cols = c("hotpink","orchid3", "springgreen", "blue") #c("black", "chartreuse3", "chocolate3", "goldenrod3")
+  smry = rbind(smry,p1c)
   
   gt.cols = c("grey", "grey", "firebrick3", "firebrick3", "firebrick3", "firebrick3")
   lty = c(3, 1, 3, 1, 2, 4)
@@ -1182,8 +1259,8 @@ lty = c(3,3,3,3,1,1,1,1)
   var = 5
   varname = "Heterozygosity"
   title = "D"
-  ymin <- .05
-  ymax <- .25
+  ymin <- .09
+  ymax <- .20
   {
     par(mar = c(1,2,1,1))
     ## make plot
@@ -1192,7 +1269,7 @@ lty = c(3,3,3,3,1,1,1,1)
          cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
     text(0,ymax, title, cex=text.size, family="sans")
     #title(title, adj = 0, cex.main = text.size, line = 2)
-    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), cex.axis = text.size)
+    axis(2, at = c(0.1, 0.15, 0.2), cex.axis = text.size)
     axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = FALSE, cex.axis = text.size) #c('0','50', '100','150','200', '250', '300','350')
     #abline(h = 0, lty = 2)
     
@@ -1317,14 +1394,23 @@ lty = c(3,3,3,3,1,1,1,1)
     #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
   }
   
-  p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-  p3a = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
-  p3b = read.table("end_9.18.23_LL3b_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
-  p3c = read.table("end_9.18.23_LL3c_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
-  b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
-  ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
-  smry = rbind(b0, ba, p30, p3a, p3b, p3c)
-  
+  p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
+  p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
+  p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
+  p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
+  b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary_comb.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
+  b0[,19] = "b0"
+  ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
+
+  smry = rbind(b0, ba, p30, p3a, p3b, p3c) 
+  smry_h = rbind(ab0, aba, a30, a3a, a3b, a3c) 
+  smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+  smry = smry[smry[,1]!="year",,drop=FALSE]
+  smry[,10] = as.numeric(smry[,10])
+  smry[,14] = as.numeric(smry[,14])
+  smry[,17] = as.numeric(smry_h[,17])
+  smry[,5] = as.numeric(smry_h[,5])
+  #gt.cols = c("hotpink","orchid3", "springgreen", "blue") #c("black", "chartreuse3", "chocolate3", "goldenrod3")
   
   gt.cols = c("grey", "grey","darkorange1", "darkorange1", "darkorange1", "darkorange1")
   lty = c(3, 1, 3, 1, 2, 4)
@@ -1369,8 +1455,8 @@ lty = c(3,3,3,3,1,1,1,1)
       lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
       points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = pch[col], cex = pt.size) #pt.cex
       
-      print(mean(y1[,var]))
-      print(mean(y7[,var]))
+      print(mean(y5[,var]))
+      print(mean(y8[,var]))
       col <- col+1
     }
     #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
@@ -1380,8 +1466,8 @@ lty = c(3,3,3,3,1,1,1,1)
   var = 5
   varname = "Heterozygosity"
   title = "E"
-  ymin <- .05
-  ymax <- .25
+  ymin <- .09
+  ymax <- .20
   {
     par(mar = c(1,1,1,1))
     ## make plot
@@ -1390,7 +1476,7 @@ lty = c(3,3,3,3,1,1,1,1)
          cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
     text(0,ymax, title, cex=text.size, family="sans")
     #title(title, adj = 0, cex.main = text.size, line = 2)
-    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), labels = FALSE, cex.axis = text.size)
+    axis(2, at = c(0.1, 0.15, 0.2), labels = FALSE, cex.axis = text.size)
     axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = FALSE, cex.axis = text.size) #c('0','50', '100','150','200', '250', '300','350')
     #abline(h = 0, lty = 2)
     
@@ -1415,8 +1501,8 @@ lty = c(3,3,3,3,1,1,1,1)
       lines(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], ln.alph), lwd = lwd, lty = lty[col])
       points(xs, c(mean(y1[,var]), mean(y2[,var]), mean(y3[,var]), mean(y4[,var]), mean(y5[,var]), mean(y6[,var]), mean(y7[,var]), mean(y8[,var])), col = alpha(gt.cols[col], pt.alph), pch = pch[col], cex = pt.size) #pt.cex
       
-      print(mean(y1[,var]))
-      print(mean(y7[,var]))
+      print(mean(y5[,var]))
+      print(mean(y8[,var]))
       col <- col+1
     }
     #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
@@ -1515,13 +1601,21 @@ lty = c(3,3,3,3,1,1,1,1)
     #legend('bottomleft', legend = c('no mig', '1 mig/gen','burst mig', 'pulse mig'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
   }
   
-  p7a = read.table("end_9.18.23_LL7a_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_summary
-  p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
-  p7b = read.table("end_9.18.23_LL7b_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_summary
-  p7c = read.table("end_9.18.23_LL7c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_summary
-  b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
-  ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
+  p7a = read.table("p_2.5.24_LL7a_mi_all_summary_comb.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_summary
+  p7a[,19] = "p7a"
+  p70 = read.table("p_2.5.24_LL70_mi_all_summary_comb.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
+  p70[,19] = "p70"
+  p7b = read.table("p_2.5.24_LL7b_mi_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_summary
+  p7c = read.table("p_2.5.24_LL7c_mi_all_summary_comb.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_summary
+  p7c[,19] = "p7c"
+  b0 = read.table("p_2.5.24_LLnbtl0_mi_all_summary_comb.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
+  b0[,19] = "b0"
+  ba = read.table("p_2.5.24_LLnbtla_mi_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
   smry = rbind(b0, ba, p70, p7a, p7b, p7c)
+  smry_h = rbind(ab0, aba, a70, a7a, a7b, a7c)
+  smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+  smry[,17] = as.numeric(smry_h[,17])
+  smry[,5] = as.numeric(smry_h[,5])
   
   gt.cols = c("grey","grey","goldenrod1", "goldenrod1", "goldenrod1", "goldenrod1")
   lty = c(3, 1, 3, 1, 2, 4)
@@ -1577,8 +1671,8 @@ lty = c(3,3,3,3,1,1,1,1)
   var = 5
   varname = "Heterozygosity"
   title = "F"
-  ymin <- .05
-  ymax <- .25
+  ymin <- .09
+  ymax <- .20
   {
     par(mar = c(1,1,1,1))
     ## make plot
@@ -1587,7 +1681,7 @@ lty = c(3,3,3,3,1,1,1,1)
          cex.axis = text.size, cex.lab = text.size, yaxt = 'n')
     text(0,ymax, title, cex=text.size, family="sans")
     #title(title, adj = 0, cex.main = text.size, line = 2)
-    axis(2, at = c(ymin, ymax-(ymax-ymin)/2, ymax), labels = FALSE, cex.axis = text.size)
+    axis(2, at = c(0.1, 0.15, 0.2), labels = FALSE, cex.axis = text.size)
     axis(1, at = c(0, 50, 100, 150, 200, 250, 300, 350), labels = FALSE, cex.axis = text.size) #c('0','50', '100','150','200', '250', '300','350')
     #abline(h = 0, lty = 2)
     
@@ -2507,9 +2601,14 @@ ymax <- .5
 #5A - timing of burst mig rates (B&E) ~ year 
 par(mfcol = c(4,2))
 
-p3b = read.table("end_9.18.23_LL3b_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3b_all_summary.csv", header=T, sep=",")
-p3e = read.table("end_9.18.23_LL3e_all_summary.csv", header=T, sep=",") #read.table("cpfin_5.10.23_1LL3e_all_summary.csv", header=T, sep=",")
+p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3b_all_summary.csv", header=T, sep=",")
+p3e = read.table("p_1.30.24_LL3e_mi_all_summary.csv", header=T, sep=",") #read.table("cpfin_5.10.23_1LL3e_all_summary.csv", header=T, sep=",")
 smry = rbind(p3b, p3e)
+smry_h = rbind(a3b, a3e)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,17] <- as.numeric(smry_h[,17])
+smry[,5] <- as.numeric(smry_h[,5])
+
 gt.cols <- c("black", "grey")
 lty = c(1,1)
 
@@ -2584,8 +2683,8 @@ ymax <- 1
 var = 5
 varname = "Heterozygosity"
 title = "C"
-ymin <- .05
-ymax <- .25
+ymin <- .10
+ymax <- .20
 {
   par(mar = c(2,6,1,1))
   ## make plot
@@ -2773,9 +2872,13 @@ ymax <- .5
   #legend('bottomleft', legend = c('no mig', '1 mig/gen'), col = gt.cols, pch = pch, bty = 'n', cex = (text.size-.5), pt.cex = pt.cex+.5, horiz = FALSE, x.intersp = 0.2)
 }
 
-p3c = read.table("end_9.18.23_LL3c_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3c_all_summary.csv", header=T, sep=",")
-p3f = read.table("end_9.18.23_LL3f_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3f_all_summary.csv", header=T, sep=",")
+p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3c_all_summary.csv", header=T, sep=",")
+p3f = read.table("p_1.30.24_LL3f_mi_all_summary.csv", header=T, sep=",") #read.table("fin_5.10.23_1LL3f_all_summary.csv", header=T, sep=",")
 smry = rbind(p3c, p3f)
+smry_h = rbind(a3c, a3f)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,17] <- as.numeric(smry_h[,17])
+smry[,5] <- as.numeric(smry_h[,5])
 
 #B
 var = 17
@@ -2845,8 +2948,8 @@ ymax <- 1
 var = 5
 varname = "Heterozygosity"
 title = "D"
-ymin <- .05
-ymax <- .25
+ymin <- .10
+ymax <- .20
 {
   par(mar = c(2,2,1,6))
   ## make plot
@@ -3038,11 +3141,15 @@ ymax <- .5
 #Supp Figure 1
 #data for when migrants arent preferentially mated ~ migration rate
 {
-p30. = read.table("end_9.18.23_LL30._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL30._all_summary.csv", header=T, sep=",")
-p3a. = read.table("end_9.18.23_LL3a._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")  
-p3b. = read.table("end_9.18.23_LL3b._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
-p3c. = read.table("end_9.18.23_LL3c._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
+p30. = read.table("p_2.5.24_LL30._mi_all_summary_comb.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL30._all_summary.csv", header=T, sep=",")
+p3a. = read.table("p_2.5.24_LL3a._mi_all_summary_comb.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")  
+p3b. = read.table("p_2.5.24_LL3b._mi_all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
+p3c. = read.table("p_2.5.24_LL3c._mi_all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
 smry = rbind(p30., p3a., p3b., p3c.)
+smry_h = rbind(a30., a3a., a3b., a3c.)
+smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+smry[,17] <- as.numeric(smry_h[,17])
+smry[,5] <- as.numeric(smry_h[,5])
 
 gt.cols = "darkorange1"
 lty = c(3, 1, 2, 4)
@@ -3235,19 +3342,25 @@ ymax <- .5
 }
 #version 2
 {
-  p30. = read.table("end_9.18.23_LL30._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL30._all_summary.csv", header=T, sep=",")
-  p3a. = read.table("end_9.18.23_LL3a._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")  
-  p3b. = read.table("end_9.18.23_LL3b._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
-  p3c. = read.table("end_9.18.23_LL3c._all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
-  p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-  p3a = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
-  p3b = read.table("end_9.18.23_LL3b_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
-  p3c = read.table("end_9.18.23_LL3c_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
+  p30. = read.table("p_2.5.24_LL30._mi_all_summary_comb.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL30._all_summary.csv", header=T, sep=",")
+  p30.[,19] = "p30."
+  p3a. = read.table("p_2.5.24_LL3a._mi_all_summary_comb.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3a._all_summary.csv", header=T, sep=",")  
+  p3a.[,19] = "p3a."
+  p3b. = read.table("p_2.5.24_LL3b._mi_all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3b._all_summary.csv", header=T, sep=",")
+  p3c. = read.table("p_2.5.24_LL3c._mi_all_summary.csv", header=T, sep=",") #read.table("fin_6.1.23_1LL3c._all_summary.csv", header=T, sep=",")
+  p30 = read.table("p_1.30.24_LL30_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
+  p3a = read.table("p_1.30.24_LL3a_mi_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
+  p3b = read.table("p_1.30.24_LL3b_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
+  p3c = read.table("p_1.30.24_LL3c_mi_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
   
   gt.cols = c("grey", "grey", "grey", "grey","darkorange1", "darkorange1", "darkorange1", "darkorange1")
   lty = c(3, 1, 2, 4, 3, 1, 2, 4)
   pch = c(18, 19, 15, 17, 18, 19, 15, 17)
   smry = rbind(p30., p3a., p3b., p3c., p30, p3a, p3b, p3c)
+  smry_h = rbind(a30., a3a., a3b., a3c., a30, a3a, a3b, a3c)
+  smry_h = smry_h[smry_h[,1]!="year",,drop=FALSE]
+  smry[,17] <- as.numeric(smry_h[,17])
+  smry[,5] <- as.numeric(smry_h[,5])
 
   
   par(mfrow = c(2,2))
@@ -3302,8 +3415,8 @@ ymax <- .5
   var = 5
   varname = "Heterozygosity"
   title = "B"
-  ymin <- .05
-  ymax <- .25
+  ymin <- .1
+  ymax <- .2
   
   {
     par(mar = c(2,6,2,2))
@@ -3439,12 +3552,12 @@ ymax <- .5
 #Supp Figure 2
 #data for the proportion of populations that crashed
 {
-p1a = read.table("p_2.5.24_LL1a_mi_all_summary.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
+p1a = read.table("p_2.5.24_LL1a_mi_all_summary_comb.csv", header=T, sep=",") #end_9.18.23_LL1a ##comb_fin_5.11.23_1LL1a_all_summary
 p10 = read.table("p_2.5.24_LL10_mi_all_summary.csv", header=T, sep=",") #end_comb_LL10 ##comb_fin_5.11.23_1LL10_all_summary
 #p10[,19] = "LL10"
-p1b = read.table("p_2.5.24_LL1b_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
+p1b = read.table("p_2.5.24_LL1b_mi_all_summary_comb.csv", header=T, sep=",") #end_comb_LL1b ##comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
 #p1b[,19] = "p1b"
-p1c = read.table("p_2.5.24_LL1c_mi_all_summary.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
+p1c = read.table("p_2.5.24_LL1c_mi_all_summary_comb.csv", header=T, sep=",") #end_comb_LL1c ##fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
 #p1c[,19] = "p1c"
 smry = rbind(p10, p1a, p1b, p1c)
 
@@ -3499,23 +3612,23 @@ ymax <- 1
 #Supp Figure 3
 #Fis, sex ratio, LRS?
 
-p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
-p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
-p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary
-p10[,19] = "LL10"
-b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
-p7a = read.table("end_9.18.23_LL7a_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_summary
-p3a = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
-p1a = read.table("end_9.18.23_LL1a_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_summary
-ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
-p7b = read.table("end_9.18.23_LL7b_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_summary
-p7c = read.table("end_9.18.23_LL7c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_summary
-p3b = read.table("end_9.18.23_LL3b_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
-p3c = read.table("end_9.18.23_LL3c_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
-p1b = read.table("end_comb_LL1b_all_summary.csv", header=T, sep=",") #comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
-p1b[,19] = "p1b"
-p1c = read.table("end_comb_LL1c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
-p1c[,19] = "p1c"
+# p70 = read.table("end_9.18.23_LL70_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_summary
+# p30 = read.table("end_9.18.23_LL30_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_summary
+# p10 = read.table("end_comb_LL10_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL10_all_summary
+# p10[,19] = "LL10"
+# b0 = read.table("end_9.18.23_nbtl30_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_summary
+# p7a = read.table("end_9.18.23_LL7a_all_summary.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_summary
+# p3a = read.table("end_9.18.23_LL3a_all_summary.csv", header=T, sep=",")  #fin_5.10.23_1LL3a_all_summary
+# p1a = read.table("end_9.18.23_LL1a_all_summary.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_summary
+# ba = read.table("end_9.18.23_nbtl3a_all_summary.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_summary
+# p7b = read.table("end_9.18.23_LL7b_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_summary
+# p7c = read.table("end_9.18.23_LL7c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_summary
+# p3b = read.table("end_9.18.23_LL3b_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_summary
+# p3c = read.table("end_9.18.23_LL3c_all_summary.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_summary
+# p1b = read.table("end_comb_LL1b_all_summary.csv", header=T, sep=",") #comb_fin_6.1.23_LL1b_all_summary #has 35 pops that crashed!!!
+# p1b[,19] = "p1b"
+# p1c = read.table("end_comb_LL1c_all_summary.csv", header=T, sep=",") #fin_6.1.23_LL1c_all_summary #has 37 pops that crashed!!!
+# p1c[,19] = "p1c"
 
 par(mfrow = c(2,2)) #lty = c(3, 1, 2, 4)
 #Fis
@@ -3662,6 +3775,8 @@ for(c in unique(smry[,19])){
 }
 
 smry = rbind(p1b, p3b, p7b)
+smry = smry[smry[,1]!="year",,drop=FALSE]
+smry[,6] = as.numeric(smry[,6])
 gt.cols <- c("firebrick3", "darkorange1", "gold")
 lty = c(2, 2, 2)
 {
@@ -3702,7 +3817,7 @@ lty = c(2, 2, 2)
     tbl = NULL
     tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
     
-    for(d in unique(temp[,1])){
+    for(d in unique(as.numeric(temp[,1]))){
       dat = temp[temp[,1]==d,,drop=FALSE]
       tbl[(d+1),1] = as.numeric(d)
       tbl[(d+1),2] = as.numeric(mean(dat[,var]))
@@ -3947,6 +4062,8 @@ lty  = c(1,1,1,1)
 }
 
 smry = rbind(p1b, p3b, p7b)
+smry = smry[smry[,1]!="year",,drop=FALSE]
+smry[,8] = as.numeric(smry[,8])
 gt.cols <- c("firebrick3", "darkorange1", "gold")
 lty = c(2, 2, 2)
 {
@@ -3987,7 +4104,7 @@ lty = c(2, 2, 2)
     tbl = NULL
     tbl = matrix(nrow = length(unique(temp[,1])), ncol = 5)
     
-    for(d in unique(temp[,1])){
+    for(d in unique(as.numeric(temp[,1]))){
       dat = temp[temp[,1]==d,,drop=FALSE]
       tbl[(d+1),1] = as.numeric(d)
       tbl[(d+1),2] = as.numeric(mean(dat[,var]))
@@ -4089,36 +4206,31 @@ lty  = c(4, 4, 4)
 
 ###Supp Figure 5
 #LRS
-r30 = read.table("p_1.30.24_LL30_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
-r3a = read.table("p_1.30.24_LL3a_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
-r3b = read.table("p_1.30.24_LL3b_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
-r3c = read.table("p_1.30.24_LL3c_mi_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_repsuc
-
-smry = rbind(r30, r3a, r3b, r3c)
-
 {
-r30 = read.table("end_9.18.23_LL30_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
-r3a = read.table("end_9.18.23_LL3a_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
-r3b = read.table("end_9.18.23_LL3b_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
-r3c = read.table("end_9.18.23_LL3c_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_repsuc
+r30 = read.table("a_2.22.24_LL30_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL30_all_repsuc
+r3a = read.table("a_2.22.24_LL3a_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3a_all_repsuc
+r3b = read.table("a_2.22.24_LL3b_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3b_all_repsuc
+r3c = read.table("a_2.22.24_LL3c_all_repsuc.csv", header=T, sep=",") #fin_5.10.23_1LL3c_all_repsuc
 
-r10 = read.table("end_LL10_comb_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL10_all_repsuc
-r10[,13] = "r10"
-r1a = read.table("end_9.18.23_LL1a_all_repsuc.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_repsuc
-r70 = read.table("end_9.18.23_LL70_all_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_repsuc
-r7a = read.table("end_9.18.23_LL7a_all_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_repsuc
+r10 = read.table("a_2.22.24_LL10_all_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL10_all_repsuc
+#r10[,13] = "r10"
+r1a = read.table("a_2.22.24_LL1a_all_repsuc.csv", header=T, sep=",") #comb_fin_5.11.23_1LL1a_all_repsuc
+r70 = read.table("a_2.22.24_LL70_all_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL70_all_repsuc
+r7a = read.table("a_2.22.24_LL7a_all_repsuc.csv", header=T, sep=",") #fin_5.11.23_1LL7a_all_repsuc
 
-r1b = read.table("end_LL1b_comb_repsuc.csv", header=T, sep=",")  #comb_fin_6.1.23_LL1b_all_repsuc #has 35 pops that crashed!!!
-r1b[,13] = "r1b"
-r1c = read.table("end_LL1c_comb_repsuc.csv", header=T, sep=",")  #fin_6.1.23_LL1c_all_repsuc #has 37 pops that crashed!!!
-r1c[,13] = "r1c"
-r7b = read.table("end_9.18.23_LL7b_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_repsuc
-r7c = read.table("end_9.18.23_LL7c_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_repsuc
+r1b = read.table("a_2.22.24_LL1b_all_repsuc.csv", header=T, sep=",")  #comb_fin_6.1.23_LL1b_all_repsuc #has 35 pops that crashed!!!
+#r1b[,13] = "r1b"
+r1c = read.table("a_2.22.24_LL1c_all_repsuc.csv", header=T, sep=",")  #fin_6.1.23_LL1c_all_repsuc #has 37 pops that crashed!!!
+#r1c[,13] = "r1c"
+r7b = read.table("a_2.22.24_LL7b_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_LL7b_all_repsuc
+r7c = read.table("a_2.22.24_LL7c_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_LL7c_all_repsuc
 
-ra = read.table("end_9.18.23_nbtl3a_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_repsuc
-r0 = read.table("end_9.18.23_nbtl30_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_repsuc
+ra = read.table("a_2.22.24_LLnbtla_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_nbtl3a_all_repsuc
+r0 = read.table("a_2.22.24_LLnbtl0_all_repsuc.csv", header=T, sep=",") #fin_6.1.23_nbtl30_all_repsuc
 
 smry = rbind(r0, r10, r30, r70)
+smry = smry[smry[,1]!="YearBorn",,drop=FALSE]
+smry[,3] = as.numeric(smry[,3])
 gt.cols = c("grey","firebrick3", "darkorange1", "gold")
 #smry_new = matrix(nrow = 1, ncol = ncol(smry))
 #colnames(smry_new) <- colnames(smry)
@@ -4146,7 +4258,7 @@ alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
   range(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 10 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 8 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4178,9 +4290,9 @@ alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
     temp <- smry[smry[,13] == c,, drop=FALSE] #separate by parameter set/aka project name
     
     tbl = NULL
-    tbl = matrix(nrow = length(unique(temp[,1]))+1, ncol = 5)
+    tbl = matrix(nrow = 351, ncol = 5) #length(unique(temp[,1]))+1
     
-    for(d in unique(temp[,1])){
+    for(d in unique(as.numeric(temp[,1]))){
       dat = temp[temp[,1]==d,,drop=FALSE]
       tbl[(d+1),1] = as.numeric(d)
       tbl[(d+1),2] = as.numeric(mean(dat[,var]))
@@ -4205,6 +4317,8 @@ alf = c(.7, .7, .7, .7, .7, .7, .7, .7) #.7, .7, .7, .7
 
 
 smry = rbind(ra, r1a, r3a, r7a)
+smry = smry[smry[,1]!="YearBorn",,drop=FALSE]
+smry[,3] = as.numeric(smry[,3])
 gt.cols = c("grey","firebrick3", "darkorange1", "gold")
 smry_new = smry[!is.na(smry[,2]),,drop=FALSE]
 smry_new = smry_new[smry_new[,1]<=348,,drop=FALSE]
@@ -4217,7 +4331,7 @@ smry = smry_new
     range(smry[,var])
     
     ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-    ymax <- 3.5 #round(max(smry[,var]), digits = 2)#+.1
+    ymax <- 8 #round(max(smry[,var]), digits = 2)#+.1
     ln.alph <- 0.5
     pt.alph <- 1.25
     diff <- 0.15
@@ -4249,9 +4363,9 @@ smry = smry_new
       temp <- smry[smry[,13] == c,, drop=FALSE] #separate by parameter set/aka project name
       
       tbl = NULL
-      tbl = matrix(nrow = length(unique(temp[,1]))+1, ncol = 5)
+      tbl = matrix(nrow = 351, ncol = 5)
       
-      for(d in unique(temp[,1])){
+      for(d in unique(as.numeric(temp[,1]))){
         dat = temp[temp[,1]==d,,drop=FALSE]
         tbl[(d+1),1] = as.numeric(d)
         tbl[(d+1),2] = as.numeric(mean(dat[,var]))
@@ -4277,6 +4391,8 @@ smry = smry_new
 
 
 smry = rbind(r1b, r3b, r7b)
+smry = smry[smry[,1]!="YearBorn",,drop=FALSE]
+smry[,3] = as.numeric(smry[,3])
 gt.cols = c("firebrick3", "darkorange1", "gold")
 smry_new = smry[!is.na(smry[,2]),,drop=FALSE]
 smry_new = smry_new[smry_new[,1]<=348,,drop=FALSE]
@@ -4288,7 +4404,7 @@ smry = smry_new
   range(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 3.5 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 8 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4320,9 +4436,9 @@ smry = smry_new
     temp <- smry[smry[,13] == c,, drop=FALSE] #separate by parameter set/aka project name
     
     tbl = NULL
-    tbl = matrix(nrow = length(unique(temp[,1]))+1, ncol = 5)
+    tbl = matrix(nrow = 351, ncol = 5)
     
-    for(d in unique(temp[,1])){
+    for(d in unique(as.numeric(temp[,1]))){
       dat = temp[temp[,1]==d,,drop=FALSE]
       tbl[(d+1),1] = as.numeric(d)
       tbl[(d+1),2] = as.numeric(mean(dat[,var]))
@@ -4346,6 +4462,8 @@ smry = smry_new
 }
 
 smry = rbind(r1c, r3c, r7c)
+smry = smry[smry[,1]!="YearBorn",,drop=FALSE]
+smry[,3] = as.numeric(smry[,3])
 gt.cols = c("firebrick3", "darkorange1", "gold")
 smry_new = smry[!is.na(smry[,2]),,drop=FALSE]
 smry_new = smry_new[smry_new[,1]<=348,,drop=FALSE]
@@ -4357,7 +4475,7 @@ smry = smry_new
   range(smry[,var])
   
   ymin <- 0 #round(min(smry[,var]), digits = 2)#-.1
-  ymax <- 3.5 #round(max(smry[,var]), digits = 2)#+.1
+  ymax <- 8 #round(max(smry[,var]), digits = 2)#+.1
   ln.alph <- 0.5
   pt.alph <- 1.25
   diff <- 0.15
@@ -4389,9 +4507,9 @@ smry = smry_new
     temp <- smry[smry[,13] == c,, drop=FALSE] #separate by parameter set/aka project name
     
     tbl = NULL
-    tbl = matrix(nrow = length(unique(temp[,1]))+1, ncol = 5)
+    tbl = matrix(nrow = 351, ncol = 5)
     
-    for(d in unique(temp[,1])){
+    for(d in unique(as.numeric(temp[,1]))){
       dat = temp[temp[,1]==d,,drop=FALSE]
       tbl[(d+1),1] = as.numeric(d)
       tbl[(d+1),2] = as.numeric(mean(dat[,var]))
