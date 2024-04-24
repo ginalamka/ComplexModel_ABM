@@ -89,7 +89,7 @@ write.table(repEND, paste(directory, "/Output/rep_summary__proj___group_.csv", s
 
 
 #add celebratory note at the end, because it worked!
-print(paste("SUCCESSSS BITCHESSSS"))
+print(paste("SUCCESS!! Way to go!"))
 
 
 #Notes on things that will need changed when going from a local computer to a high performance computing cluster:
